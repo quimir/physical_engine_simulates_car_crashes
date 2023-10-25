@@ -1,0 +1,48 @@
+Debug: Current Date and Time: "2023-10-25 17:20:55" "User screen width: 1536,height: 824"
+Debug: Current Date and Time: "2023-10-25 17:20:55" "Window width: 800,height: 600"
+Warning: QLayout: Cannot add parent widget QPushButton/ to its child layout QHBoxLayout/
+Warning: QLayout: Cannot add parent widget QPushButton/ to its child layout QHBoxLayout/
+Debug: Current Date and Time: "2023-10-25 17:20:55" "basic_button width: 32,height: 120"
+Warning: QLayout: Cannot add parent widget QPushButton/ to its child layout QHBoxLayout/
+Debug: Current Date and Time: "2023-10-25 17:40:24" "User screen width: 1536,height: 824"
+Debug: Current Date and Time: "2023-10-25 17:40:24" "Window width: 800,height: 600"
+Warning: QLayout: Cannot add parent widget QPushButton/ to its child layout QHBoxLayout/
+Warning: QLayout: Cannot add parent widget QPushButton/ to its child layout QHBoxLayout/
+Debug: Current Date and Time: "2023-10-25 17:40:24" "basic_button width: 32,height: 120"
+Warning: QLayout: Cannot add parent widget QPushButton/ to its child layout QHBoxLayout/
+
+Debug: Current Date and Time: "2023-10-25 17:40:24" "Mouse entered button: 设置"
+Debug: Current Date and Time: "2023-10-25 17:40:24" "设置 button Start Width: 156,Height: 51 button End Width: 171,Height: 56"
+Debug: Current Date and Time: "2023-10-25 17:40:24" "exit button animation: 设置"
+Debug: Current Date and Time: "2023-10-25 17:40:25" "Mouse leave button: 设置"
+Debug: Current Date and Time: "2023-10-25 17:40:25" "设置 button Start Width: 156,Height: 51 button End Width: 156,Height: 51"
+Debug: Current Date and Time: "2023-10-25 17:40:25" "exit button animation: 设置"
+Debug: Current Date and Time: "2023-10-25 17:40:25" "Mouse entered button: 开始"
+Debug: Current Date and Time: "2023-10-25 17:40:25" "开始 button Start Width: 156,Height: 51 button End Width: 171,Height: 56"
+Debug: Current Date and Time: "2023-10-25 17:40:25" "exit button animation: 开始"
+Debug: Current Date and Time: "2023-10-25 17:40:26" "Mouse leave button: 开始"
+Debug: Current Date and Time: "2023-10-25 17:40:26" "开始 button Start Width: 156,Height: 51 button End Width: 156,Height: 51"
+Debug: Current Date and Time: "2023-10-25 17:40:26" "exit button animation: 开始"
+Debug: Current Date and Time: "2023-10-25 17:40:26" "Mouse entered button: 设置"
+Debug: Current Date and Time: "2023-10-25 17:40:26" "设置 button Start Width: 156,Height: 51 button End Width: 171,Height: 56"
+Debug: Current Date and Time: "2023-10-25 17:40:26" "exit button animation: 设置"
+Debug: Current Date and Time: "2023-10-25 17:40:26" "Mouse leave button: 设置"
+Debug: Current Date and Time: "2023-10-25 17:40:26" "设置 button Start Width: 156,Height: 51 button End Width: 156,Height: 51"
+Debug: Current Date and Time: "2023-10-25 17:40:26" "exit button animation: 设置"
+Debug: Current Date and Time: "2023-10-25 17:40:26" "Mouse entered button: 退出"
+Debug: Current Date and Time: "2023-10-25 17:40:26" "退出 button Start Width: 156,Height: 51 button End Width: 171,Height: 56"
+Debug: Current Date and Time: "2023-10-25 17:40:26" "exit button animation: 退出"
+Debug: Current Date and Time: "2023-10-25 17:40:27" "Mouse leave button: 退出"
+Debug: Current Date and Time: "2023-10-25 17:40:27" "退出 button Start Width: 156,Height: 51 button End Width: 156,Height: 51"
+Debug: Current Date and Time: "2023-10-25 17:40:27" "exit button animation: 退出"
+Debug: Current Date and Time: "2023-10-25 17:40:27" "Mouse entered button: 设置"
+Debug: Current Date and Time: "2023-10-25 17:40:27" "设置 button Start Width: 156,Height: 51 button End Width: 171,Height: 56"
+Debug: Current Date and Time: "2023-10-25 17:40:27" "exit button animation: 设置"
+Debug: Current Date and Time: "2023-10-25 17:40:27" "Mouse leave button: 设置"
+Debug: Current Date and Time: "2023-10-25 17:40:27" "设置 button Start Width: 156,Height: 51 button End Width: 156,Height: 51"
+Debug: Current Date and Time: "2023-10-25 17:40:27" "exit button animation: 设置"
+Debug: Current Date and Time: "2023-10-25 17:40:28" "Mouse entered button: 退出"
+Debug: Current Date and Time: "2023-10-25 17:40:28" "退出 button Start Width: 156,Height: 51 button End Width: 171,Height: 56"
+Debug: Current Date and Time: "2023-10-25 17:40:28" "exit button animation: 退出"
+Debug: Current Date and Time: "2023-10-25 17:40:28" "clicked end_button\n"
+

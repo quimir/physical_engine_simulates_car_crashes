@@ -37,13 +37,13 @@ public:
      * @brief enterEvent Override the mouse entry event so that its length and width are increased by 10% when the mouse enters
      * @param event Mouse entry event
      */
-    void enterEvent(QEnterEvent*event)override;
+    void enterEvent(QEnterEvent* event)override;
 
     /**
      * @brief leaveEvent Override the mouse departure event so that the length and width of the mouse return to their original size when the mouse leaves
      * @param event Mouse departure event
      */
-    void leaveEvent(QEvent*event)override;
+    void leaveEvent(QEvent* event)override;
 
 private:
 
@@ -52,7 +52,7 @@ private:
      * @param start_size The overall length and width at the beginning of the painting
      * @param end_size The overall width and length at the end of the painting
      */
-    void AnimateSizeChange(const QSize&start_size,const QSize&end_size);
+    void AnimateSizeChange(const QSize& start_size, const QSize& end_size);
 
     /**
      * @brief SettingButtonIcon Sets the icon for the button
@@ -79,7 +79,7 @@ private:
     /**
      * @brief animation_ Save the button animation so that the animation system doesn't have to re-initialize and cause memory leaks
      */
-    QPropertyAnimation *animation_;
+    QPropertyAnimation* animation_;
 
 public slots:
     /**

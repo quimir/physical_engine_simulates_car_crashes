@@ -29,22 +29,6 @@ void FileWirteSystem::CustomMessageHandler(QtMsgType type,const QMessageLogConte
     log_file_.close();
 }
 
-void FileWirteSystem::OutMessage(const int type, const QString out_string)
-{
-    if(type==static_cast<int>(MessageType::debug))
-    {
-        qDebug()<<"Current Date and Time:"<<FileWirteSystem::GetCurrentDataTimeString()<<out_string;
-    }
-    else if(type==static_cast<int>(MessageType::warning))
-    {
-        qWarning()<<"Current Date and Time:"<<FileWirteSystem::GetCurrentDataTimeString()<<out_string;
-    }
-    else if(type==static_cast<int>(MessageType::critical))
-    {
-        qCritical()<<"Current Date and Time:"<<FileWirteSystem::GetCurrentDataTimeString()<<out_string;
-    }
-}
-
 void FileWirteSystem::OutMessage(const QString type,const QString out_string)
 {
     if(type=="debug"||type=="Debug")
@@ -56,6 +40,22 @@ void FileWirteSystem::OutMessage(const QString type,const QString out_string)
         qWarning()<<"Current Date and Time:"<<FileWirteSystem::GetCurrentDataTimeString()<<out_string;
     }
     else if(type=="critical"||type=="Critical")
+    {
+        qCritical()<<"Current Date and Time:"<<FileWirteSystem::GetCurrentDataTimeString()<<out_string;
+    }
+}
+
+void FileWirteSystem::OutMessage(MessageTypeBit type, const QString out_string)
+{
+    if(type==MessageTypeBit::Debug)
+    {
+        qDebug()<<"Current Date and Time:"<<FileWirteSystem::GetCurrentDataTimeString()<<out_string;
+    }
+    else if(type==MessageTypeBit::Warning)
+    {
+        qWarning()<<"Current Date and Time:"<<FileWirteSystem::GetCurrentDataTimeString()<<out_string;
+    }
+    else if(type==MessageTypeBit::Critical)
     {
         qCritical()<<"Current Date and Time:"<<FileWirteSystem::GetCurrentDataTimeString()<<out_string;
     }
@@ -86,7 +86,7 @@ void FileWirteSystem::DeleteLogDay(const QString &log_file_path, const long long
             if(log_file.exists())
             {
                 log_file.remove();
-                OutMessage(1,QString("log file deleted due to exceeding: %1 day").arg(QString::number(day)));
+                OutMessage(FileWirteSystem::Debug,QString("log file deleted due to exceeding: %1 day").arg(QString::number(day)));
             }
         }
     }
@@ -108,7 +108,7 @@ void FileWirteSystem::DeleteLogDay(QFile &log_file, const long long day)
             if(log_file.exists())
             {
                 log_file.remove();
-                OutMessage(1,QString("log file deleted due to exceeding: %1 day").arg(QString::number(day)));
+                OutMessage(FileWirteSystem::Debug,QString("log file deleted due to exceeding: %1 day").arg(QString::number(day)));
             }
         }
     }

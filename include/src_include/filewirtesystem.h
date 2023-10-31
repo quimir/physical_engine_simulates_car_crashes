@@ -26,6 +26,16 @@
 class FileWirteSystem
 {
 public:
+    enum MessageTypeBit
+    {
+        Debug=0x0001,
+        Warning=0x0002,
+        Critical=0x0003,
+        Fatal=0x0004,
+        Info=0x0005
+    };
+
+public:
     FileWirteSystem()=delete;
 
     /**
@@ -36,14 +46,9 @@ public:
      */
     static void CustomMessageHandler(QtMsgType type,const QMessageLogContext& context,const QString &msg);
 
-    /**
-     * @brief OutMessage Normalized Qt output information
-     * @param type See the MessageType enum for details
-     * @param out_string A detailed description of the message
-     */
-    static void OutMessage(const int type,const QString out_string);
-
     static void OutMessage(const QString type,const QString out_string);
+
+    static void OutMessage(FileWirteSystem::MessageTypeBit type,const QString out_string);
 
     static void EndWirteLine();
 
@@ -54,14 +59,6 @@ public:
     static QFile log_file_;
 
 private:
-    enum class MessageType
-    {
-        debug=1,
-        warning,
-        critical,
-        fatal,
-        info
-    };
 
     static QString GetCurrentDataTimeString();
 

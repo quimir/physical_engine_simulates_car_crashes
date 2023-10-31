@@ -18,7 +18,7 @@ IF(NOT CMAKE_BUILD_TYPE)
 ENDIF(NOT CMAKE_BUILD_TYPE)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools OpenGL OpenGLWidgets)
 
 set(TS_FILES physical_engine_simulates_car_crashes_zh_CN.ts)
 
@@ -32,17 +32,19 @@ set(PROJECT_SOURCES
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
 
+if(WIN32)
+      set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
+endif(WIN32)
+
+link_directories(${CMAKE_SOURCE_DIR}/lib)
+
 #find the required packages
 find_package(GLM REQUIRED)
 message(STATUS "GLM included at ${GLM_INCLUDE_DIRS}")
 find_package(ASSIMP REQUIRED)
 message(STATUS "Found ASSIMP in ${ASSIMP_INCLUDE_DIRS}")
 
-if(WIN32)
-      set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
-endif(WIN32)
 
-link_directories(${CMAKE_SOURCE_DIR}/lib)
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(physical_engine_simulates_car_crashes
@@ -54,6 +56,10 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         include/src_include/filepathsystem.h src/filepathsystem.cpp
         include/src_include/functionmessage.h
         include/src_include/filereadsystem.h src/filereadsystem.cpp
+        include/src_include/settingbutton.h src/settingbutton.cpp
+        include/src_include/shader.h src/shader.cpp
+        include/src_include/geometricalias.h
+        include/src_include/firstpersoncamera.h src/firstpersoncamera.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET physical_engine_simulates_car_crashes APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -89,15 +95,14 @@ include_directories(${CMAKE_BINARY_DIR}/configuration)
 add_library(STB_IMAGE "src/stb_image.cpp")
 set(LIBS ${LIBS} STB_IMAGE)
 
-add_library(GLAD "src/glad.c")
-set(LIBS ${LIBS} GLAD)
-
 macro(makeLink src dest target)
   add_custom_command(TARGET ${target} POST_BUILD COMMAND ${CMAKE_COMMAND} -E create_symlink ${src} ${dest}  DEPENDS  ${dest} COMMENT "mklink ${src} -> ${dest}")
 endmacro()
 
 target_link_libraries(physical_engine_simulates_car_crashes PRIVATE
     Qt${QT_VERSION_MAJOR}::Widgets
+    Qt${QT_VERSION_MAJOR}::OpenGL
+    Qt${QT_VERSION_MAJOR}::OpenGLWidgets
 )
 
 set_target_properties(physical_engine_simulates_car_crashes PROPERTIES

@@ -19,6 +19,7 @@
 #include <QPushButton>
 #include <QEasingCurve>
 #include <QTimer>
+#include <QOpenGLWindow>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

@@ -83,7 +83,7 @@ private:
 
 public slots:
     /**
-     * @brief OnAnimationFinished This signal prevents the button from crashing due to a memory leak during the stop animation.
+     * @brief OnAnimationFinished This slots prevents the button from crashing due to a memory leak during the stop animation.
      * Therefore, we need to use this model to get the button back to its original state immediately but the problem is that the animation time becomes extremely short,
      * so let's keep this function for now until we can figure out a better way
      */

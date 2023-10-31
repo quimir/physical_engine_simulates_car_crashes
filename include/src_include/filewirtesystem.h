@@ -1,3 +1,15 @@
+/******************************************************************************
+ * Copyright 2020-xxxx xxx Co., Ltd.
+ * All right reserved. See COPYRIGHT for detailed Information.
+ *
+ * @file       filewirtesystem.h
+ * @version 0.1
+ *
+ * @author     QuiMir<2546670299@qq.com>
+ * @date       2023/10/26
+ * @history
+ *****************************************************************************/
+
 #ifndef FILEWIRTESYSTEM_H
 #define FILEWIRTESYSTEM_H
 
@@ -35,14 +47,11 @@ public:
 
     static void EndWirteLine();
 
-    static void DeleteLogDay(const QString &file_path,const long long day);
+    static void DeleteLogDay(const QString &log_file_path,const long long day);
 
-    static void DeleteLogDay(QFile log_file,const long long day);
+    static void DeleteLogDay(QFile &log_file, const long long day);
 
-    static void DeleteLogDay(const long long day);
-
-    static QString GetCurrentDataTimeString();
-
+    static QFile log_file_;
 
 private:
     enum class MessageType
@@ -53,6 +62,16 @@ private:
         fatal,
         info
     };
+
+    static QString GetCurrentDataTimeString();
+
+    static bool ReadFirstLogLine(const QString &file_path,QString &first_line);
+
+    static bool ReadFirstLogLine(QFile &log_file,QString &first_line);
+
+    static QDateTime ExtractLogTime(const QString &log_line);
+
+    static QRegularExpression regex;
 
 };
 

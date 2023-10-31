@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
     }
 
     qInstallMessageHandler(FileWirteSystem::CustomMessageHandler);
-    FileWirteSystem::DeleteLogDay(1);
+    FileWirteSystem::DeleteLogDay(FileWirteSystem::log_file_,1);
     MainWindow w;
     w.show();
     FileWirteSystem::EndWirteLine();

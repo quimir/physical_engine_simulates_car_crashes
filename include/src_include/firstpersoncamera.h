@@ -1,7 +1,20 @@
+/******************************************************************************
+ * Copyright 2020-xxxx xxx Co., Ltd.
+ * All right reserved. See COPYRIGHT for detailed Information.
+ *
+ * @file       firstpersoncamera.h
+ * @version 0.1
+ *
+ * @author     QuiMir<2546670299@qq.com>
+ * @date       2023/11/01
+ * @history
+ *****************************************************************************/
+
 #ifndef FIRSTPERSONCAMERA_H
 #define FIRSTPERSONCAMERA_H
 
 #include <QObject>
+
 #include "src_include/geometricalias.h"
 
 namespace camerasetting

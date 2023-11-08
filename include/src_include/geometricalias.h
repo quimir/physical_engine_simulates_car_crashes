@@ -1,3 +1,15 @@
+/******************************************************************************
+ * Copyright 2020-xxxx xxx Co., Ltd.
+ * All right reserved. See COPYRIGHT for detailed Information.
+ *
+ * @file       geometricalias.h
+ * @version 0.1
+ *
+ * @author     QuiMir<2546670299@qq.com>
+ * @date       2023/11/01
+ * @history
+ *****************************************************************************/
+
 #ifndef GEOMETRICALIAS_H
 #define GEOMETRICALIAS_H
 
@@ -9,6 +21,7 @@
 #include <QMatrix4x4>
 #include <QMatrix2x3>
 #include <QMatrix2x4>
+#include <QQuaternion>
 
 namespace geometricalias
 {
@@ -20,6 +33,7 @@ using mat3 = QMatrix3x3;
 using mat4 = QMatrix4x4;
 using mat2x3=QMatrix2x3;
 using mat2x4=QMatrix2x4;
+using quat=QQuaternion;
 }
 
 #endif // GEOMETRICALIAS_H

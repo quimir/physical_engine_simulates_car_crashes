@@ -51,6 +51,11 @@ void Shader::SetInt(const QString &name, GLint value)
     this->shader_program_.setUniformValue(GetUniformLocation(name),value);
 }
 
+void Shader::SetUint(const QString &name, GLuint value)
+{
+    this->shader_program_.setUniformValue(GetUniformLocation(name),value);
+}
+
 void Shader::SetFloat(const QString &name, GLfloat value)
 {
     this->shader_program_.setUniformValue(GetUniformLocation(name),value);
@@ -114,6 +119,11 @@ void Shader::SetBlockBinding(const GLuint block_index, const GLuint block_bindin
         return;
     }
     glUniformBlockBinding(this->shader_program_.programId(),block_index,block_binding);
+}
+
+QOpenGLShaderProgram &Shader::GetShaderProgram()
+{
+    return this->shader_program_;
 }
 
 GLint Shader::GetUniformLocation(const QString &name)

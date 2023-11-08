@@ -5,8 +5,6 @@
 #include "./src_include/mainwindow.h"
 #include "src_include/filewirtesystem.h"
 
-#include "src_include/firstpersoncamera.h"
-
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);

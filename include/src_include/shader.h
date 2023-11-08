@@ -1,3 +1,15 @@
+/******************************************************************************
+ * Copyright 2020-xxxx xxx Co., Ltd.
+ * All right reserved. See COPYRIGHT for detailed Information.
+ *
+ * @file       shader.h
+ * @version 0.1
+ *
+ * @author     QuiMir<2546670299@qq.com>
+ * @date       2023/11/01
+ * @history
+ *****************************************************************************/
+
 #ifndef SHADER_H
 #define SHADER_H
 
@@ -7,6 +19,7 @@
 #include <QOpenGLShaderProgram>
 #include <QMap>
 #include <QOpenGLFunctions_4_5_Core>
+
 #include "src_include/geometricalias.h"
 
 class Shader:protected QOpenGLFunctions_4_5_Core
@@ -21,6 +34,8 @@ public:
     void SetBool(const QString& name,bool value);
 
     void SetInt(const QString& name,GLint value);
+
+    void SetUint(const QString& name,GLuint value);
 
     void SetFloat(const QString& name,GLfloat value);
 
@@ -45,6 +60,8 @@ public:
     GLuint GetBlockIndex(const QString& name);
 
     void SetBlockBinding(const GLuint block_index,const GLuint block_binding);
+
+    QOpenGLShaderProgram& GetShaderProgram();
 
 private:
     GLint GetUniformLocation(const QString& name);

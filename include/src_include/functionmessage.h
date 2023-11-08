@@ -1,7 +1,0 @@
-#ifndef FUNCTIONMESSAGE_H
-#define FUNCTIONMESSAGE_H
-
-constexpr int FUNCTION_SUCCESS=1;
-constexpr int FUNCTION_FAILED=0;
-
-#endif // FUNCTIONMESSAGE_H

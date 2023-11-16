@@ -3,7 +3,17 @@
 
 Shader::Shader(const QString &vertex_path, const QString &fragment_path, const QString &geometry_path, const QString &tessellation_control_path, const QString &tessellation_evaluation_path, const QString &compute_path)
 {
-    this->shader_program_.addShaderFromSourceFile(QOpenGLShader::Vertex,vertex_path);
+    FileWirteSystem::OutMessage(FileWirteSystem::Debug,vertex_path);
+    if(this->shader_program_.addShaderFromSourceFile(QOpenGLShader::Vertex,vertex_path))
+    {
+        FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Shader add From Vertex");
+    }
+
+    GLenum error=glGetError();
+    if(error!=GL_NO_ERROR)
+    {
+        FileWirteSystem::OutMessage(FileWirteSystem::Debug,QString("OpenGL Error: %1").arg(QString::number(error)));
+    }
     this->shader_program_.addShaderFromSourceFile(QOpenGLShader::Fragment,fragment_path);
 
     if(!geometry_path.isEmpty())
@@ -25,6 +35,7 @@ Shader::Shader(const QString &vertex_path, const QString &fragment_path, const Q
     {
         this->shader_program_.addShaderFromSourceFile(QOpenGLShader::Compute,compute_path);
     }
+    this->shader_program_.create();
 
     if(this->shader_program_.link())
     {
@@ -32,6 +43,8 @@ Shader::Shader(const QString &vertex_path, const QString &fragment_path, const Q
     }
     else
     {
+        GLint link_status;
+        glGetProgramiv(this->shader_program_.programId(),GL_LINK_STATUS,&link_status);
         FileWirteSystem::OutMessage(FileWirteSystem::Debug,QString("Shader program linking failed: %1" ).arg(shader_program_.log()));
     }
 }
@@ -118,6 +131,7 @@ void Shader::SetBlockBinding(const GLuint block_index, const GLuint block_bindin
         FileWirteSystem::OutMessage(FileWirteSystem::Debug,QString("The bloc index error does not exist occurred in: %1 shader").arg(QString::number(this->shader_program_.programId())));
         return;
     }
+
     glUniformBlockBinding(this->shader_program_.programId(),block_index,block_binding);
 }
 
@@ -134,8 +148,8 @@ GLint Shader::GetUniformLocation(const QString &name)
     {
         if(this->error_map_.contains(name))
         {
-        error_map_[name]++;
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug,QString("Uniform variable %1 not found in the shader.").arg(name));
+            error_map_[name]++;
+            FileWirteSystem::OutMessage(FileWirteSystem::Debug,QString("Uniform variable %1 not found in the shader.").arg(name));
         }
     }
 
@@ -150,9 +164,10 @@ GLuint Shader::GetUniformBlockIndex(const QString &name)
     {
         if(this->error_map_.contains(name))
         {
-        this->error_map_[name]++;
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug,QString("Uniform block %1 not found in the shader.").arg(name));
+            this->error_map_[name]++;
+            FileWirteSystem::OutMessage(FileWirteSystem::Debug,QString("Uniform block %1 not found in the shader.").arg(name));
         }
     }
+
     return index;
 }

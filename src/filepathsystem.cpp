@@ -2,20 +2,22 @@
 
 QString FilePathSystem::GetPath(const QString &path)
 {
-    QString root=GetRoot();
-    return QDir::toNativeSeparators(root+QDir::separator()+path);
+    return QDir::toNativeSeparators(GetRoot()+QDir::separator()+path);
 }
 
 QString FilePathSystem::GetImagePath(const QString &path)
 {
-    QString root=GetRoot();
-    return QDir::toNativeSeparators(root+QDir::separator()+"resources"+QDir::separator()+path);
+    return QDir::toNativeSeparators(GetRoot()+QDir::separator()+"resources"+QDir::separator()+path);
 }
 
 QString FilePathSystem::GetAttributesSettingPath(const QString &path)
 {
-    QString root=GetRoot();
-    return QDir::toNativeSeparators(root+QDir::separator()+"resources"+QDir::separator()+"attributes _beautify_files"+QDir::separator()+path);
+    return QDir::toNativeSeparators(GetRoot()+QDir::separator()+"resources"+QDir::separator()+"attributes _beautify_files"+QDir::separator()+path);
+}
+
+QString FilePathSystem::GetShaderPath(const QString &path)
+{
+    return QDir::toNativeSeparators(GetRoot()+QDir::separator()+"src"+QDir::separator()+"shader"+QDir::separator()+path);
 }
 
 QString FilePathSystem::GetRoot()

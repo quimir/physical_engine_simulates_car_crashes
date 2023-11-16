@@ -8,7 +8,7 @@
 #include "src_include/shader.h"
 #include "src_include/modelattribute.h"
 
-class Mesh:protected QOpenGLFunctions_4_5_Core
+class Mesh:protected QOpenGLFunctions_3_3_Core
 {
 public:
     Mesh(QVector<modelattribute::Vertex> vertices,QVector<GLuint> indices,QVector<modelattribute::Texture> textures)

@@ -18,11 +18,11 @@
 #include <QTextStream>
 #include <QOpenGLShaderProgram>
 #include <QMap>
-#include <QOpenGLFunctions_4_5_Core>
+#include <QOpenGLFunctions_3_3_Core>
 
 #include "src_include/geometricalias.h"
 
-class Shader:protected QOpenGLFunctions_4_5_Core
+class Shader:protected QOpenGLFunctions_3_3_Core
 {
 public:
     Shader(const QString& vertex_path,const QString& fragment_path,const QString& geometry_path=QString()

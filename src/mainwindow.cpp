@@ -4,6 +4,8 @@
 #include "src_include/settingwindow.h"
 #include "src_include/filewirtesystem.h"
 #include "src_include/filepathsystem.h"
+#include "src_include/shader.h"
+#include "src_include/startwindow.h"
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
@@ -58,8 +60,15 @@ void MainWindow::PlaceStartButton()
     start_button->installEventFilter(this);
     start_button->setParent(this);
 
-    connect(start_button, &QPushButton::clicked, [=]() {
+    Shader* shader=new Shader(FilePathSystem::GetShaderPath("text.vert"),FilePathSystem::GetShaderPath("text.frag"));
+    StartWindow *start_window=new StartWindow(this->geometry(),shader);
+
+    connect(start_button, &QPushButton::clicked,start_window, [=]() {
         FileWirteSystem::OutMessage(FileWirteSystem::Debug, "clicked start_button");
+        QTimer::singleShot(200,this,[=](){
+            this->hide();
+            start_window->show();
+        });
     });
 }
 

@@ -26,6 +26,7 @@ public:
     static QString GetPath(const QString&path);
     static QString GetImagePath(const QString &path);
     static QString GetAttributesSettingPath(const QString &path);
+    static QString GetShaderPath(const QString& path);
 
 private:
     static QString GetRoot();

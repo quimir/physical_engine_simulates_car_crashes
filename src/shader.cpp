@@ -9,11 +9,6 @@ Shader::Shader(const QString &vertex_path, const QString &fragment_path, const Q
         FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Shader add From Vertex");
     }
 
-    GLenum error=glGetError();
-    if(error!=GL_NO_ERROR)
-    {
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug,QString("OpenGL Error: %1").arg(QString::number(error)));
-    }
     this->shader_program_.addShaderFromSourceFile(QOpenGLShader::Fragment,fragment_path);
 
     if(!geometry_path.isEmpty())

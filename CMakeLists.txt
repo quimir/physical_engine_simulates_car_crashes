@@ -15,8 +15,8 @@ set(CMAKE_CXX_EXTENSIONS ON)
 # Define supported build types
 set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "Configs" FORCE)
 if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Choose the type of build, options are: Debug Release" FORCE)
-endif(NOT CMAKE_BUILD_TYPE)
+      set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Choose the type of build, options are: Debug Release" FORCE)
+endif()
 
 # Add a flag bit to store the target name
 set(QT_TARGET_NAME physical_engine_simulates_car_crashes)
@@ -28,18 +28,35 @@ set(TS_FILES physical_engine_simulates_car_crashes_zh_CN.ts)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
 
+#The project is built in the bin directory
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
+
+set(TARGET_DLLS_DIR ${CMAKE_SOURCE_DIR}/dlls)
+
+include_directories(${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/include/PhysX)
 
 link_directories(${CMAKE_SOURCE_DIR}/lib)
 
+IF(CMAKE_BUILD_TYPE STREQUAL "Debug")
+add_definitions(-D_DEBUG)
+else()
+      add_definitions(-DNDEBUG)
+endif()
+
 #find the required packages
-find_package(PhysX REQUIRED)
+find_package(PHYSX REQUIRED)
+message(STATUS "Found PHYSX in ${PHYSX_INCLUDE_DIR}")
+message(STATUS "PhysX Libraries: ${PHYSX_LIBRARIES}")
 find_package(GLM REQUIRED)
 message(STATUS "GLM included at ${GLM_INCLUDE_DIR}")
 find_package(ASSIMP REQUIRED)
 message(STATUS "Found ASSIMP in ${ASSIMP_INCLUDE_DIR}")
 
-set(LIBS assimp)
+IF(MSVC)
+set(LIBS assimp PhysX_64 PhysXCommon_64 PhysXCooking_64 PhysXExtensions_static_64 PhysXFoundation_64 PhysXPvdSDK_static_64)
+ELSEIF(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
+set(LIBS assimpd zlibstaticd)
+ENDIF()
 
 set(SHADER_FILES
       src/shader/text.vert
@@ -58,7 +75,7 @@ set(PROJECT_SOURCES
 source_group("Shader Files" FILES ${SHADER_FILES})
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-      qt_add_executable(physical_engine_simulates_car_crashes
+      qt_add_executable(${QT_TARGET_NAME}
             MANUAL_FINALIZATION
             ${PROJECT_SOURCES}
             include/src_include/mainentrybutton.h src/mainentrybutton.cpp
@@ -79,6 +96,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
             include/src_include/bone.h src/bone.cpp
             include/src_include/animator.h src/animator.cpp
             include/src_include/animation.h src/animation.cpp
+            include/src_include/physxtext.h src/physxtext.cpp
       )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET physical_engine_simulates_car_crashes APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -102,17 +120,26 @@ endif()
 qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 endif()
 
+#Copy the dll to the bin directory
+add_custom_target(CopyDlls
+      COMMENT "Copying DLLs to ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}"
+      COMMAND ${CMAKE_COMMAND} -E copy_directory
+      ${TARGET_DLLS_DIR}
+      $<TARGET_FILE_DIR:physical_engine_simulates_car_crashes>
+      COMMENT "Copying DLLs to $<TARGET_FILE_DIR:physical_engine_simulates_car_crashes>")
+add_dependencies(${QT_TARGET_NAME} CopyDlls)
+
 configure_file(configuration/root_directory.h.in configuration/root_directory.h)
 include_directories(${CMAKE_BINARY_DIR}/configuration)
 
-target_link_libraries(physical_engine_simulates_car_crashes PRIVATE
-      ${LIBS}
+target_link_libraries(${QT_TARGET_NAME} PRIVATE
       Qt${QT_VERSION_MAJOR}::Widgets
       Qt${QT_VERSION_MAJOR}::OpenGL
       Qt${QT_VERSION_MAJOR}::OpenGLWidgets
+      ${LIBS}
 )
 
-set_target_properties(physical_engine_simulates_car_crashes PROPERTIES
+set_target_properties(${QT_TARGET_NAME} PROPERTIES
       MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
       MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
       MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
@@ -120,12 +147,10 @@ set_target_properties(physical_engine_simulates_car_crashes PROPERTIES
       WIN32_EXECUTABLE TRUE
 )
 
-install(TARGETS physical_engine_simulates_car_crashes
+install(TARGETS ${QT_TARGET_NAME}
       BUNDLE DESTINATION .
       LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 if(QT_VERSION_MAJOR EQUAL 6)
       qt_finalize_executable(physical_engine_simulates_car_crashes)
 endif()
-
-include_directories(${CMAKE_SOURCE_DIR}/include)

@@ -12,27 +12,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @file       physxtext.h
+ * @file       basicsettingswindow.h
  * @version 0.1
  *
- * @author     QuiMir<2546670299@qq.com>
- * @date       2023/11/20
+ * @author     QuiMir <2546670299@qq.com>
+ * @date       2023/11/21
  * @history
  *****************************************************************************/
 
-#ifdef _MSC_VER
-#ifndef PHYSXTEXT_H
-#define PHYSXTEXT_H
+#ifndef BASICSETTINGSWINDOW_H
+#define BASICSETTINGSWINDOW_H
 
-#include <PhysX/PxPhysicsAPI.h>
+#include <QWidget>
 
-using namespace physx;
-
-class PhysXText
+class BasicSettingsWindow : public QWidget
 {
+    Q_OBJECT
 public:
-    static void Init();
+    explicit BasicSettingsWindow(QWidget *parent = nullptr);
+
+signals:
+
 };
 
-#endif // PHYSXTEXT_H
-#endif
+#endif // BASICSETTINGSWINDOW_H

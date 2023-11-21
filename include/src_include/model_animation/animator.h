@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @file       physxtext.h
+ * @file       animator.h
  * @version 0.1
  *
  * @author     QuiMir<2546670299@qq.com>
@@ -20,19 +20,31 @@
  * @history
  *****************************************************************************/
 
-#ifdef _MSC_VER
-#ifndef PHYSXTEXT_H
-#define PHYSXTEXT_H
+#ifndef ANIMATOR_H
+#define ANIMATOR_H
 
-#include <PhysX/PxPhysicsAPI.h>
+#include <QVector>
+#include <QMap>
 
-using namespace physx;
+#include <assimp/scene.h>
+#include <assimp/Importer.hpp>
 
-class PhysXText
+#include "src_include/model_animation/animation.h"
+#include "src_include/geometricalias.h"
+
+class Animator
 {
 public:
-    static void Init();
+    Animator(Animation* animation);
+    void UpdateAnimation(float delte_time);
+    void PlayAnimation(Animation* play_animation);
+    void CalculateBoneTransform(const Animation::AssimpNodeData* node,geometricalias::mat4 parent_transfrom);
+    QVector<geometricalias::mat4> GetFinalBoneMatrices();
+private:
+    QVector<geometricalias::mat4> final_bone_matrices_;
+    Animation* current_animation_;
+    float current_time_;
+    float delta_time_;
 };
 
-#endif // PHYSXTEXT_H
-#endif
+#endif // ANIMATOR_H

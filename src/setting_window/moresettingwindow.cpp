@@ -12,27 +12,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @file       physxtext.h
+ * @file       moresettingwindow.cpp
  * @version 0.1
  *
- * @author     QuiMir<2546670299@qq.com>
- * @date       2023/11/20
+ * @author     QuiMir <2546670299@qq.com>
+ * @date       2023/11/21
  * @history
  *****************************************************************************/
 
-#ifdef _MSC_VER
-#ifndef PHYSXTEXT_H
-#define PHYSXTEXT_H
+#include "src_include/setting_window/moresettingwindow.h"
 
-#include <PhysX/PxPhysicsAPI.h>
-
-using namespace physx;
-
-class PhysXText
+MoreSettingWindow::MoreSettingWindow(QWidget *parent)
+    : QWidget{parent}
 {
-public:
-    static void Init();
-};
 
-#endif // PHYSXTEXT_H
-#endif
+}

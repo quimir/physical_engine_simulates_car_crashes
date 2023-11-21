@@ -1,5 +1,6 @@
 # - Try to find Assimp
 # Once done, this will define
+# Assimp for MinGW uses version 5.2.0, while MinGW uses version 11.2.0 64-bit, statically compiled and use Debug made
 #
 # ASSIMP_FOUND - system has Assimp
 # ASSIMP_INCLUDE_DIR - the Assimp include directories

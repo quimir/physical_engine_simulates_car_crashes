@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @file       physxtext.h
+ * @file       modelattribute.h
  * @version 0.1
  *
  * @author     QuiMir<2546670299@qq.com>
@@ -20,19 +20,45 @@
  * @history
  *****************************************************************************/
 
-#ifdef _MSC_VER
-#ifndef PHYSXTEXT_H
-#define PHYSXTEXT_H
+#ifndef MODELATTRIBUTE_H
+#define MODELATTRIBUTE_H
 
-#include <PhysX/PxPhysicsAPI.h>
+#include <cstdlib>
 
-using namespace physx;
+#include <QString>
 
-class PhysXText
+#include "src_include/geometricalias.h"
+
+namespace modelattribute
 {
-public:
-    static void Init();
+
+constexpr unsigned int MAX_BONE_INFLUENCE=4;
+
+struct Vertex
+{
+    // position
+    geometricalias::vec3 position;
+    // normal
+    geometricalias::vec3 normal;
+    // texCoords
+    geometricalias::vec2 tex_coords;
+    // tangent
+    geometricalias::vec3 tangent;
+    // bitangent
+    geometricalias::vec3 bitangent;
+    // bone indexes which will influence this vertex
+    int32_t bone_ids[MAX_BONE_INFLUENCE];
+    // weights frome each bone
+    float_t weights[MAX_BONE_INFLUENCE];
 };
 
-#endif // PHYSXTEXT_H
-#endif
+struct Texture
+{
+    uint32_t id;
+    QString type;
+    QString path;
+};
+
+}
+
+#endif // MODELATTRIBUTE_H

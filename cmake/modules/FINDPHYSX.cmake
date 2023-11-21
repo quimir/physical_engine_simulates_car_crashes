@@ -1,4 +1,9 @@
+# - Try to find PhysX
+# The version of PhysX used in this project is 5.3.0 built with vc142 and built with /MD and use Debug mode
 #
+# PHYSX_FOUND - system has PhysX
+# PHYSX_INCLUDE_DIR - the PhysX include directories
+# PHYSX_LIBRARIES - link these to use PhysX
 
 FIND_PATH(PHYSX_INCLUDE_DIR PhysX/PxPhysicsAPI.h
       ${CMAKE_SOURCE_DIR}/include)

@@ -1,26 +1,55 @@
-Debug: Current Date and Time: "2023-11-17 16:55:44" "log file deleted due to exceeding: 1 day"
-Debug: Current Date and Time: "2023-11-17 16:55:44" "User screen width: 1536,height: 824"
-Debug: Current Date and Time: "2023-11-17 16:55:44" "Window width: 800,height: 600"
+Debug: Current Date and Time: "2023-11-21 14:53:06" "log file deleted due to exceeding: 1 day"
+Debug: Current Date and Time: "2023-11-21 14:53:06" "User screen width: 1536,height: 824"
+Debug: Current Date and Time: "2023-11-21 14:53:06" "Window width: 800,height: 600"
 Warning: QLayout: Cannot add parent widget QPushButton/ to its child layout QHBoxLayout/
-Debug: Current Date and Time: "2023-11-17 16:55:44" "D:\\Qt-Text\\physical_engine_simulates_car_crashes\\src\\shader\\text.vert"
-Warning: QOpenGLFunctions created with non-current context
-Debug: Current Date and Time: "2023-11-17 16:55:54" "User screen width: 1536,height: 824"
-Debug: Current Date and Time: "2023-11-17 16:55:54" "Window width: 800,height: 600"
 Warning: QLayout: Cannot add parent widget QPushButton/ to its child layout QHBoxLayout/
-Debug: Current Date and Time: "2023-11-17 16:55:54" "D:\\Qt-Text\\physical_engine_simulates_car_crashes\\src\\shader\\text.vert"
-Warning: QOpenGLFunctions created with non-current context
-Debug: Current Date and Time: "2023-11-17 16:56:42" "User screen width: 1536,height: 824"
-Debug: Current Date and Time: "2023-11-17 16:56:42" "Window width: 800,height: 600"
+Debug: Current Date and Time: "2023-11-21 14:53:06" "basic_button width: 32,height: 120"
 Warning: QLayout: Cannot add parent widget QPushButton/ to its child layout QHBoxLayout/
-Debug: Current Date and Time: "2023-11-17 16:56:42" "D:\\Qt-Text\\physical_engine_simulates_car_crashes\\src\\shader\\text.vert"
-Warning: QOpenGLFunctions created with non-current context
-Debug: Current Date and Time: "2023-11-17 18:23:27" "User screen width: 1536,height: 824"
-Debug: Current Date and Time: "2023-11-17 18:23:27" "Window width: 800,height: 600"
+
+Debug: Current Date and Time: "2023-11-21 14:53:07" "Mouse entered button: 设置"
+Debug: Current Date and Time: "2023-11-21 14:53:07" "设置 button start width: 156,height: 51 button end width: 171,height: 56"
+Debug: Current Date and Time: "2023-11-21 14:53:07" "exit button animation: 设置"
+Debug: Current Date and Time: "2023-11-21 14:53:08" "clicked setting_button"
+Debug: Current Date and Time: "2023-11-21 14:53:08" "Mouse leave button: 设置"
+Debug: Current Date and Time: "2023-11-21 14:53:08" "设置 button start width: 170,height: 55 button end width: 156,height: 51"
+Debug: Current Date and Time: "2023-11-21 14:53:08" "exit button animation: 设置"
+Debug: Current Date and Time: "2023-11-21 17:16:40" "User screen width: 1536,height: 824"
+Debug: Current Date and Time: "2023-11-21 17:16:40" "Window width: 800,height: 600"
 Warning: QLayout: Cannot add parent widget QPushButton/ to its child layout QHBoxLayout/
-Debug: Current Date and Time: "2023-11-17 18:23:27" "D:\\Qt-Text\\physical_engine_simulates_car_crashes\\src\\shader\\text.vert"
-Warning: QOpenGLFunctions created with non-current context
-Debug: Current Date and Time: "2023-11-17 18:24:23" "User screen width: 1536,height: 824"
-Debug: Current Date and Time: "2023-11-17 18:24:23" "Window width: 800,height: 600"
 Warning: QLayout: Cannot add parent widget QPushButton/ to its child layout QHBoxLayout/
-Debug: Current Date and Time: "2023-11-17 18:24:23" "D:\\Qt-Text\\physical_engine_simulates_car_crashes\\src\\shader\\text.vert"
-Warning: QOpenGLFunctions created with non-current context
+Debug: Current Date and Time: "2023-11-21 17:16:40" "basic_button width: 32,height: 120"
+Warning: QLayout: Cannot add parent widget QPushButton/ to its child layout QHBoxLayout/
+
+Debug: Current Date and Time: "2023-11-21 17:16:41" "Mouse entered button: 设置"
+Debug: Current Date and Time: "2023-11-21 17:16:41" "设置 button start width: 156,height: 51 button end width: 171,height: 56"
+Debug: Current Date and Time: "2023-11-21 17:16:41" "exit button animation: 设置"
+Debug: Current Date and Time: "2023-11-21 17:16:41" "clicked setting_button"
+Debug: Current Date and Time: "2023-11-21 17:16:42" "Mouse leave button: 设置"
+Debug: Current Date and Time: "2023-11-21 17:16:42" "设置 button start width: 156,height: 51 button end width: 156,height: 51"
+Debug: Current Date and Time: "2023-11-21 17:16:42" "exit button animation: 设置"
+Debug: Current Date and Time: "2023-11-21 17:26:49" "User screen width: 1536,height: 824"
+Debug: Current Date and Time: "2023-11-21 17:26:49" "Window width: 800,height: 600"
+Warning: QLayout: Cannot add parent widget QPushButton/ to its child layout QHBoxLayout/
+Warning: QLayout: Cannot add parent widget QPushButton/ to its child layout QHBoxLayout/
+Debug: Current Date and Time: "2023-11-21 17:26:49" "basic_button width: 32,height: 120"
+Warning: QLayout: Cannot add parent widget QPushButton/ to its child layout QHBoxLayout/
+
+Debug: Current Date and Time: "2023-11-21 17:26:51" "Mouse entered button: 退出"
+Debug: Current Date and Time: "2023-11-21 17:26:51" "退出 button start width: 156,height: 51 button end width: 171,height: 56"
+Debug: Current Date and Time: "2023-11-21 17:26:51" "exit button animation: 退出"
+Debug: Current Date and Time: "2023-11-21 17:26:51" "Mouse leave button: 退出"
+Debug: Current Date and Time: "2023-11-21 17:26:51" "退出 button start width: 156,height: 51 button end width: 156,height: 51"
+Debug: Current Date and Time: "2023-11-21 17:26:51" "exit button animation: 退出"
+Debug: Current Date and Time: "2023-11-21 17:26:51" "Mouse entered button: 退出"
+Debug: Current Date and Time: "2023-11-21 17:26:51" "退出 button start width: 156,height: 51 button end width: 171,height: 56"
+Debug: Current Date and Time: "2023-11-21 17:26:51" "exit button animation: 退出"
+Debug: Current Date and Time: "2023-11-21 17:26:51" "Mouse leave button: 退出"
+Debug: Current Date and Time: "2023-11-21 17:26:51" "退出 button start width: 157,height: 51 button end width: 156,height: 51"
+Debug: Current Date and Time: "2023-11-21 17:26:51" "exit button animation: 退出"
+Debug: Current Date and Time: "2023-11-21 17:26:51" "Mouse entered button: 设置"
+Debug: Current Date and Time: "2023-11-21 17:26:51" "设置 button start width: 156,height: 51 button end width: 171,height: 56"
+Debug: Current Date and Time: "2023-11-21 17:26:51" "exit button animation: 设置"
+Debug: Current Date and Time: "2023-11-21 17:26:51" "clicked setting_button"
+Debug: Current Date and Time: "2023-11-21 17:26:52" "Mouse leave button: 设置"
+Debug: Current Date and Time: "2023-11-21 17:26:52" "设置 button start width: 156,height: 51 button end width: 156,height: 51"
+Debug: Current Date and Time: "2023-11-21 17:26:52" "exit button animation: 设置"

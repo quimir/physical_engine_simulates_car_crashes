@@ -1,10 +1,31 @@
+/******************************************************************************
+ * Copyright 2023 QuiMir
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+
+ * http://www.apache.org/licenses/LICENSE-2.0
+
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * @file       mainwindow.cpp
+ * @version 0.1
+ *
+ * @author     QuiMir <2546670299@qq.com>
+ * @date       2023/11/20
+ * @history
+ *****************************************************************************/
+
 #include "./src_include/mainwindow.h"
 #include "./ui_mainwindow.h"
 #include "src_include/mainentrybutton.h"
-#include "src_include/settingwindow.h"
+#include "src_include/setting_window//settingwindow.h"
 #include "src_include/filewirtesystem.h"
 #include "src_include/filepathsystem.h"
-#include "src_include/shader.h"
 #include "src_include/startwindow.h"
 
 MainWindow::MainWindow(QWidget* parent)
@@ -60,15 +81,9 @@ void MainWindow::PlaceStartButton()
     start_button->installEventFilter(this);
     start_button->setParent(this);
 
-    Shader* shader=new Shader(FilePathSystem::GetShaderPath("text.vert"),FilePathSystem::GetShaderPath("text.frag"));
-    StartWindow *start_window=new StartWindow(this->geometry(),shader);
 
-    connect(start_button, &QPushButton::clicked,start_window, [=]() {
+    connect(start_button, &QPushButton::clicked, [=]() {
         FileWirteSystem::OutMessage(FileWirteSystem::Debug, "clicked start_button");
-        QTimer::singleShot(200,this,[=](){
-            this->hide();
-            start_window->show();
-        });
     });
 }
 

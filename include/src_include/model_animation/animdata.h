@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @file       physxtext.h
+ * @file       animdata.h
  * @version 0.1
  *
  * @author     QuiMir<2546670299@qq.com>
@@ -20,19 +20,18 @@
  * @history
  *****************************************************************************/
 
-#ifdef _MSC_VER
-#ifndef PHYSXTEXT_H
-#define PHYSXTEXT_H
+#ifndef ANIMDATA_H
+#define ANIMDATA_H
 
-#include <PhysX/PxPhysicsAPI.h>
+#include "src_include/geometricalias.h"
 
-using namespace physx;
-
-class PhysXText
+struct BoneInfo
 {
-public:
-    static void Init();
+    //id is index in finalBoneMatrices
+    int id;
+
+    //offset matrix transforms vertex from model space to bone space
+    geometricalias::mat4 offset;
 };
 
-#endif // PHYSXTEXT_H
-#endif
+#endif // ANIMDATA_H

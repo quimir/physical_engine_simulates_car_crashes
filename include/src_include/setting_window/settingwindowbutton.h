@@ -12,27 +12,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @file       physxtext.h
+ * @file       settingwindowbutton.h
  * @version 0.1
  *
- * @author     QuiMir<2546670299@qq.com>
- * @date       2023/11/20
+ * @author     QuiMir <2546670299@qq.com>
+ * @date       2023/11/21
  * @history
  *****************************************************************************/
 
-#ifdef _MSC_VER
-#ifndef PHYSXTEXT_H
-#define PHYSXTEXT_H
+#ifndef SETTINGWINDOWBUTTON_H
+#define SETTINGWINDOWBUTTON_H
 
-#include <PhysX/PxPhysicsAPI.h>
+#include <QPushButton>
+#include <QToolTip>
 
-using namespace physx;
-
-class PhysXText
+class SettingWindowButton : public QPushButton
 {
+    Q_OBJECT
 public:
-    static void Init();
+    SettingWindowButton(const QString icon_path,const QSize original_size,const QString button_text,const QSize icon_size);
+
+protected:
+    bool eventFilter(QObject* obj,QEvent* event);
+
+private:
+    QString icon_path_;
+    QSize original_size_;
+
+signals:
+    void ButtonClicked();
+
+private slots:
+    void ShowPopupWidget();
 };
 
-#endif // PHYSXTEXT_H
-#endif
+#endif // SETTINGWINDOWBUTTON_H

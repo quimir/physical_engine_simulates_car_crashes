@@ -1,4 +1,26 @@
-#include "src_include/model.h"
+/******************************************************************************
+ * Copyright 2023 QuiMir
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+
+ * http://www.apache.org/licenses/LICENSE-2.0
+
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * @file       model.cpp
+ * @version 0.1
+ *
+ * @author     QuiMir <2546670299@qq.com>
+ * @date       2023/11/20
+ * @history
+ *****************************************************************************/
+
+#include "src_include/model_animation/model.h"
 #include "src_include/assimp_qt_coversion.h"
 #include "src_include/filewirtesystem.h"
 #include <assimp/types.h>
@@ -46,6 +68,7 @@ GLuint Model::TextureFromFile(const QString& path, const QString& directory, boo
     else
     {
         FileWirteSystem::OutMessage(FileWirteSystem::Debug, QString("Unsupported image format: %1").arg(filename));
+        return 0;
     }
 
     glBindTexture(GL_TEXTURE_2D, texture_id);

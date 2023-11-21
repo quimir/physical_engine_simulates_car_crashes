@@ -1,12 +1,22 @@
 /******************************************************************************
- * Copyright 2020-xxxx xxx Co., Ltd.
- * All right reserved. See COPYRIGHT for detailed Information.
+ * Copyright 2023 QuiMir
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+
+ * http://www.apache.org/licenses/LICENSE-2.0
+
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  *
  * @file       firstpersoncamera.h
  * @version 0.1
  *
  * @author     QuiMir<2546670299@qq.com>
- * @date       2023/11/01
+ * @date       2023/11/20
  * @history
  *****************************************************************************/
 
@@ -43,9 +53,9 @@ public:
     explicit FirstPersonCamera(geometricalias::vec3 position=geometricalias::vec3(0.0f,0.0f,0.0f)
                                ,geometricalias::vec3 up=geometricalias::vec3(0.0f,1.0f,0.0f),
                                float yaw=camerasetting::YAW,float pitch=camerasetting::PITCH,QObject *parent=nullptr)
-        :QObject(parent),front_(geometricalias::vec3(0.0f,0.0f,-1.0f)),movement_speed_(camerasetting::SPEED)
-        ,mouse_sensitivity_(camerasetting::SENSITIVITY),zoom_(camerasetting::ZOOM),position_(position),world_up_(up),
-        yaw_(yaw),pitch_(pitch)
+        :QObject(parent),position_(position),front_(geometricalias::vec3(0.0f,0.0f,-1.0f))
+        ,world_up_(up),yaw_(yaw),pitch_(pitch),movement_speed_(camerasetting::SPEED),
+        mouse_sensitivity_(camerasetting::SENSITIVITY),zoom_(camerasetting::ZOOM)
     {
         UpdateCameraVectors();
     }
@@ -79,7 +89,7 @@ private:
     float yaw_;
     float pitch_;
 
-     // camera options
+    // camera options
     float movement_speed_;
     float mouse_sensitivity_;
     float zoom_;

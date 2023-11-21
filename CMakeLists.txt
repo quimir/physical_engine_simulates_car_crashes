@@ -12,6 +12,13 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS ON)
 
+# Check the size of void pointer
+if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+    message(STATUS "64-bit operating system detected.")
+else()
+    message(FATAL_ERROR "This project requires a 64-bit operating system. Exiting...")
+endif()
+
 # Define supported build types
 set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "Configs" FORCE)
 if(NOT CMAKE_BUILD_TYPE)
@@ -44,9 +51,11 @@ else()
 endif()
 
 #find the required packages
+IF(MSVC)# There is currently no way to introduce PhysX with the MinGW compiler
 find_package(PHYSX REQUIRED)
 message(STATUS "Found PHYSX in ${PHYSX_INCLUDE_DIR}")
 message(STATUS "PhysX Libraries: ${PHYSX_LIBRARIES}")
+ENDIF()
 find_package(GLM REQUIRED)
 message(STATUS "GLM included at ${GLM_INCLUDE_DIR}")
 find_package(ASSIMP REQUIRED)
@@ -79,24 +88,27 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
             MANUAL_FINALIZATION
             ${PROJECT_SOURCES}
             include/src_include/mainentrybutton.h src/mainentrybutton.cpp
-            include/src_include/settingwindow.h src/settingwindow.cpp
+            include/src_include/setting_window/settingwindow.h src/setting_window/settingwindow.cpp
             include/src_include/filewirtesystem.h src/filewirtesystem.cpp
             include/src_include/filepathsystem.h src/filepathsystem.cpp
             include/src_include/filereadsystem.h src/filereadsystem.cpp
-            include/src_include/settingbutton.h src/settingbutton.cpp
             include/src_include/shader.h src/shader.cpp
             include/src_include/geometricalias.h
             include/src_include/firstpersoncamera.h src/firstpersoncamera.cpp
-            include/src_include/mesh.h src/mesh.cpp
-            include/src_include/modelattribute.h
-            include/src_include/model.h src/model.cpp
+            include/src_include/model_animation/mesh.h src/model_animation/mesh.cpp
+            include/src_include/model_animation/modelattribute.h
+            include/src_include/model_animation/model.h src/model_animation/model.cpp
             include/src_include/assimp_qt_coversion.h
             include/src_include/startwindow.h src/startwindow.cpp
-            include/src_include/animdata.h
-            include/src_include/bone.h src/bone.cpp
-            include/src_include/animator.h src/animator.cpp
-            include/src_include/animation.h src/animation.cpp
+            include/src_include/model_animation/animdata.h
+            include/src_include/model_animation/bone.h src/model_animation/bone.cpp
+            include/src_include/model_animation/animator.h src/model_animation/animator.cpp
+            include/src_include/model_animation/animation.h src/model_animation/animation.cpp
             include/src_include/physxtext.h src/physxtext.cpp
+            include/src_include/setting_window/settingwindowbutton.h src/setting_window/settingwindowbutton.cpp
+            include/src_include/setting_window/basicsettingswindow.h src/setting_window/basicsettingswindow.cpp
+            include/src_include/setting_window/moresettingwindow.h src/setting_window/moresettingwindow.cpp
+            include/src_include/setting_window/environmentsettingwindow.h src/setting_window/environmentsettingwindow.cpp
       )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET physical_engine_simulates_car_crashes APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

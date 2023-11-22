@@ -33,6 +33,9 @@ Thumbs.db
 *.rc
 /.qmake.cache
 /.qmake.stash
+**/bin/
+PhysXGpu_64.dll
+libassimp-5d.dll
 
 # qtcreator generated files
 *.pro.user*

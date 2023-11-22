@@ -64,7 +64,11 @@ message(STATUS "Found ASSIMP in ${ASSIMP_INCLUDE_DIR}")
 IF(MSVC)
 set(LIBS assimp PhysX_64 PhysXCommon_64 PhysXCooking_64 PhysXExtensions_static_64 PhysXFoundation_64 PhysXPvdSDK_static_64)
 ELSEIF(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
+IF(CMAKE_BUILD_TYPE STREQUAL "Debug")
 set(LIBS assimpd zlibstaticd)
+ELSEIF(CMAKE_BUILD_TYPE STREQUAL "Release")
+set(LIBS assimp)
+ENDIF()
 ENDIF()
 
 set(SHADER_FILES

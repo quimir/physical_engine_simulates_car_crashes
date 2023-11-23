@@ -36,28 +36,42 @@ class SettingWindow : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SettingWindow(QWidget *parent = nullptr);
+    explicit SettingWindow(const QRect& window_geometry,QWidget *parent = nullptr);
 
-    QPushButton* SetBasicButton();
+    void SetBasicButton(const QSize button_size);
 
-    QPushButton* SetEnvironmentButton();
+    void SetEnvironmentButton(const QSize button_size);
 
-    QPushButton* SetMoreButton();
+    void SetMoreButton(const QSize button_size);
+
+    void SetWindowLayout();
+
+    void SetChildWindow(const QSize button_size);
+
+    void SetWindow();
+
+    QSize GetButtonSize();
 
     QPushButton* SetRetunButton();
 
     QPushButton* SetStartButton();
+
+protected:
+    void closeEvent(QCloseEvent* event)override;
 
 private:
     bool processing_button_click_;
 
     BasicSettingsWindow* basic_setting_window_;
     MoreSettingWindow* more_setting_window_;
-    EnvironmentSettingWindow* weather_setting_window_;
+    EnvironmentSettingWindow* enviroment_setting_window_;
     QVector<SettingWindowButton*> setting_buttons_;
 
 public slots:
     void HandleButtonClicked();
+
+private slots:
+    void ReturnToMainWindow();
 };
 
 #endif // SETTINGWINDOW_H

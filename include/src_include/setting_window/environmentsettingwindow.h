@@ -24,12 +24,15 @@
 #define ENVIRONMENTSETTINGWINDOW_H
 
 #include <QWidget>
+#include <QVBoxLayout>
+#include <QLabel>
+#include <QScrollArea>
 
 class EnvironmentSettingWindow : public QWidget
 {
     Q_OBJECT
 public:
-    explicit EnvironmentSettingWindow(QWidget *parent = nullptr);
+    explicit EnvironmentSettingWindow(QRect window_geometry,QWidget *parent = nullptr);
 
 signals:
 

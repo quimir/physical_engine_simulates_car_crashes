@@ -43,8 +43,8 @@ int main(int argc, char *argv[])
 
     qInstallMessageHandler(FileWirteSystem::CustomMessageHandler);
     FileWirteSystem::DeleteLogDay(FileWirteSystem::log_file_,1);
+    FileWirteSystem::DeleteLogFile();
     MainWindow w;
     w.show();
-    FileWirteSystem::EndWirteLine();
     return a.exec();
 }

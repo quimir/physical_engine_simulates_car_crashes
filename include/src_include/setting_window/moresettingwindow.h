@@ -24,12 +24,15 @@
 #define MORESETTINGWINDOW_H
 
 #include <QWidget>
+#include <QVBoxLayout>
+#include <QScrollArea>
+#include <QLabel>
 
 class MoreSettingWindow : public QWidget
 {
     Q_OBJECT
 public:
-    explicit MoreSettingWindow(QWidget *parent = nullptr);
+    explicit MoreSettingWindow(QRect window_geometry,QWidget *parent = nullptr);
 
 signals:
 

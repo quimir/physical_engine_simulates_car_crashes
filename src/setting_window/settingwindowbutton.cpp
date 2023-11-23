@@ -30,37 +30,57 @@ SettingWindowButton::SettingWindowButton(const QString icon_path, const QSize or
         FileWirteSystem::OutMessage(FileWirteSystem::Debug,QString("Setting button original size is: %1,button text is: %2")
                                                                 .arg(original_size.isNull()?"null":"no null",button_text.isNull()?"null":"no null"));
     }
-
     this->original_size_=original_size;
-    this->setText(button_text);
+    this->setText("");
+    this->button_text_=button_text;
 
     this->icon_path_=icon_path;
     QPixmap pix(this->icon_path_);
     if(pix.isNull())
     {
         FileWirteSystem::OutMessage(FileWirteSystem::Debug, QString("%1 button image loading error image path: %2")
-                                                                .arg(this->text(), icon_path_));
+                                                                .arg(this->button_text_, icon_path_));
     }
-    this->setIcon(pix);
 
+    this->setIcon(pix);
     if(icon_size.isNull())
     {
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug,QString("%1 button icon size is null").arg(this->text()));
+        FileWirteSystem::OutMessage(FileWirteSystem::Debug,QString("%1 button icon size is null").arg(this->button_text_));
     }
     this->setIconSize(icon_size);
-
     this->resize(this->original_size_);
+
+    /**
+     * Setting the style
+    **/
+    this->setFlat(true);
+    // Setting stylesheets
+    this->setStyleSheet("SettingWindowButton {"
+                        "    border: none;" // Hide borders
+                        "}"
+                        "SettingWindowButton:hover {"
+                        "    border: none;" // The border is also not displayed when the mouse is hovered
+                        "}");
+    QFont font("Arial",10);
+    this->setFont(font);
+    this->setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Preferred);
+
+    // Install the mouse event listener
+    this->installEventFilter(this);
 
     connect(this,&QPushButton::clicked,this,&SettingWindowButton::ShowPopupWidget);
 }
 
 bool SettingWindowButton::eventFilter(QObject *obj, QEvent *event)
 {
+    Q_UNUSED(event);
     if(obj==this)
     {
+
         if(event->type()==QEvent::Enter)
         {
-            QToolTip::showText(mapToGlobal(rect().bottomRight()),text());
+            QToolTip::setFont(QFont("Arial",10));
+            QToolTip::showText(mapToGlobal(rect().bottomRight()),this->button_text_);
         }
         else if(event->type()==QEvent::Leave)
         {

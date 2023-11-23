@@ -26,7 +26,6 @@
 #include "src_include/setting_window//settingwindow.h"
 #include "src_include/filewirtesystem.h"
 #include "src_include/filepathsystem.h"
-#include "src_include/startwindow.h"
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
@@ -35,8 +34,6 @@ MainWindow::MainWindow(QWidget* parent)
     ui->setupUi(this);
     this->setWindowTitle("汽车仿真碰撞引擎");
     GetScreenWindow();
-    FileWirteSystem::OutMessage(FileWirteSystem::Debug, QString("Window width: %1,height: %2")
-                                       .arg(QString::number(this->width()), QString::number(this->height())));
     SetUIWindow();
 }
 
@@ -47,12 +44,18 @@ void MainWindow::GetScreenWindow()
     this->screen_width_ = get_user_screen.width();
     this->screen_height_ = get_user_screen.height();
     FileWirteSystem::OutMessage(FileWirteSystem::Debug, QString("User screen width: %1,height: %2")
-                                       .arg(QString::number(screen_width_), QString::number(screen_height_)));
+                                .arg(QString::number(screen_width_), QString::number(screen_height_)));
 }
 
 int MainWindow::GetScreenHeight()const
 {
     return this->screen_height_;
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    FileWirteSystem::OutMessage(FileWirteSystem::Debug,"The user closes the window using the close event in the upper-right corner");
+    FileWirteSystem::EndWirteLine();
 }
 
 int MainWindow::GetScreenWidth()const
@@ -104,13 +107,12 @@ void MainWindow::PlaceSettingButton()
     setting_button->installEventFilter(this);
     setting_button->setParent(this);
 
-    SettingWindow* setting_window = new SettingWindow();
+    SettingWindow* setting_window = new SettingWindow(this->geometry());
 
     connect(setting_button, &QPushButton::clicked, setting_window, [=]() {
-        FileWirteSystem::OutMessage("debug", "clicked setting_button");
+        FileWirteSystem::OutMessage(FileWirteSystem::Debug, "clicked setting_button");
 
         QTimer::singleShot(200, this, [=]() {
-            setting_window->setGeometry(this->geometry());
             this->hide();
             setting_window->show();
         });
@@ -136,7 +138,7 @@ void MainWindow::PlaceEndButton()
     end_button->setParent(this);
 
     connect(end_button, &QPushButton::clicked, this, [=]() {
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug, "clicked end_button\n");
+        FileWirteSystem::OutMessage(FileWirteSystem::Debug, "clicked end_button");
         FileWirteSystem::EndWirteLine();
         this->close();
     });
@@ -145,6 +147,8 @@ void MainWindow::PlaceEndButton()
 void MainWindow::SetUIWindow()
 {
     this->setGeometry(GetScreenWidth() / 4, GetScreenHeight() / 4, GetScreenWidth() / 2, GetScreenHeight() / 2);
+    FileWirteSystem::OutMessage(FileWirteSystem::Debug,QString("Now main_windows width: %1 height: %2")
+                                                            .arg(QString::number(this->width()),QString::number(this->height())));
     PlaceStartButton();
     PlaceSettingButton();
     PlaceEndButton();

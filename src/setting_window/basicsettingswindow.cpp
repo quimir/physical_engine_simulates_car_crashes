@@ -21,9 +21,33 @@
  *****************************************************************************/
 
 #include "src_include/setting_window/basicsettingswindow.h"
+#include "src_include/filewirtesystem.h"
 
-BasicSettingsWindow::BasicSettingsWindow(QWidget *parent)
+BasicSettingsWindow::BasicSettingsWindow(QRect window_geometry,QWidget *parent)
     : QWidget{parent}
 {
+    this->setGeometry(window_geometry);
+    QVBoxLayout* layout=new QVBoxLayout(this);
+    FileWirteSystem::OutMessage(FileWirteSystem::Debug,QString("Basic setting window width: %1,height: %2")
+                                .arg(QString::number(this->width()),QString::number(this->height())));
 
+    for(quint32 i=0;i<20;i++)
+    {
+        QLabel* label=new QLabel(QString("基础测试: %1").arg(QString::number(i+1)));
+        layout->addWidget(label);
+    }
+
+    QScrollArea* scroll_area=new QScrollArea(this);
+
+    QWidget* scroll_widget=new QWidget();
+    scroll_widget->setLayout(layout);
+
+    scroll_area->setWidget(scroll_widget);
+
+    scroll_area->setWidgetResizable(true);
+    scroll_area->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    scroll_area->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+
+    QVBoxLayout* main_layout=new QVBoxLayout(this);
+    main_layout->addWidget(scroll_area);
 }

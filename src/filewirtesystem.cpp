@@ -51,22 +51,6 @@ void FileWirteSystem::CustomMessageHandler(QtMsgType type,const QMessageLogConte
     log_file_.close();
 }
 
-void FileWirteSystem::OutMessage(const QString type,const QString out_string)
-{
-    if(type=="debug"||type=="Debug")
-    {
-        qDebug()<<"Current Date and Time:"<<FileWirteSystem::GetCurrentDataTimeString()<<out_string;
-    }
-    else if(type=="warning"||type=="Warning")
-    {
-        qWarning()<<"Current Date and Time:"<<FileWirteSystem::GetCurrentDataTimeString()<<out_string;
-    }
-    else if(type=="critical"||type=="Critical")
-    {
-        qCritical()<<"Current Date and Time:"<<FileWirteSystem::GetCurrentDataTimeString()<<out_string;
-    }
-}
-
 void FileWirteSystem::OutMessage(MessageTypeBit type, const QString out_string)
 {
     if(type==MessageTypeBit::Debug)
@@ -113,6 +97,15 @@ void FileWirteSystem::DeleteLogDay(const QString &log_file_path, const long long
         }
     }
 
+}
+
+void FileWirteSystem::DeleteLogFile()
+{
+    if(log_file_.exists())
+    {
+        log_file_.remove();
+        OutMessage(FileWirteSystem::Debug,"Using delete log file");
+    }
 }
 
 void FileWirteSystem::DeleteLogDay(QFile &log_file, const long long day)

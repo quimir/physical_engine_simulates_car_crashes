@@ -33,10 +33,10 @@
 class FilePathSystem
 {
 public:
-    static QString GetPath(const QString&path);
-    static QString GetImagePath(const QString &path);
-    static QString GetAttributesSettingPath(const QString &path);
-    static QString GetShaderPath(const QString& path);
+    static QString GetPath(const QString&name);
+    static QString GetImagePath(const QString &name);
+    static QString GetAttributesSettingPath(const QString &name);
+    static QString GetShaderPath(const QString& name);
 
 private:
     static QString GetRoot();

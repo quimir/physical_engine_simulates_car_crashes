@@ -61,11 +61,9 @@ public:
 
     /**
      * @brief OutMessage Unified log output format. The unified output content is: (Debug|Warning|Critical|Fatal): Current Date and Time (now time) (out message).
-     * @param type Debug or Warning or Critical.
+     * @param type See MessageTypeBit for details
      * @param out_string Log detail message.
      */
-    static void OutMessage(const QString type,const QString out_string);
-
     static void OutMessage(FileWirteSystem::MessageTypeBit type,const QString out_string);
 
     /**
@@ -79,6 +77,8 @@ public:
      * @param day User specifies the number of days to clear logs.
      */
     static void DeleteLogDay(const QString &log_file_path,const long long day);
+
+    static void DeleteLogFile();
 
     static void DeleteLogDay(QFile &log_file, const long long day);
 

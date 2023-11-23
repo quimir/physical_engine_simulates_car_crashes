@@ -61,6 +61,9 @@ public:
     int GetScreenWidth()const;
     int GetScreenHeight()const;
 
+protected:
+    void closeEvent(QCloseEvent* event)override;
+
 private:
     void SetUIWindow();
     Ui::MainWindow *ui;

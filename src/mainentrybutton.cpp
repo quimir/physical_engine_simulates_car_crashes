@@ -50,8 +50,8 @@ MainEntryButton::MainEntryButton(const QString icon_path, const QSize original_s
 
     this->resize(this->original_size_);
 
-    // Connect the finished signal to onAnimationFinished slot
-    connect(this->animation_, &QPropertyAnimation::finished, this, &MainEntryButton::OnAnimationFinished);
+//    // Connect the finished signal to onAnimationFinished slot
+//    connect(this->animation_, &QPropertyAnimation::finished, this, &MainEntryButton::OnAnimationFinished);
 }
 
 void MainEntryButton::enterEvent(QEnterEvent* event)
@@ -111,9 +111,9 @@ void MainEntryButton::SetButtonIcon(const QString icon_path)
 void MainEntryButton::SetButtonLayout()
 {
     // Remove old layout objects to avoid memory leaks
-    QLayout* existingLayout = layout();
-    if (existingLayout) {
-        delete existingLayout;
+    QLayout *existing_layout = layout();
+    if (existing_layout) {
+        delete existing_layout;
     }
 
     // Create a new widget to hold the button

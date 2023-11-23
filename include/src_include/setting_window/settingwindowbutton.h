@@ -25,6 +25,9 @@
 
 #include <QPushButton>
 #include <QToolTip>
+#include <QRect>
+#include <QPainter>
+#include <QPixmap>
 
 class SettingWindowButton : public QPushButton
 {
@@ -38,6 +41,7 @@ protected:
 private:
     QString icon_path_;
     QSize original_size_;
+    QString button_text_;
 
 signals:
     void ButtonClicked();

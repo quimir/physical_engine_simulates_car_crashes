@@ -24,12 +24,17 @@
 #define BASICSETTINGSWINDOW_H
 
 #include <QWidget>
+#include <QScrollArea>
+#include <QVBoxLayout>
+#include <QString>
+#include <QLabel>
+#include <QRect>
 
 class BasicSettingsWindow : public QWidget
 {
     Q_OBJECT
 public:
-    explicit BasicSettingsWindow(QWidget *parent = nullptr);
+    explicit BasicSettingsWindow(QRect window_geometry,QWidget *parent = nullptr);
 
 signals:
 

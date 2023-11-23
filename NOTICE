@@ -1,0 +1,5 @@
+Special thanks to the following third-party libraries for their support:
+NVIDIA-PhysX:https://github.com/NVIDIA-Omniverse/PhysX.
+Open Asset Import Library(assimp):https://github.com/assimp/assimp/blob/master/Readme.md.
+
+Thanks to Joey de Vries for his LearnOpenGL for ideas for graph rendering and graph animation:https://github.com/JoeyDeVries/LearnOpenGL.

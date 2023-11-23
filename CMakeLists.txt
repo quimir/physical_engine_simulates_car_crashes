@@ -35,7 +35,7 @@ set(TS_FILES physical_engine_simulates_car_crashes_zh_CN.ts)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
 
-#The project is built in the bin directory
+# The project is built in the bin directory
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
 set(TARGET_DLLS_DIR ${CMAKE_SOURCE_DIR}/dlls)
@@ -50,7 +50,7 @@ else()
       add_definitions(-DNDEBUG)
 endif()
 
-#find the required packages
+# Find the required packages
 IF(MSVC)# There is currently no way to introduce PhysX with the MinGW compiler
 find_package(PHYSX REQUIRED)
 message(STATUS "Found PHYSX in ${PHYSX_INCLUDE_DIR}")
@@ -84,7 +84,7 @@ set(PROJECT_SOURCES
       ${SHADER_FILES}
 )
 
-#Add shader to separate Shader Files
+# Add shader to separate Shader Files
 source_group("Shader Files" FILES ${SHADER_FILES})
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -136,7 +136,7 @@ endif()
 qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 endif()
 
-#Copy the dll to the bin directory
+# Copy the dll to the bin directory
 add_custom_target(CopyDlls
       COMMENT "Copying DLLs to ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}"
       COMMAND ${CMAKE_COMMAND} -E copy_directory

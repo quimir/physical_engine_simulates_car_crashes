@@ -20,8 +20,8 @@
  * @history
  *****************************************************************************/
 
-#include "src_include/setting_window/moresettingwindow.h"
-#include "src_include/filewirtesystem.h"
+#include "src_include/setting_window/more_setting_window.h"
+#include "src_include/file_wirte_system.h"
 
 MoreSettingWindow::MoreSettingWindow(QRect window_geometry, QWidget *parent)
     : QWidget{parent}

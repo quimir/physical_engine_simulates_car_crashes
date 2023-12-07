@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @file       environmentsettingwindow.cpp
+ * @file       basicsettingswindow.cpp
  * @version 0.1
  *
  * @author     QuiMir <2546670299@qq.com>
@@ -20,33 +20,37 @@
  * @history
  *****************************************************************************/
 
-#include "src_include/setting_window/environmentsettingwindow.h"
-#include "src_include/filewirtesystem.h"
+#include "src_include/setting_window/basic_setting_window.h"
+#include "src_include/file_wirte_system.h"
 
-EnvironmentSettingWindow::EnvironmentSettingWindow(QRect window_geometry, QWidget *parent)
+BasicSettingsWindow::BasicSettingsWindow(QRect window_geometry,QWidget *parent)
+    : QWidget{parent}
 {
     this->setGeometry(window_geometry);
     QVBoxLayout* layout=new QVBoxLayout(this);
-    FileWirteSystem::OutMessage(FileWirteSystem::Debug,QString("environment setting window width: %1,height: %2")
+    FileWirteSystem::OutMessage(FileWirteSystem::Debug,QString("Basic setting window width: %1,height: %2")
                                 .arg(QString::number(this->width()),QString::number(this->height())));
 
     for(quint32 i=0;i<20;i++)
     {
-        QLabel* label=new QLabel(QString("环境测试: %1").arg(QString::number(i+1)));
+        QLabel* label=new QLabel(QString("基础测试: %1").arg(QString::number(i+1)));
         layout->addWidget(label);
     }
+    layout->setSizeConstraint(QLayout::SetMinAndMaxSize);
 
-    QScrollArea* scroll_area=new QScrollArea(this);
+    QScrollArea* scroll_area = new QScrollArea(this);
+    QWidget* scroll_widget = new QWidget();
 
-    QWidget* scroll_widget=new QWidget();
+    // 设置滚动区域的大小适应内容
+    scroll_widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     scroll_widget->setLayout(layout);
-
     scroll_area->setWidget(scroll_widget);
 
+    // 设置滚动区域的大小策略
     scroll_area->setWidgetResizable(true);
-    scroll_area->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    scroll_area->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 
-    QVBoxLayout* main_layout=new QVBoxLayout(this);
-    main_layout->addWidget(scroll_area);
+    QVBoxLayout* main_layout = new QVBoxLayout(this);
+    main_layout->addWidget(scroll_area);  // 将滚动区域添加到主布局
+
+    setLayout(main_layout);  // 设置主布局
 }

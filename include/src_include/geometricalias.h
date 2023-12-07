@@ -52,7 +52,7 @@ using quat=QQuaternion;
  * @param t Interpolant.
  * @return a
  */
-static QVector3D lerp(const QVector3D& v1,const QVector3D& v2,float t)
+inline static QVector3D lerp(const QVector3D& v1,const QVector3D& v2,float t)
 {
     return v1*(1-t)+v2*t;
 }

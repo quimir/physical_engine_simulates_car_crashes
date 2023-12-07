@@ -20,28 +20,35 @@
  * @history
  *****************************************************************************/
 
-#ifndef SETTINGWINDOWBUTTON_H
-#define SETTINGWINDOWBUTTON_H
+#ifndef SETTING_WINDOW_BUTTON_H
+#define SETTING_WINDOW_BUTTON_H
 
 #include <QPushButton>
 #include <QToolTip>
 #include <QRect>
 #include <QPainter>
 #include <QPixmap>
+#include <QImageReader>
 
 class SettingWindowButton : public QPushButton
 {
     Q_OBJECT
 public:
-    SettingWindowButton(const QString icon_path,const QSize original_size,const QString button_text,const QSize icon_size);
+    SettingWindowButton(const QString icon_path,const QSize original_size
+                        ,const QString button_text,const QSize icon_size,const QString specify_the_display_text=QString()
+                        ,const QString press_icon_path=QString());
 
 protected:
     bool eventFilter(QObject* obj,QEvent* event);
+    void mousePressEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
 
 private:
     QString icon_path_;
+    QString press_icon_path_;
     QSize original_size_;
     QString button_text_;
+    QString specify_the_display_text_;
 
 signals:
     void ButtonClicked();
@@ -50,4 +57,4 @@ private slots:
     void ShowPopupWidget();
 };
 
-#endif // SETTINGWINDOWBUTTON_H
+#endif // SETTING_WINDOW_BUTTON_H

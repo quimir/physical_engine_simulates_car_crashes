@@ -41,8 +41,18 @@ public:
     };
 
 public:
+    /**
+     * @brief Animation Read the animation from the animation path when the path exists
+     * @param animation_path Target animation path
+     * @param model Target model
+     */
     Animation(const QString& animation_path,Model *model);
 
+    /**
+     * @brief FindBone Look for additional bone data that hasn't been added
+     * @param name Bone name
+     * @return If yes, return skeleton modification, otherwise return nullptr
+     */
     Bone *FindBone(const QString& name);
 
     inline int GetTicksPerSecond()
@@ -66,14 +76,31 @@ public:
     }
 
 private:
+    /**
+     * @brief ReadMissingBones Read bone data that is not recorded in BoneInfoMap
+     * @param animation
+     * @param model
+     */
     void ReadMissingBones(const aiAnimation* animation,Model& model);
     void ReadHierarchyData(AssimpNodeData& dest,const aiNode* src);
 
 private:
     float duration_;
+    /**
+     * @brief ticks_per_second_ Animation second counter
+     */
     int ticks_per_second_;
+    /**
+     * @brief bone_ Save bone data
+     */
     QVector<Bone> bone_;
+    /**
+     * @brief root_node_ Save node data
+     */
     AssimpNodeData root_node_;
+    /**
+     * @brief bone_info_map_
+     */
     QMap<QString,BoneInfo> bone_info_map_;
 };
 

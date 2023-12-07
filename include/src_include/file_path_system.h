@@ -21,8 +21,8 @@
  *****************************************************************************/
 
 
-#ifndef FILEPATHSYSTEM_H
-#define FILEPATHSYSTEM_H
+#ifndef FILE_PATH_SYSTEM_H
+#define FILE_PATH_SYSTEM_H
 
 #include <QFile>
 #include <QString>
@@ -33,6 +33,11 @@
 class FilePathSystem
 {
 public:
+    /**
+     * @brief GetPath Returns the top-level directory of the project + name
+     * @param name File name
+     * @return Top-level directory + name of the project
+     */
     static QString GetPath(const QString&name);
     static QString GetImagePath(const QString &name);
     static QString GetAttributesSettingPath(const QString &name);
@@ -43,4 +48,4 @@ private:
 
 };
 
-#endif // FILEPATHSYSTEM_H
+#endif // FILE_PATH_SYSTEM_H

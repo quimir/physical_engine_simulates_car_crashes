@@ -20,7 +20,7 @@
  * @history
  *****************************************************************************/
 
-#include "src_include/filepathsystem.h"
+#include "src_include/file_path_system.h"
 
 QString FilePathSystem::GetPath(const QString &name)
 {

@@ -24,7 +24,6 @@
 #define BONE_H
 
 #include <stdint.h>
-#include <limits.h>
 
 #include <QVector>
 #include <QList>
@@ -138,24 +137,42 @@ private:
 private:
     /* Bone data */
 
-    // Save bone position
+    /**
+     * @brief positions_ Save bone position
+     */
     QVector<KeyPosition> positions_;
-    // Save bone rotation
+    /**
+     * @brief rotations_ Save bone rotation
+     */
     QVector<KeyRotation> rotations_;
-    // Save bone scale
+    /**
+     * @brief scales_ Save bone scale
+     */
     QVector<KeyScale> scales_;
-    // Save bone position number
+    /**
+     * @brief num_positions_ Save bone position number
+     */
     uint32_t num_positions_;
-    // Save bone rotation number
+    /**
+     * @brief num_rotations_ Save bone rotation number
+     */
     uint32_t num_rotations_;
-    // Save bone scale number
+    /**
+     * @brief num_scalings_ Save bone scale number
+     */
     uint32_t num_scalings_;
 
-    // Animation local transformation matrix
+    /**
+     * @brief local_transfrom_ Animation local transformation matrix
+     */
     geometricalias::mat4 local_transfrom_;
-    // Bone name
+    /**
+     * @brief name_ Bone name
+     */
     QString name_;
-    // Bone id
+    /**
+     * @brief id_ Bone id
+     */
     int id_;
 };
 

@@ -1,0 +1,315 @@
+/******************************************************************************
+ * Copyright 2023 QuiMir
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+
+ * http://www.apache.org/licenses/LICENSE-2.0
+
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * @file       settingwindow.cpp
+ * @version 0.1
+ *
+ * @author     QuiMir <2546670299@qq.com>
+ * @date       2023/11/20
+ * @history
+ *****************************************************************************/
+
+#include "src_include/setting_window/setting_window.h"
+#include "src_include/file_wirte_system.h"
+#include "src_include/file_path_system.h"
+#include "src_include/main_window.h"
+#include "src_include/file_read_system.h"
+
+SettingWindow::SettingWindow(const QRect &window_geometry, QWidget *parent)
+    : QWidget{parent},processing_button_click_(false)
+{
+    this->setWindowTitle("汽车仿真碰撞引擎");
+    this->setGeometry(window_geometry);
+
+    CreateWindowInterface();
+
+    for(SettingWindowButton* button:this->setting_left_buttons_)
+    {
+        connect(button,&SettingWindowButton::clicked,this,&SettingWindow::HandleButtonClicked);
+    }
+}
+
+void SettingWindow::CreateBasicButton(const QSize button_size)
+{
+    SettingWindowButton* basic_button=new SettingWindowButton(FilePathSystem::GetImagePath("setting_start.png")
+                                                                ,button_size*2,"基本设置",button_size*2,"setting basic");
+    FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Setting basic button width:"+QString::number(basic_button->width()));
+    if(nullptr==basic_button)
+    {
+        FileWirteSystem::OutMessage(FileWirteSystem::Debug,QString("Failed to create the %1 button").arg("setting basic"));
+    }
+
+    basic_button->move(button_size.width()/2,button_size.height()/2);
+    basic_button->setParent(this);
+    this->setting_left_buttons_.push_back(basic_button);
+}
+
+void SettingWindow::CreateEnvironmentButton(const QSize button_size)
+{
+    SettingWindowButton* enviroment_button=new SettingWindowButton(FilePathSystem::GetImagePath("setting_weath.png")
+                                                                     ,button_size*2,"环境设置",button_size*2,"setting weath");
+    if(nullptr==enviroment_button)
+    {
+        FileWirteSystem::OutMessage(FileWirteSystem::Debug,QString("Failed to create the %1 button").arg("setting weath"));
+    }
+
+    enviroment_button->move(button_size.width()/2,button_size.height()*6+button_size.height()/2);
+    enviroment_button->setParent(this);
+    this->setting_left_buttons_.push_back(enviroment_button);
+}
+
+void SettingWindow::CreateMoreButton(const QSize button_size)
+{
+    SettingWindowButton* more_button=new SettingWindowButton(FilePathSystem::GetImagePath("setting_more.png")
+                                                               ,button_size*2,"更多设置",button_size*2,"setting more");
+    if(nullptr==more_button)
+    {
+        FileWirteSystem::OutMessage(FileWirteSystem::Debug,QString("Failed to create the %1 button").arg("setting more"));
+    }
+
+    more_button->move(button_size.width()/2,button_size.height()*3+button_size.height()/2);
+    more_button->setParent(this);
+    this->setting_left_buttons_.push_back(more_button);
+}
+
+void SettingWindow::CreateWindowLayout()
+{
+    // Create a vertical layout style
+    QVBoxLayout* left_buttons_layout=new QVBoxLayout;
+    QVBoxLayout* right_buttons_layout=new QVBoxLayout;
+    if(nullptr==left_buttons_layout)
+    {
+        FileWirteSystem::OutMessage(FileWirteSystem::Warning,"No left buttons layout created");
+    }
+    if(nullptr==right_buttons_layout)
+    {
+        FileWirteSystem::OutMessage(FileWirteSystem::Warning,"No right buttons layout created");
+    }
+
+    // Put all the buttons in a vertical layout
+    for(SettingWindowButton* left_buttons:this->setting_left_buttons_)
+    {
+        left_buttons_layout->addWidget(left_buttons);
+    }
+
+    for(SettingWindowButton* right_buttons:this->setting_right_buttons_)
+    {
+        right_buttons_layout->addWidget(right_buttons);
+    }
+
+    // Create a horizontal layout style so that the child window is on the same line as the button
+    QHBoxLayout* main_layout=new QHBoxLayout(this);
+    if(nullptr==main_layout)
+    {
+        FileWirteSystem::OutMessage(FileWirteSystem::Warning,"No main layout created");
+    }
+
+    main_layout->addLayout(left_buttons_layout);
+    main_layout->addWidget(this->basic_setting_window_);
+    main_layout->addWidget(this->more_setting_window_);
+    main_layout->addWidget(this->enviroment_setting_window_);
+    main_layout->addLayout(right_buttons_layout);
+    // Set layout margins
+    main_layout->setContentsMargins(0, 0, 0, 0);
+
+    // Only the first subwindow is displayed when you enter
+    this->setLayout(main_layout);
+    this->basic_setting_window_->show();
+    this->more_setting_window_->close();
+    this->enviroment_setting_window_->close();
+
+    FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Left buttons layout width: "+QString::number(left_buttons_layout->geometry().width()));
+    FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Right buttons layout width: "+QString::number(right_buttons_layout->geometry().width()));
+    FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Main layout width: "+QString::number(main_layout->geometry().width()));
+}
+
+void SettingWindow::CreateChildWindow(const QSize button_size)
+{
+    QRect child_window_geometry=QRect(button_size.width() * 2,this->height(),
+                                        this->width() - (button_size.width()*2),
+                                        this->height() - button_size.height());
+
+    FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Setting child window width: "+QString::number(child_window_geometry.width()));
+
+    this->basic_setting_window_=new BasicSettingsWindow(child_window_geometry,this);
+    if(nullptr==this->basic_setting_window_)
+    {
+        FileWirteSystem::OutMessage(FileWirteSystem::Warning,"The basic setting window failed to create");
+    }
+    this->basic_setting_window_->setWindowTitle("基本设置");
+
+    this->more_setting_window_=new MoreSettingWindow(child_window_geometry,this);
+    if(nullptr==this->more_setting_window_)
+    {
+        FileWirteSystem::OutMessage(FileWirteSystem::Warning,"The more setting window failed to create");
+    }
+    this->more_setting_window_->setWindowTitle("更多设置");
+
+    this->enviroment_setting_window_=new EnvironmentSettingWindow(child_window_geometry,this);
+    if(nullptr==this->enviroment_setting_window_)
+    {
+        FileWirteSystem::OutMessage(FileWirteSystem::Warning,"The environment setting window failed to create");
+    }
+    this->enviroment_setting_window_->setWindowTitle("环境设置");
+}
+
+void SettingWindow::CreateWindowInterface()
+{
+    QSize button_size=GetButtonSize();
+    CreateBasicButton(button_size);
+    CreateMoreButton(button_size);
+    CreateEnvironmentButton(button_size);
+    CreateRetunButton(button_size);
+    CreateStartButton(button_size);
+    CreateChildWindow(button_size);
+    CreateWindowLayout();
+}
+
+QSize SettingWindow::GetButtonSize()
+{
+    FileWirteSystem::OutMessage(FileWirteSystem::Debug,QString("Setting window width: %1 height: %2")
+                                                            .arg(QString::number(this->width()),QString::number(this->height())));
+    const qint32 edge_distance_width=this->size().width()/100*10;
+    const qint32 edge_distance_height=this->size().height()/100*10;
+    FileWirteSystem::OutMessage(FileWirteSystem::Debug,QString("Button edge distance width: %1 height: %2")
+                                                            .arg(QString::number(edge_distance_width),QString::number(edge_distance_height)));
+    QSize button_size(edge_distance_width,edge_distance_height);
+    return button_size;
+}
+
+void SettingWindow::CreateRetunButton(const QSize button_size)
+{
+    SettingWindowButton* return_button=new SettingWindowButton(FilePathSystem::GetImagePath("setting_return.png")
+                                                                 ,button_size*2,"返回到上一个页面",button_size*2,"setting return");
+    if(nullptr==return_button)
+    {
+        FileWirteSystem::OutMessage(FileWirteSystem::Debug,QString("Failed to create the %1 button").arg("setting return"));
+    }
+
+    return_button->move(this->width()-button_size.width()/2,button_size.height()/2);
+    return_button->setParent(this);
+    connect(return_button,&QPushButton::clicked,this,&SettingWindow::ReturnToMainWindow);
+    this->setting_right_buttons_.push_back(return_button);
+}
+
+void SettingWindow::CreateStartButton(const QSize button_size)
+{
+    SettingWindowButton* start_button=new SettingWindowButton(FilePathSystem::GetImagePath("setting_start_up.png")
+                                                                ,button_size*2,"开始",button_size*2,"setting start",FilePathSystem::GetImagePath("setting_start_down.png"));
+    if(nullptr==start_button)
+    {
+        FileWirteSystem::OutMessage(FileWirteSystem::Debug,QString("Failed to create the %1 button").arg("setting start"));
+    }
+
+    start_button->move(this->width()-button_size.width()/2,button_size.height()*6+button_size.height()/2);
+    start_button->setParent(this);
+    this->setting_right_buttons_.push_back(start_button);
+}
+
+SettingWindow::~SettingWindow()
+{
+    delete this->basic_setting_window_;
+    delete this->enviroment_setting_window_;
+    delete this->more_setting_window_;
+    for(SettingWindowButton* button:setting_left_buttons_)
+    {
+        delete button;
+    }
+
+    for(SettingWindowButton* button:setting_right_buttons_)
+    {
+        delete button;
+    }
+}
+
+void SettingWindow::closeEvent(QCloseEvent *event)
+{
+    FileWirteSystem::OutMessage(FileWirteSystem::Debug,"The user closes the window using the close event in the upper-right corner");
+    FileWirteSystem::EndWirteLine();
+}
+
+void SettingWindow::paintEvent(QPaintEvent *event)
+{
+    QPixmap background_image(FileReadSystem::ReadImageFile(FilePathSystem::GetImagePath("background_picture.png")));
+
+    if(background_image.isNull())
+    {
+        FileWirteSystem::OutMessage(FileWirteSystem::Debug,"The background image fails to be read. Check the cause of the failure");
+    }
+
+    QBrush brush(background_image);
+    QPainter painter(this);
+    painter.fillRect(this->rect(),brush);
+
+    QWidget::paintEvent(event);
+}
+
+void SettingWindow::HandleButtonClicked()
+{
+    // Ensure that the same click event is not triggered twice
+    if(this->processing_button_click_)
+        return;
+
+    // Returns a pointer to the object that sent the signal (in this case SettingWindowButton)
+    SettingWindowButton* clicked_button=qobject_cast<SettingWindowButton*>(sender());
+    if(nullptr==clicked_button)
+        return;
+
+    // Handle click event wait
+    this->processing_button_click_=true;
+
+    // Close the current subwindow
+    if(this->basic_setting_window_->isVisible())
+    {
+        this->basic_setting_window_->close();
+    }
+    else if(this->more_setting_window_->isVisible())
+    {
+        this->more_setting_window_->close();
+    }
+    else if(this->enviroment_setting_window_->isVisible())
+    {
+        this->enviroment_setting_window_->close();
+    }
+
+    // show the current subwindow
+    if(clicked_button==this->setting_left_buttons_[0])
+    {
+        this->basic_setting_window_->show();
+    }
+    else if(clicked_button==this->setting_left_buttons_[1])
+    {
+        this->more_setting_window_->show();
+    }
+    else if(clicked_button==this->setting_left_buttons_[2])
+    {
+        this->enviroment_setting_window_->show();
+    }
+
+    // The click event has been processed
+    this->processing_button_click_=false;
+}
+
+void SettingWindow::ReturnToMainWindow()
+{
+    MainWindow* main_window=new MainWindow();
+    if(main_window)
+    {
+        QTimer::singleShot(200,this,[=](){
+        main_window->setGeometry(this->geometry());
+        main_window->show();
+        this->close();
+        });
+    }
+}

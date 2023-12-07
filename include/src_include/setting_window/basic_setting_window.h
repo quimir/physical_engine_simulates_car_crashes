@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @file       moresettingwindow.h
+ * @file       basicsettingswindow.h
  * @version 0.1
  *
  * @author     QuiMir <2546670299@qq.com>
@@ -20,22 +20,24 @@
  * @history
  *****************************************************************************/
 
-#ifndef MORESETTINGWINDOW_H
-#define MORESETTINGWINDOW_H
+#ifndef BASIC_SETTING_WINDOW_H
+#define BASIC_SETTING_WINDOW_H
 
 #include <QWidget>
-#include <QVBoxLayout>
 #include <QScrollArea>
+#include <QVBoxLayout>
+#include <QString>
 #include <QLabel>
+#include <QRect>
 
-class MoreSettingWindow : public QWidget
+class BasicSettingsWindow : public QWidget
 {
     Q_OBJECT
 public:
-    explicit MoreSettingWindow(QRect window_geometry,QWidget *parent = nullptr);
+    explicit BasicSettingsWindow(QRect window_geometry,QWidget *parent = nullptr);
 
 signals:
 
 };
 
-#endif // MORESETTINGWINDOW_H
+#endif // BASIC_SETTING_WINDOW_H

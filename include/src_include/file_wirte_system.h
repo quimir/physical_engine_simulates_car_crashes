@@ -20,8 +20,8 @@
  * @history
  *****************************************************************************/
 
-#ifndef FILEWIRTESYSTEM_H
-#define FILEWIRTESYSTEM_H
+#ifndef FILE_WIRTE_SYSTEM_H
+#define FILE_WIRTE_SYSTEM_H
 
 #include <QCoreApplication>
 #include <QDebug>
@@ -113,4 +113,4 @@ private:
 
 };
 
-#endif // FILEWIRTESYSTEM_H
+#endif // FILE_WIRTE_SYSTEM_H

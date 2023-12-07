@@ -20,7 +20,7 @@
  * @history
  *****************************************************************************/
 
-#include "src_include/firstpersoncamera.h"
+#include "src_include/first_person_camera.h"
 
 geometricalias::mat4 FirstPersonCamera::GetViewMatrix() const
 {

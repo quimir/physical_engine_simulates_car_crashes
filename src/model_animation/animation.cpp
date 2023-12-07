@@ -22,7 +22,7 @@
 
 #include "src_include/model_animation/animation.h"
 #include "src_include/assimp_qt_coversion.h"
-#include "src_include/filewirtesystem.h"
+#include "src_include/file_wirte_system.h"
 
 Animation::Animation(const QString &animation_path, Model *model)
 {

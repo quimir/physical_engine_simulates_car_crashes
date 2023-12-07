@@ -20,10 +20,13 @@
  * @history
  *****************************************************************************/
 
-#include "src_include/setting_window/settingwindowbutton.h"
-#include "src_include/filewirtesystem.h"
+#include "src_include/setting_window/setting_window_button.h"
+#include "src_include/file_wirte_system.h"
+#include "src_include/file_read_system.h"
 
-SettingWindowButton::SettingWindowButton(const QString icon_path, const QSize original_size, const QString button_text, const QSize icon_size)
+SettingWindowButton::SettingWindowButton(const QString icon_path, const QSize original_size
+                                         , const QString button_text, const QSize icon_size, const QString specify_the_display_text, const QString press_icon_path)
+    :press_icon_path_(press_icon_path),specify_the_display_text_(specify_the_display_text)
 {
     if(original_size.isNull()||button_text.isNull())
     {
@@ -34,19 +37,10 @@ SettingWindowButton::SettingWindowButton(const QString icon_path, const QSize or
     this->setText("");
     this->button_text_=button_text;
 
+    FileReadSystem::ReadImageFile(icon_path);
     this->icon_path_=icon_path;
     QPixmap pix(this->icon_path_);
-    if(pix.isNull())
-    {
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug, QString("%1 button image loading error image path: %2")
-                                                                .arg(this->button_text_, icon_path_));
-    }
-
     this->setIcon(pix);
-    if(icon_size.isNull())
-    {
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug,QString("%1 button icon size is null").arg(this->button_text_));
-    }
     this->setIconSize(icon_size);
     this->resize(this->original_size_);
 
@@ -90,6 +84,36 @@ bool SettingWindowButton::eventFilter(QObject *obj, QEvent *event)
     }
 
     return false;
+}
+
+void SettingWindowButton::mousePressEvent(QMouseEvent *event)
+{
+    if(!this->press_icon_path_.isNull())
+    {
+        if(this->specify_the_display_text_.compare("setting start",Qt::CaseInsensitive))
+        {
+            FileReadSystem::ReadImageFile(this->press_icon_path_);
+            QPixmap pix(this->press_icon_path_);
+            this->setIcon(pix);
+            this->setIconSize(this->original_size_);
+        }
+    }
+    QPushButton::mousePressEvent(event);
+}
+
+void SettingWindowButton::mouseReleaseEvent(QMouseEvent *event)
+{
+    if(!this->icon_path_.isNull())
+    {
+        if(this->specify_the_display_text_.compare("setting start",Qt::CaseInsensitive))
+        {
+            FileReadSystem::ReadImageFile(this->icon_path_);
+            QPixmap pix(this->icon_path_);
+            this->setIcon(pix);
+            this->setIconSize(this->original_size_);
+        }
+    }
+    QPushButton::mouseReleaseEvent(event);
 }
 
 void SettingWindowButton::ShowPopupWidget()

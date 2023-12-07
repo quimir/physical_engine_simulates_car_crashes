@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @file       basicsettingswindow.cpp
+ * @file       environmentsettingwindow.cpp
  * @version 0.1
  *
  * @author     QuiMir <2546670299@qq.com>
@@ -20,20 +20,19 @@
  * @history
  *****************************************************************************/
 
-#include "src_include/setting_window/basicsettingswindow.h"
-#include "src_include/filewirtesystem.h"
+#include "src_include/setting_window/environment_setting_window.h"
+#include "src_include/file_wirte_system.h"
 
-BasicSettingsWindow::BasicSettingsWindow(QRect window_geometry,QWidget *parent)
-    : QWidget{parent}
+EnvironmentSettingWindow::EnvironmentSettingWindow(QRect window_geometry, QWidget *parent)
 {
     this->setGeometry(window_geometry);
     QVBoxLayout* layout=new QVBoxLayout(this);
-    FileWirteSystem::OutMessage(FileWirteSystem::Debug,QString("Basic setting window width: %1,height: %2")
+    FileWirteSystem::OutMessage(FileWirteSystem::Debug,QString("environment setting window width: %1,height: %2")
                                 .arg(QString::number(this->width()),QString::number(this->height())));
 
     for(quint32 i=0;i<20;i++)
     {
-        QLabel* label=new QLabel(QString("基础测试: %1").arg(QString::number(i+1)));
+        QLabel* label=new QLabel(QString("环境测试: %1").arg(QString::number(i+1)));
         layout->addWidget(label);
     }
 

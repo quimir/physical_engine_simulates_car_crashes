@@ -27,10 +27,14 @@
 
 struct BoneInfo
 {
-    //id is index in finalBoneMatrices
+    /**
+     * @brief id Is index in finalBoneMatrices
+     */
     int id;
 
-    //offset matrix transforms vertex from model space to bone space
+    /**
+     * @brief offset Matrix transforms vertex from model space to bone space
+     */
     geometricalias::mat4 offset;
 };
 

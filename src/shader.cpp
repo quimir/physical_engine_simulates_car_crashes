@@ -21,7 +21,7 @@
  *****************************************************************************/
 
 #include "src_include/shader.h"
-#include "src_include/filewirtesystem.h"
+#include "src_include/file_wirte_system.h"
 
 Shader::Shader(const QString &vertex_path, const QString &fragment_path, const QString &geometry_path, const QString &tessellation_control_path, const QString &tessellation_evaluation_path, const QString &compute_path)
 {

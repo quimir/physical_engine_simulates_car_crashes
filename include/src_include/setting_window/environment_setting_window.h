@@ -12,27 +12,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @file       filereadsystem.h
+ * @file       environmentsettingwindow.h
  * @version 0.1
  *
- * @author     QuiMir<2546670299@qq.com>
- * @date       2023/11/20
+ * @author     QuiMir <2546670299@qq.com>
+ * @date       2023/11/21
  * @history
  *****************************************************************************/
 
-#ifndef FILEREADSYSTEM_H
-#define FILEREADSYSTEM_H
+#ifndef ENVIRONMENT_SETTING_WINDOW_H
+#define ENVIRONMENT_SETTING_WINDOW_H
 
-#include <QString>
-#include <QFile>
-#include <QTextStream>
+#include <QWidget>
+#include <QVBoxLayout>
+#include <QLabel>
+#include <QScrollArea>
 
-class FileReadSystem
+class EnvironmentSettingWindow : public QWidget
 {
+    Q_OBJECT
 public:
-    FileReadSystem();
+    explicit EnvironmentSettingWindow(QRect window_geometry,QWidget *parent = nullptr);
 
-    static QString LoadStylesFromFile(const QString&file_name);
+signals:
+
 };
 
-#endif // FILEREADSYSTEM_H
+#endif // ENVIRONMENT_SETTING_WINDOW_H

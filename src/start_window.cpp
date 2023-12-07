@@ -20,8 +20,8 @@
  * @history
  *****************************************************************************/
 
-#include "src_include/startwindow.h"
-#include "src_include/filewirtesystem.h"
+#include "src_include/start_window.h"
+#include "src_include/file_wirte_system.h"
 
 StartWindow::StartWindow(QRect screen_size, Shader *shader):
     screen_size_(screen_size),shader_(shader),vao_(0),vbo_(0),ebo_(0)

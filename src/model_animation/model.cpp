@@ -22,10 +22,10 @@
 
 #include "src_include/model_animation/model.h"
 #include "src_include/assimp_qt_coversion.h"
-#include "src_include/filewirtesystem.h"
+#include "src_include/file_wirte_system.h"
 #include <assimp/types.h>
 
-Model::Model(const QString& path, bool animation_switch, bool gamma) :animation_switch_(animation_switch), gamma_correction_(gamma)
+Model::Model(const QString& path, bool animation_switch, bool gamma) :gamma_correction_(gamma), animation_switch_(animation_switch)
 {
     LoadModel(path);
 }
@@ -270,7 +270,7 @@ QVector<modelattribute::Texture> Model::LoadMaterialTextures(aiMaterial* mat, ai
 
 void Model::SetVertexBoneDataToDafault(modelattribute::Vertex& vertex)
 {
-    for (uint32_t i = 0; i < modelattribute::MAX_BONE_INFLUENCE; i++)
+    for (uint32_t i = 0; i < modelattribute::KMaxBoneInfluence; i++)
     {
         vertex.bone_ids[i] = -1;
         vertex.weights[i] = 0.0f;
@@ -279,7 +279,7 @@ void Model::SetVertexBoneDataToDafault(modelattribute::Vertex& vertex)
 
 void Model::SetVertexBoneData(modelattribute::Vertex& vertex, int bone_id, float weight)
 {
-    for (uint32_t i = 0; i < modelattribute::MAX_BONE_INFLUENCE; i++)
+    for (uint32_t i = 0; i < modelattribute::KMaxBoneInfluence; i++)
     {
         if (vertex.bone_ids[i] < 0)
         {

@@ -23,8 +23,6 @@
 #ifndef MODELATTRIBUTE_H
 #define MODELATTRIBUTE_H
 
-#include <cstdlib>
-
 #include <QString>
 
 #include "src_include/geometricalias.h"
@@ -32,7 +30,7 @@
 namespace modelattribute
 {
 
-constexpr unsigned int MAX_BONE_INFLUENCE=4;
+constexpr unsigned int KMaxBoneInfluence=4;
 
 struct Vertex
 {
@@ -47,9 +45,9 @@ struct Vertex
     // bitangent
     geometricalias::vec3 bitangent;
     // bone indexes which will influence this vertex
-    int32_t bone_ids[MAX_BONE_INFLUENCE];
+    int32_t bone_ids[KMaxBoneInfluence];
     // weights frome each bone
-    float_t weights[MAX_BONE_INFLUENCE];
+    float_t weights[KMaxBoneInfluence];
 };
 
 struct Texture

@@ -104,9 +104,9 @@ void Mesh::SetupMesh()
     glVertexAttribPointer(4,3,GL_FLOAT,GL_FALSE,sizeof(modelattribute::Vertex),(void*)offsetof(modelattribute::Vertex,bitangent));
     // vertex bone ids
     glEnableVertexAttribArray(5);
-    glVertexAttribIPointer(5,modelattribute::MAX_BONE_INFLUENCE,GL_INT,sizeof(modelattribute::Vertex),(void*)offsetof(modelattribute::Vertex,bone_ids));
+    glVertexAttribIPointer(5,modelattribute::KMaxBoneInfluence,GL_INT,sizeof(modelattribute::Vertex),(void*)offsetof(modelattribute::Vertex,bone_ids));
     // vertex bone weights
     glEnableVertexAttribArray(6);
-    glVertexAttribPointer(6,modelattribute::MAX_BONE_INFLUENCE,GL_FLOAT,GL_FALSE,sizeof(modelattribute::Vertex),(void*)offsetof(modelattribute::Vertex,weights));
+    glVertexAttribPointer(6,modelattribute::KMaxBoneInfluence,GL_FLOAT,GL_FALSE,sizeof(modelattribute::Vertex),(void*)offsetof(modelattribute::Vertex,weights));
     glBindVertexArray(0);
 }

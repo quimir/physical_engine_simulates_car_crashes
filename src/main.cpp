@@ -25,7 +25,7 @@
 #include <QTranslator>
 
 #include "./src_include/mainwindow.h"
-#include "src_include/filewirtesystem.h"
+#include "src_include/file_wirte_system.h"
 
 int main(int argc, char *argv[])
 {

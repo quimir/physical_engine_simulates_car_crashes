@@ -12,11 +12,16 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS ON)
 
+# Rename variable
+set(QT_TARGET_NAME physical_engine_simulates_car_crashes)
+set(SHADER_FILE_DIRECTORY "${CMAKE_SOURCE_DIR}/src/shader")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
+
 # Check the size of void pointer
 if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-    message(STATUS "64-bit operating system detected.")
+      message(STATUS "64-bit operating system detected.")
 else()
-    message(FATAL_ERROR "This project requires a 64-bit operating system. Exiting...")
+      message(FATAL_ERROR "This project requires a 64-bit operating system. Exiting...")
 endif()
 
 # Define supported build types
@@ -25,32 +30,24 @@ if(NOT CMAKE_BUILD_TYPE)
       set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Choose the type of build, options are: Debug Release" FORCE)
 endif()
 
-# Add a flag bit to store the target name
-set(QT_TARGET_NAME physical_engine_simulates_car_crashes)
-
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools OpenGL OpenGLWidgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools OpenGL OpenGLWidgets)
-
-set(TS_FILES physical_engine_simulates_car_crashes_zh_CN.ts)
-
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
-
 # The project is built in the bin directory
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
-
 set(TARGET_DLLS_DIR ${CMAKE_SOURCE_DIR}/dlls)
 
+# Add header files and link library directories
 include_directories(${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/include/PhysX)
-
 link_directories(${CMAKE_SOURCE_DIR}/lib)
 
-IF(CMAKE_BUILD_TYPE STREQUAL "Debug")
+IF(MSVC AND CMAKE_BUILD_TYPE STREQUAL "Debug")
+# Add debug parameters
 add_definitions(-D_DEBUG)
 else()
       add_definitions(-DNDEBUG)
 endif()
 
 # Find the required packages
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools OpenGL OpenGLWidgets MultimediaWidgets)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools OpenGL OpenGLWidgets MultimediaWidgets)
 IF(MSVC)# There is currently no way to introduce PhysX with the MinGW compiler
 find_package(PHYSX REQUIRED)
 message(STATUS "Found PHYSX in ${PHYSX_INCLUDE_DIR}")
@@ -61,6 +58,7 @@ message(STATUS "GLM included at ${GLM_INCLUDE_DIR}")
 find_package(ASSIMP REQUIRED)
 message(STATUS "Found ASSIMP in ${ASSIMP_INCLUDE_DIR}")
 
+# Add and integrate link parameters
 IF(MSVC)
 set(LIBS assimp PhysX_64 PhysXCommon_64 PhysXCooking_64 PhysXExtensions_static_64 PhysXFoundation_64 PhysXPvdSDK_static_64)
 ELSEIF(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
@@ -71,48 +69,43 @@ set(LIBS assimp)
 ENDIF()
 ENDIF()
 
-set(SHADER_FILES
-      src/shader/text.vert
-      src/shader/text.frag)
+set(TS_FILES physical_engine_simulates_car_crashes_zh_CN.ts)
+file(GLOB QTUI_FILES "${CMAKE_SOURCE_DIR}/src/*.ui")
+file(GLOB STYLE_FILES "${CMAKE_SOURCE_DIR}/src/style/*.qml")
+file(GLOB SHADER_FILES
+      "${SHADER_FILE_DIRECTORY}/*.vert" # Vertex shader type file extensions
+      "${SHADER_FILE_DIRECTORY}/*.frag" # Fragment shader type file extensions
+      "${SHADER_FILE_DIRECTORY}/*.geom" # Geometry shader type file extensions
+      "${SHADER_FILE_DIRECTORY}/*.mesh" # Mesh shader type file extensions
+      "${SHADER_FILE_DIRECTORY}/*.tesc" # Tessellation control shader type file extensions
+      "${SHADER_FILE_DIRECTORY}/*.test")# Tessellation evaluation shader type file extension
+file(GLOB SOURCE_FILES
+      "${CMAKE_SOURCE_DIR}/include/src_include/*.h"
+      "${CMAKE_SOURCE_DIR}/src/*.cpp"
+      "${CMAKE_SOURCE_DIR}/include/src_include/model_animation/*.h"
+      "${CMAKE_SOURCE_DIR}/include/src_include/setting_window/*.h"
+      "${CMAKE_SOURCE_DIR}/src/model_animation/*.cpp"
+      "${CMAKE_SOURCE_DIR}/src/setting_window/*.cpp")
 
 set(PROJECT_SOURCES
-      src/main.cpp
-      src/mainwindow.cpp
-      include/src_include/mainwindow.h
-      src/mainwindow.ui
-      ${TS_FILES}
-      ${SHADER_FILES}
+      ${SOURCE_FILES}
 )
 
 # Add shader to separate Shader Files
 source_group("Shader Files" FILES ${SHADER_FILES})
+source_group("TS Files" FILES ${TS_FILES})
+source_group("QTUI Files" FILES ${QTUI_FILES})
+source_group("Style Files" FILES ${STYLE_FILES})
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-      qt_add_executable(${QT_TARGET_NAME}
-            MANUAL_FINALIZATION
+      qt_add_executable(
+            ${QT_TARGET_NAME}
             ${PROJECT_SOURCES}
-            include/src_include/mainentrybutton.h src/mainentrybutton.cpp
-            include/src_include/setting_window/settingwindow.h src/setting_window/settingwindow.cpp
-            include/src_include/filewirtesystem.h src/filewirtesystem.cpp
-            include/src_include/filepathsystem.h src/filepathsystem.cpp
-            include/src_include/filereadsystem.h src/filereadsystem.cpp
-            include/src_include/shader.h src/shader.cpp
-            include/src_include/geometricalias.h
-            include/src_include/firstpersoncamera.h src/firstpersoncamera.cpp
-            include/src_include/model_animation/mesh.h src/model_animation/mesh.cpp
-            include/src_include/model_animation/modelattribute.h
-            include/src_include/model_animation/model.h src/model_animation/model.cpp
-            include/src_include/assimp_qt_coversion.h
-            include/src_include/startwindow.h src/startwindow.cpp
-            include/src_include/model_animation/animdata.h
-            include/src_include/model_animation/bone.h src/model_animation/bone.cpp
-            include/src_include/model_animation/animator.h src/model_animation/animator.cpp
-            include/src_include/model_animation/animation.h src/model_animation/animation.cpp
-            include/src_include/physxtext.h src/physxtext.cpp
-            include/src_include/setting_window/settingwindowbutton.h src/setting_window/settingwindowbutton.cpp
-            include/src_include/setting_window/basicsettingswindow.h src/setting_window/basicsettingswindow.cpp
-            include/src_include/setting_window/moresettingwindow.h src/setting_window/moresettingwindow.cpp
-            include/src_include/setting_window/environmentsettingwindow.h src/setting_window/environmentsettingwindow.cpp
+            ${STYLE_FILES}
+            ${QTUI_FILES}
+            ${TS_FILES}
+            ${SHADER_FILES}
+            MANUAL_FINALIZATION
       )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET physical_engine_simulates_car_crashes APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -136,13 +129,20 @@ endif()
 qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 endif()
 
-# Copy the dll to the bin directory
-add_custom_target(CopyDlls
-      COMMENT "Copying DLLs to ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}"
-      COMMAND ${CMAKE_COMMAND} -E copy_directory
-      ${TARGET_DLLS_DIR}
-      $<TARGET_FILE_DIR:physical_engine_simulates_car_crashes>
-      COMMENT "Copying DLLs to $<TARGET_FILE_DIR:physical_engine_simulates_car_crashes>")
+# Copy the dll to the bin directory\
+# Lists the DLL files in the directory
+file(GLOB DLL_FILES ${TARGET_DLLS_DIR}/*.dll)
+# Set a flag file to check if it has been copied
+set(COPY_DONE_FLAG ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/dlls_copied.flag)
+# If the copy flag file does not exist, copy it
+add_custom_command(
+      OUTPUT ${COPY_DONE_FLAG}
+      COMMAND ${CMAKE_COMMAND} -E copy_directory ${TARGET_DLLS_DIR} $<TARGET_FILE_DIR:physical_engine_simulates_car_crashes>
+      COMMAND ${CMAKE_COMMAND} -E touch ${COPY_DONE_FLAG}
+      COMMENT "Copying DLLs to $<TARGET_FILE_DIR:physical_engine_simulates_car_crashes>"
+)
+# Setting custom targets depends on the copy command
+add_custom_target(CopyDlls DEPENDS ${COPY_DONE_FLAG})
 add_dependencies(${QT_TARGET_NAME} CopyDlls)
 
 configure_file(configuration/root_directory.h.in configuration/root_directory.h)
@@ -152,6 +152,7 @@ target_link_libraries(${QT_TARGET_NAME} PRIVATE
       Qt${QT_VERSION_MAJOR}::Widgets
       Qt${QT_VERSION_MAJOR}::OpenGL
       Qt${QT_VERSION_MAJOR}::OpenGLWidgets
+      Qt${QT_VERSION_MAJOR}::MultimediaWidgets
       ${LIBS}
 )
 

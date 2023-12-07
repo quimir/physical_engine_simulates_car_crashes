@@ -20,8 +20,8 @@
  * @history
  *****************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef MAIN_WINDOW_H
+#define MAIN_WINDOW_H
 
 #include <QMainWindow>
 #include <QDebug>
@@ -30,6 +30,11 @@
 #include <QEasingCurve>
 #include <QTimer>
 #include <QOpenGLWindow>
+#include <QPaintEvent>
+#include <QPixmap>
+#include <QPalette>
+
+#include "src_include/main_entry_button.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -43,30 +48,31 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    /**
-     * @brief PlaceStartButton This function is used to place the start button on the UI
-     */
-    void PlaceStartButton();
+    void CreateWindowButton();
 
     /**
-     * @brief PlaceEndButton This function is used to place the end button on the UI
+     * @brief GetScreenWindow Gets the user's screen to set the window size
      */
-    void PlaceEndButton();
-
-    /**
-     * @brief PlaceSettingButton This function is used to place the setting button on the UI
-     */
-    void PlaceSettingButton();
     void GetScreenWindow();
+
+
     int GetScreenWidth()const;
     int GetScreenHeight()const;
 
 protected:
     void closeEvent(QCloseEvent* event)override;
+    void paintEvent(QPaintEvent* event)override;
 
 private:
     void SetUIWindow();
+
+private slots:
+    void HandleButtonClicked();
+
+private:
     Ui::MainWindow *ui;
+
+    QVector<MainEntryButton*> buttons_;
 
     /**
      * @brief screen_width_ user screen width
@@ -78,4 +84,4 @@ private:
      */
     int screen_height_;
 };
-#endif // MAINWINDOW_H
+#endif // MAIN_WINDOW_H

@@ -12,32 +12,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @file       basicsettingswindow.h
+ * @file       startwindow.h
  * @version 0.1
  *
- * @author     QuiMir <2546670299@qq.com>
- * @date       2023/11/21
+ * @author     QuiMir<2546670299@qq.com>
+ * @date       2023/11/20
  * @history
  *****************************************************************************/
 
-#ifndef BASICSETTINGSWINDOW_H
-#define BASICSETTINGSWINDOW_H
+#ifndef START_WINDOW_H
+#define START_WINDOW_H
 
-#include <QWidget>
-#include <QScrollArea>
-#include <QVBoxLayout>
-#include <QString>
-#include <QLabel>
-#include <QRect>
+#include <QOpenGLWindow>
+#include <QOpenGLFunctions_4_5_Core>
+#include <QTimer>
+#include "src_include/shader.h"
 
-class BasicSettingsWindow : public QWidget
+class StartWindow : public QOpenGLWindow,protected QOpenGLFunctions_3_3_Core
 {
-    Q_OBJECT
 public:
-    explicit BasicSettingsWindow(QRect window_geometry,QWidget *parent = nullptr);
+    StartWindow(QRect screen_size, Shader *shader);
 
-signals:
+    void initializeGL();
 
+    void resizeGL(int w,int h);
+
+    void paintGL();
+
+private:
+    QRect screen_size_;
+    Shader* shader_;
+    GLuint vao_,vbo_,ebo_;
 };
 
-#endif // BASICSETTINGSWINDOW_H
+#endif // START_WINDOW_H

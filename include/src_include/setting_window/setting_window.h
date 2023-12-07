@@ -20,17 +20,17 @@
  * @history
  *****************************************************************************/
 
-#ifndef SETTINGWINDOW_H
-#define SETTINGWINDOW_H
+#ifndef SETTING_WINDOW_H
+#define SETTING_WINDOW_H
 
 #include <QWidget>
 #include <QPushButton>
 #include <QVBoxLayout>
 
-#include "src_include/setting_window/basicsettingswindow.h"
-#include "src_include/setting_window/moresettingwindow.h"
-#include "src_include/setting_window/environmentsettingwindow.h"
-#include "src_include/setting_window/settingwindowbutton.h"
+#include "src_include/setting_window/basic_setting_window.h"
+#include "src_include/setting_window/more_setting_window.h"
+#include "src_include/setting_window/environment_setting_window.h"
+#include "src_include/setting_window/setting_window_button.h"
 
 class SettingWindow : public QWidget
 {
@@ -38,26 +38,29 @@ class SettingWindow : public QWidget
 public:
     explicit SettingWindow(const QRect& window_geometry,QWidget *parent = nullptr);
 
-    void SetBasicButton(const QSize button_size);
+    void CreateBasicButton(const QSize button_size);
 
-    void SetEnvironmentButton(const QSize button_size);
+    void CreateEnvironmentButton(const QSize button_size);
 
-    void SetMoreButton(const QSize button_size);
+    void CreateMoreButton(const QSize button_size);
 
-    void SetWindowLayout();
+    void CreateWindowLayout();
 
-    void SetChildWindow(const QSize button_size);
+    void CreateChildWindow(const QSize button_size);
 
-    void SetWindow();
+    void CreateWindowInterface();
 
     QSize GetButtonSize();
 
-    QPushButton* SetRetunButton();
+    void CreateRetunButton(const QSize button_size);
 
-    QPushButton* SetStartButton();
+    void CreateStartButton(const QSize button_size);
+
+    ~SettingWindow();
 
 protected:
     void closeEvent(QCloseEvent* event)override;
+    void paintEvent(QPaintEvent* event)override;
 
 private:
     bool processing_button_click_;
@@ -65,7 +68,8 @@ private:
     BasicSettingsWindow* basic_setting_window_;
     MoreSettingWindow* more_setting_window_;
     EnvironmentSettingWindow* enviroment_setting_window_;
-    QVector<SettingWindowButton*> setting_buttons_;
+    QVector<SettingWindowButton*> setting_left_buttons_;
+    QVector<SettingWindowButton*> setting_right_buttons_;
 
 public slots:
     void HandleButtonClicked();
@@ -74,4 +78,4 @@ private slots:
     void ReturnToMainWindow();
 };
 
-#endif // SETTINGWINDOW_H
+#endif // SETTING_WINDOW_H

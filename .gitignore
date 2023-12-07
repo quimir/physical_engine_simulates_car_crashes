@@ -37,6 +37,9 @@ Thumbs.db
 /dlls/PhysXGpu_64.dll
 /dlls/libassimp-5d.dll
 *.txt.user
+/data_and_log/log_file.log
+/CMakeLists.text.user
+*.log
 
 # qtcreator generated files
 *.pro.user*

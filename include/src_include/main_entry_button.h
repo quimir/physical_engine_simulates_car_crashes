@@ -20,8 +20,8 @@
  * @history
  *****************************************************************************/
 
-#ifndef MAINENTRYBUTTON_H
-#define MAINENTRYBUTTON_H
+#ifndef MAIN_ENTRY_BUTTON_H
+#define MAIN_ENTRY_BUTTON_H
 
 #include <QPushButton>
 #include <QPropertyAnimation>
@@ -34,6 +34,7 @@
 
 class MainEntryButton : public QPushButton
 {
+    Q_OBJECT
 public:
     /**
      * @brief MainEntryButton Set the button length and width are enlarged by 10% after the mouse enters, and return to the original length and width after the exit
@@ -100,4 +101,4 @@ public slots:
     void OnAnimationFinished();
 };
 
-#endif // MAINENTRYBUTTON_H
+#endif // MAIN_ENTRY_BUTTON_H

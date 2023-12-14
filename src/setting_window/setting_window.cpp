@@ -12,10 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @file       settingwindow.cpp
+ * @file       setting_window.h
  * @version 0.1
  *
- * @author     QuiMir <2546670299@qq.com>
+ * @author     QuiMir<2546670299@qq.com>
  * @date       2023/11/20
  * @history
  *****************************************************************************/

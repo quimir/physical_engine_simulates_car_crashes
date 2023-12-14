@@ -12,16 +12,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @file       mainwindow.cpp
+ * @file       main_window.h
  * @version 0.1
  *
- * @author     QuiMir <2546670299@qq.com>
+ * @author     QuiMir<2546670299@qq.com>
  * @date       2023/11/20
  * @history
  *****************************************************************************/
 
 #include "src_include/main_window.h"
-#include "./ui_mainwindow.h"
+#include "qapplication.h"
 #include "src_include/main_entry_button.h"
 #include "src_include/setting_window/setting_window.h"
 #include "src_include/file_wirte_system.h"
@@ -30,9 +30,7 @@
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
 {
-    ui->setupUi(this);
     this->setWindowTitle("汽车仿真碰撞引擎");
     this->buttons_.resize(3);
     GetScreenWindow();
@@ -46,7 +44,7 @@ MainWindow::MainWindow(QWidget* parent)
 
 void MainWindow::GetScreenWindow()
 {
-    QScreen* user_screen = QGuiApplication::primaryScreen();
+    QScreen* user_screen = QApplication::primaryScreen();
     QRect get_user_screen = user_screen->availableGeometry();
     this->screen_width_ = get_user_screen.width();
     this->screen_height_ = get_user_screen.height();
@@ -110,7 +108,6 @@ void MainWindow::HandleButtonClicked()
         FileWirteSystem::OutMessage(FileWirteSystem::Debug, "clicked setting_button");
 
         QTimer::singleShot(200, this, [=]() {
-            //setting_window->setGeometry(this->geometry());
             setting_window->show();
             this->close();
         });
@@ -127,7 +124,6 @@ MainWindow::~MainWindow()
 {
     for(MainEntryButton* button:this->buttons_)
         delete button;
-    delete ui;
 }
 
 void MainWindow::CreateWindowButton()

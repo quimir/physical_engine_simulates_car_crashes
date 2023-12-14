@@ -20,8 +20,8 @@
  * @history
  *****************************************************************************/
 
-#ifndef MODEL_H
-#define MODEL_H
+#ifndef MODEL_ANIMATION_MODEL_H
+#define MODEL_ANIMATION_MODEL_H
 
 #include <cstdint>
 
@@ -82,4 +82,4 @@ private:
     uint32_t bone_counter_;
 };
 
-#endif // MODEL_H
+#endif // MODEL_ANIMATION_MODEL_H

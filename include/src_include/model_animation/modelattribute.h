@@ -20,8 +20,8 @@
  * @history
  *****************************************************************************/
 
-#ifndef MODELATTRIBUTE_H
-#define MODELATTRIBUTE_H
+#ifndef MODEL_ANIMATION_MODELATTRIBUTE_H
+#define MODEL_ANIMATION_MODELATTRIBUTE_H
 
 #include <QString>
 
@@ -59,4 +59,4 @@ struct Texture
 
 }
 
-#endif // MODELATTRIBUTE_H
+#endif // MODEL_ANIMATION_MODELATTRIBUTE_H

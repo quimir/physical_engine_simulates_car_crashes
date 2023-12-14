@@ -12,13 +12,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @file       settingwindowbutton.cpp
+ * @file       setting_window_button.h
  * @version 0.1
  *
  * @author     QuiMir <2546670299@qq.com>
  * @date       2023/11/21
  * @history
  *****************************************************************************/
+
 
 #include "src_include/setting_window/setting_window_button.h"
 #include "src_include/file_wirte_system.h"

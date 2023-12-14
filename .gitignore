@@ -38,8 +38,8 @@ Thumbs.db
 /dlls/libassimp-5d.dll
 *.txt.user
 /data_and_log/log_file.log
-/CMakeLists.text.user
 *.log
+*.txt.user
 
 # qtcreator generated files
 *.pro.user*

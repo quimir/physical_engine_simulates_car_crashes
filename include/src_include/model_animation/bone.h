@@ -20,8 +20,8 @@
  * @history
  *****************************************************************************/
 
-#ifndef BONE_H
-#define BONE_H
+#ifndef MODEL_ANIMATION_BONE_H
+#define MODEL_ANIMATION_BONE_H
 
 #include <stdint.h>
 
@@ -177,4 +177,4 @@ private:
 };
 
 
-#endif // BONE_H
+#endif // MODEL_ANIMATION_BONE_H

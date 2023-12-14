@@ -20,8 +20,8 @@
  * @history
  *****************************************************************************/
 
-#ifndef ANIMATOR_H
-#define ANIMATOR_H
+#ifndef MODEL_ANIMATION_ANIMATOR_H
+#define MODEL_ANIMATION_ANIMATOR_H
 
 #include <QVector>
 #include <QMap>
@@ -47,4 +47,4 @@ private:
     float delta_time_;
 };
 
-#endif // ANIMATOR_H
+#endif // MODEL_ANIMATION_ANIMATOR_H

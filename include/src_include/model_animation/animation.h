@@ -20,8 +20,8 @@
  * @history
  *****************************************************************************/
 
-#ifndef ANIMATION_H
-#define ANIMATION_H
+#ifndef MODEL_ANIMATION_ANIMATION_H
+#define MODEL_ANIMATION_ANIMATION_H
 
 #include <QtAlgorithms>
 
@@ -104,4 +104,4 @@ private:
     QMap<QString,BoneInfo> bone_info_map_;
 };
 
-#endif // ANIMATION_H
+#endif // MODEL_ANIMATION_ANIMATION_H

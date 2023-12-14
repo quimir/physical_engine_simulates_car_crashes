@@ -20,8 +20,8 @@
  * @history
  *****************************************************************************/
 
-#ifndef ANIMDATA_H
-#define ANIMDATA_H
+#ifndef MODEL_ANIMATION_ANIMDATA_H
+#define MODEL_ANIMATION_ANIMDATA_H
 
 #include "src_include/geometricalias.h"
 
@@ -38,4 +38,4 @@ struct BoneInfo
     geometricalias::mat4 offset;
 };
 
-#endif // ANIMDATA_H
+#endif // MODEL_ANIMATION_ANIMDATA_H

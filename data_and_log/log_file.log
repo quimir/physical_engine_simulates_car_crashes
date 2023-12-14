@@ -1,39 +1,12 @@
-Debug: Current Date and Time: "2023-12-07 16:58:13" "Using delete log file"
-Debug: Current Date and Time: "2023-12-07 16:58:14" "User screen width: 1536,height: 824"
-Debug: Current Date and Time: "2023-12-07 16:58:14" "Now main_windows width: 768 height: 412"
-Debug: Current Date and Time: "2023-12-07 16:58:14" "Image name: D:/Qt-Text/physical_engine_simulates_car_crashes/resources/start.png, picture format: png, file width: 200, height: 200"
+Debug: Current Date and Time: "2023-12-14 14:02:32" "Using delete log file"
+Debug: Current Date and Time: "2023-12-14 14:02:32" "User screen width: 1536,height: 824"
+Debug: Current Date and Time: "2023-12-14 14:02:32" "Now main_windows width: 768 height: 412"
+Debug: Current Date and Time: "2023-12-14 14:02:32" "Image name: D:/Qt-Text/physical_engine_simulates_car_crashes/resources/start.png, picture format: png, file width: 200, height: 200"
 Warning: QLayout: Cannot add parent widget MainEntryButton/ to its child layout QHBoxLayout/
-Debug: Current Date and Time: "2023-12-07 16:58:14" "Image name: D:/Qt-Text/physical_engine_simulates_car_crashes/resources/setting.png, picture format: png, file width: 200, height: 200"
+Debug: Current Date and Time: "2023-12-14 14:02:32" "Image name: D:/Qt-Text/physical_engine_simulates_car_crashes/resources/setting.png, picture format: png, file width: 200, height: 200"
 Warning: QLayout: Cannot add parent widget MainEntryButton/ to its child layout QHBoxLayout/
-Debug: Current Date and Time: "2023-12-07 16:58:14" "Image name: D:/Qt-Text/physical_engine_simulates_car_crashes/resources/end.png, picture format: png, file width: 200, height: 200"
+Debug: Current Date and Time: "2023-12-14 14:02:32" "Image name: D:/Qt-Text/physical_engine_simulates_car_crashes/resources/end.png, picture format: png, file width: 200, height: 200"
 Warning: QLayout: Cannot add parent widget MainEntryButton/ to its child layout QHBoxLayout/
-Debug: Current Date and Time: "2023-12-07 16:58:14" "Image name: D:/Qt-Text/physical_engine_simulates_car_crashes/resources/background_picture.png, picture format: png, file width: 800, height: 600"
-Debug: Current Date and Time: "2023-12-07 16:58:16" "Setting window width: 768 height: 412"
-Debug: Current Date and Time: "2023-12-07 16:58:16" "Button edge distance width: 70 height: 40"
-Debug: Current Date and Time: "2023-12-07 16:58:16" "Image name: D:/Qt-Text/physical_engine_simulates_car_crashes/resources/setting_start.png, picture format: png, file width: 83, height: 94"
-Debug: Current Date and Time: "2023-12-07 16:58:16" "Setting basic button width:140"
-Debug: Current Date and Time: "2023-12-07 16:58:16" "Image name: D:/Qt-Text/physical_engine_simulates_car_crashes/resources/setting_more.png, picture format: png, file width: 77, height: 84"
-Debug: Current Date and Time: "2023-12-07 16:58:16" "Image name: D:/Qt-Text/physical_engine_simulates_car_crashes/resources/setting_weath.png, picture format: png, file width: 95, height: 88"
-Debug: Current Date and Time: "2023-12-07 16:58:16" "Image name: D:/Qt-Text/physical_engine_simulates_car_crashes/resources/setting_return.png, picture format: png, file width: 102, height: 91"
-Debug: Current Date and Time: "2023-12-07 16:58:16" "Image name: D:/Qt-Text/physical_engine_simulates_car_crashes/resources/setting_start_up.png, picture format: png, file width: 73, height: 114"
-Debug: Current Date and Time: "2023-12-07 16:58:16" "Setting child window width: 628"
-Debug: Current Date and Time: "2023-12-07 16:58:16" "Basic setting window width: 628,height: 372"
-Debug: Current Date and Time: "2023-12-07 16:58:16" "more setting window width: 628,height: 372"
-Debug: Current Date and Time: "2023-12-07 16:58:16" "environment setting window width: 628,height: 372"
-Debug: Current Date and Time: "2023-12-07 16:58:16" "Left buttons layout width: 0"
-Debug: Current Date and Time: "2023-12-07 16:58:16" "Right buttons layout width: 0"
-Debug: Current Date and Time: "2023-12-07 16:58:16" "Main layout width: 0"
-Debug: Current Date and Time: "2023-12-07 16:58:16" "clicked setting_button"
-Debug: Current Date and Time: "2023-12-07 16:58:16" "The user closes the window using the close event in the upper-right corner"
-
-Debug: Current Date and Time: "2023-12-07 16:58:17" "User screen width: 1536,height: 824"
-Debug: Current Date and Time: "2023-12-07 16:58:17" "Now main_windows width: 768 height: 412"
-Warning: QLayout: Cannot add parent widget MainEntryButton/ to its child layout QHBoxLayout/
-Warning: QLayout: Cannot add parent widget MainEntryButton/ to its child layout QHBoxLayout/
-Warning: QLayout: Cannot add parent widget MainEntryButton/ to its child layout QHBoxLayout/
-Debug: Current Date and Time: "2023-12-07 16:58:17" "The user closes the window using the close event in the upper-right corner"
-
-Debug: Current Date and Time: "2023-12-07 16:58:18" "clicked end_button"
-
-Debug: Current Date and Time: "2023-12-07 16:58:18" "The user closes the window using the close event in the upper-right corner"
+Debug: Current Date and Time: "2023-12-14 14:02:33" "Image name: D:/Qt-Text/physical_engine_simulates_car_crashes/resources/background_picture.png, picture format: png, file width: 800, height: 600"
+Debug: Current Date and Time: "2023-12-14 14:02:50" "The user closes the window using the close event in the upper-right corner"
 

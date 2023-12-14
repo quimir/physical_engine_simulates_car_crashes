@@ -20,8 +20,8 @@
  * @history
  *****************************************************************************/
 
-#ifndef MESH_H
-#define MESH_H
+#ifndef MODEL_ANIMATION_MESH_H
+#define MODEL_ANIMATION_MESH_H
 
 #include <QObject>
 #include <QVector>
@@ -70,4 +70,4 @@ private:
     GLuint VBO_,EBO_;
 };
 
-#endif // MESH_H
+#endif // MODEL_ANIMATION_MESH_H

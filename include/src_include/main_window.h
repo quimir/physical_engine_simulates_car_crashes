@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @file       mainwindow.h
+ * @file       main_window.h
  * @version 0.1
  *
  * @author     QuiMir<2546670299@qq.com>
@@ -35,10 +35,6 @@
 #include <QPalette>
 
 #include "src_include/main_entry_button.h"
-
-QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
-QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
 {
@@ -70,8 +66,6 @@ private slots:
     void HandleButtonClicked();
 
 private:
-    Ui::MainWindow *ui;
-
     QVector<MainEntryButton*> buttons_;
 
     /**

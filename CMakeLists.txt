@@ -70,7 +70,7 @@ ENDIF()
 ENDIF()
 
 set(TS_FILES physical_engine_simulates_car_crashes_zh_CN.ts)
-file(GLOB QTUI_FILES "${CMAKE_SOURCE_DIR}/src/*.ui")
+file(GLOB QTUI_FILES "${CMAKE_SOURCE_DIR}/src/qt_ui/*.ui")
 file(GLOB STYLE_FILES "${CMAKE_SOURCE_DIR}/src/style/*.qml")
 file(GLOB SHADER_FILES
       "${SHADER_FILE_DIRECTORY}/*.vert" # Vertex shader type file extensions

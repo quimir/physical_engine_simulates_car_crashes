@@ -78,10 +78,16 @@ public:
 private:
     /**
      * @brief ReadMissingBones Read bone data that is not recorded in BoneInfoMap
-     * @param animation
-     * @param model
+     * @param animation Need to query whether the bone is in the animation data of BoneInfoMap
+     * @param model Model's BoneInfoMap
      */
     void ReadMissingBones(const aiAnimation* animation,Model& model);
+
+    /**
+     * @brief ReadHierarchyData Read the node data in the current animation and store it in the animation class node
+     * @param dest Animation node data
+     * @param src Animation node name
+     */
     void ReadHierarchyData(AssimpNodeData& dest,const aiNode* src);
 
 private:

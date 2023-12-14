@@ -23,6 +23,7 @@
 #include "src_include/model_animation/model.h"
 #include "src_include/assimp_qt_coversion.h"
 #include "src_include/file_wirte_system.h"
+#include "src_include/file_read_system.h"
 #include <assimp/types.h>
 
 Model::Model(const QString& path, bool animation_switch, bool gamma) :gamma_correction_(gamma), animation_switch_(animation_switch)
@@ -41,14 +42,9 @@ GLvoid Model::Draw(Shader& shader)
 GLuint Model::TextureFromFile(const QString& path, const QString& directory, bool gamma)
 {
     QString filename = QDir(directory).filePath(path);
+    FileReadSystem::ReadImageFile(filename);
+
     QImage image(filename);
-
-    if (image.isNull())
-    {
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug, QString("Failed to load image: %1").arg(filename));
-        return 0;
-    }
-
     GLuint texture_id;
     glGenTextures(1, &texture_id);
 
@@ -241,7 +237,7 @@ QVector<modelattribute::Texture> Model::LoadMaterialTextures(aiMaterial* mat, ai
     for (uint32_t i = 0; i < mat->GetTextureCount(type); i++)
     {
         aiString str;
-        mat->GetTexture(type, i, &str);
+        mat->aiMaterial::GetTexture(type, i, &str);
         // check if texture was loaded before and if so, continue to next iteration: skip loading a new texture
         bool skip = false;
         for (uint32_t j = 0; j < this->textures_loaded_.size(); j++)

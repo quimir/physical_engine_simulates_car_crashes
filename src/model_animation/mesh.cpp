@@ -22,7 +22,7 @@
 
 #include "src_include/model_animation/mesh.h"
 
-void Mesh::Draw(Shader &shader)
+GLvoid Mesh::Draw(Shader &shader)
 {
     // bind appropriate textures
     GLuint diffuse_nr=1;
@@ -68,7 +68,7 @@ void Mesh::Draw(Shader &shader)
     glActiveTexture(GL_TEXTURE0);
 }
 
-void Mesh::SetupMesh()
+GLvoid Mesh::SetupMesh()
 {
     // create buffers/arrays
     glGenVertexArrays(1,&this->VAO_);

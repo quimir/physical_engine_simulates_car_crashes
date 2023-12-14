@@ -20,22 +20,16 @@
  * @history
  *****************************************************************************/
 
+#include <climits>
 #include <limits.h>
 #include "src_include/model_animation/animator.h"
 #include "src_include/file_wirte_system.h"
 #include "src_include/model_animation/bone.h"
 
 Animator::Animator(Animation *animation)
+    :current_time_(0),current_animation_(animation)
+    ,final_bone_matrices_(QVector<geometricalias::mat4>(100,geometricalias::mat4())),delta_time_((float)INT_MAX)
 {
-    this->current_time_=0;
-    this->current_animation_=animation;
-    this->final_bone_matrices_.reserve(100);
-    this->delta_time_=(float)INT_MAX;
-
-    for(uint32_t i=0;i<100;i++)
-    {
-        this->final_bone_matrices_.push_back(geometricalias::mat4());
-    }
 }
 
 void Animator::UpdateAnimation(float delte_time)
@@ -62,24 +56,32 @@ void Animator::PlayAnimation(Animation *play_animation)
 
 void Animator::CalculateBoneTransform(const Animation::AssimpNodeData *node, geometricalias::mat4 parent_transfrom)
 {
+    // Gets the node name and transformation matrix from the animation node data
     QString node_name=node->name;
     geometricalias::mat4 node_transform=node->transformation;
+
+    // Find bones in the current animation
     Bone* bone=this->current_animation_->FindBone(node_name);
 
     if(bone)
     {
+        // If a bone is found, update its status (posture, etc.)
         bone->Update(this->current_time_);
         node_transform=bone->Getlocaltransfrom();
     }
     else
     {
         FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Failed to read the Bone class");
+        return;
     }
 
+    // Calculate the global transformation matrix, multiplied by the parent transformation matrix
     geometricalias::mat4 global_transformation=parent_transfrom*node_transform;
+    // Gets the bone information map from the current animation
     QMap<QString,BoneInfo> bone_info_map=this->current_animation_->GetBoneInfoMap();
     if(bone_info_map.find(node_name)!=bone_info_map.end())
     {
+        // If the node is in the bone information map, update the final bone matrix
         int index=bone_info_map[node_name].id;
         geometricalias::mat4 offset=bone_info_map[node_name].offset;
         this->final_bone_matrices_[index]=global_transformation*offset;
@@ -87,15 +89,11 @@ void Animator::CalculateBoneTransform(const Animation::AssimpNodeData *node, geo
     else
     {
         FileWirteSystem::OutMessage(FileWirteSystem::Debug,QString("%1 it's been stored on the bone map").arg(node_name));
+        return;
     }
 
     for(int i=0;i<node->children_count;i++)
     {
         CalculateBoneTransform(&node->children[i],global_transformation);
     }
-}
-
-QVector<geometricalias::mat4> Animator::GetFinalBoneMatrices()
-{
-    return this->final_bone_matrices_;
 }

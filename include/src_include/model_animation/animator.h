@@ -35,13 +35,43 @@
 class Animator
 {
 public:
+    /**
+     * @brief Animator Initialize and load the animation class
+     * @param animation Animation class that needs to be loaded
+     */
     Animator(Animation* animation);
+
+    /**
+     * @brief UpdateAnimation Remove the animation differences caused by the device
+     * @param delte_time Device difference time
+     */
     void UpdateAnimation(float delte_time);
+
+    /**
+     * @brief PlayAnimation Reset the animation class
+     * @param play_animation The animation class that needs to be updated
+     */
     void PlayAnimation(Animation* play_animation);
+
+    /**
+     * @brief CalculateBoneTransform The skeletal final transformation matrix of the animation node is computed recursively,
+     * and the array storing the final matrix is updated. If the node or skeleton is not found, output debugging information and return.
+     * @param node Animation node data
+     * @param parent_transfrom Matrix data for calculation
+     */
     void CalculateBoneTransform(const Animation::AssimpNodeData* node,geometricalias::mat4 parent_transfrom);
-    QVector<geometricalias::mat4> GetFinalBoneMatrices();
+
+    inline QVector<geometricalias::mat4> GetFinalBoneMatrices()
+    {
+        return this->final_bone_matrices_;
+    }
+
 private:
     QVector<geometricalias::mat4> final_bone_matrices_;
+
+    /**
+     * @brief current_animation_ Save the imported animation class
+     */
     Animation* current_animation_;
     float current_time_;
     float delta_time_;

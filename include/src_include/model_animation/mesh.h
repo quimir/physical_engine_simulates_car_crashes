@@ -30,6 +30,9 @@
 #include "src_include/shader.h"
 #include "src_include/model_animation/modelattribute.h"
 
+/**
+ * @brief The Mesh class Grid information used to load the model
+ */
 class Mesh:protected QOpenGLFunctions_3_3_Core
 {
 public:
@@ -55,12 +58,22 @@ public:
         return *this;
     }
 
-    void Draw(Shader &shader);
+    /**
+     * @brief Load and draw the mesh information in the model and bind it to the Shader.
+     * This function is called by other classes without explicitly calling it.
+     * @param shader Bound shader
+     */
+    GLvoid Draw(Shader &shader);
 
 private:
-    void SetupMesh();
+    /**
+     * @brief SetupMesh Bind the mesh information in the model to OpenGL
+     */
+    GLvoid SetupMesh();
 
 public:
+    /* Mesh data*/
+
     QVector<modelattribute::Vertex> vertices_;
     QVector<GLuint> indices_;
     QVector<modelattribute::Texture> textures_;

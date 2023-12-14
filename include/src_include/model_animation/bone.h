@@ -55,15 +55,15 @@ public:
     };
 
     /**
-     * @brief Bone reads keyframes from aiNodeAnim
-     * @param name
-     * @param id
-     * @param channel
+     * @brief Bone Reads keyframes from aiNodeAnim
+     * @param name The bone path
+     * @param id The bone id
+     * @param channel Model node animation data
      */
     Bone(const QString& name,int id,const aiNodeAnim* channel);
 
     /**
-     * @brief Update interpolates  b/w positions,rotations & scaling keys based on the curren time of
+     * @brief Update Interpolates  b/w positions,rotations & scaling keys based on the curren time of
     the animation and prepares the local transformation matrix by combining all keys
     tranformations
      * @param animation_time The duration of the animation

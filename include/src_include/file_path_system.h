@@ -42,6 +42,7 @@ public:
     static QString GetImagePath(const QString &name);
     static QString GetAttributesSettingPath(const QString &name);
     static QString GetShaderPath(const QString& name);
+    static QString GetLogAndDataPath(const QString& name);
 
 private:
     static QString GetRoot();

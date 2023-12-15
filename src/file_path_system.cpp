@@ -42,6 +42,11 @@ QString FilePathSystem::GetShaderPath(const QString &name)
     return QDir::toNativeSeparators(GetRoot()+QDir::separator()+"src"+QDir::separator()+"shader"+QDir::separator()+name);
 }
 
+QString FilePathSystem::GetLogAndDataPath(const QString &name)
+{
+    return QDir::toNativeSeparators(GetRoot()+QDir::separator()+"data_and_log"+QDir::separator()+name);
+}
+
 QString FilePathSystem::GetRoot()
 {
     static QString logl_root;
@@ -49,8 +54,10 @@ QString FilePathSystem::GetRoot()
     if(!initalized)
     {
         QDir app_dir(QCoreApplication::applicationDirPath());
-        app_dir.cdUp();// Navigate to the parent directory
-        app_dir.cd("configuration"); // Navigate to the configuration directory
+        // Navigate to the parent directory
+        app_dir.cdUp();
+        // Navigate to the configuration directory
+        app_dir.cd("configuration");
         QFile config_file(app_dir.filePath("root_directory.h"));
         if(config_file.open(QIODevice::ReadOnly|QIODevice::Text))
         {

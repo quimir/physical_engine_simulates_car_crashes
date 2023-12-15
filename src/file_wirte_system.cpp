@@ -21,9 +21,46 @@
  *****************************************************************************/
 
 #include "src_include/file_wirte_system.h"
+#include "src_include/file_path_system.h"
 
-QFile FileWirteSystem::log_file_("../data_and_log/log_file.log");
+QFile FileWirteSystem::log_file_=QFile();
 QRegularExpression FileWirteSystem::regex("\"(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2})\"");
+
+void FileWirteSystem::InitalizeLogFile()
+{
+    static bool initalized=false;
+
+    if(initalized)
+    {
+        return;
+    }
+
+    QString file_path=FilePathSystem::GetLogAndDataPath("log_file.log");
+    QString directory_path=QFileInfo(file_path).absoluteFilePath();
+
+    // Check and create a log folder
+    QDir directory(directory_path);
+    if(!directory.exists())
+    {
+        if (!directory.mkpath(directory_path))
+        {
+            qWarning() << "Failed to create log directory.";
+        }
+    }
+
+    log_file_.setFileName(file_path);
+
+    // Check and create log files
+    if (!log_file_.exists()) {
+        if (!log_file_.open(QIODevice::WriteOnly | QIODevice::Append))
+        {
+            qWarning() << "Failed to create/open log file.";
+        }
+        log_file_.close();
+    }
+
+    initalized = true;
+}
 
 void FileWirteSystem::CustomMessageHandler(QtMsgType type,const QMessageLogContext& context,const QString &msg)
 {

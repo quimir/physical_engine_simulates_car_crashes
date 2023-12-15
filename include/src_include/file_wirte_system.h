@@ -51,6 +51,8 @@ public:
 public:
     FileWirteSystem()=delete;
 
+    static void InitalizeLogFile();
+
     /**
      * @brief CustomMessageHandler Create a handle to get a list of Qt messages, and use a file to store the details of the messages.
      * @param type The type of Qt message.

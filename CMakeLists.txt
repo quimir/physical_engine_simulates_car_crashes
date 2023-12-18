@@ -14,7 +14,6 @@ set(CMAKE_CXX_EXTENSIONS ON)
 
 # Rename variable
 set(QT_TARGET_NAME physical_engine_simulates_car_crashes)
-set(SHADER_FILE_DIRECTORY "${CMAKE_SOURCE_DIR}/src/shader")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
 
 # Check the size of void pointer

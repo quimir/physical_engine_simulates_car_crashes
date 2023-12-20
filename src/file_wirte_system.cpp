@@ -30,7 +30,7 @@ void FileWirteSystem::InitalizeLogFile()
         return;
     }
 
-    QString file_path=FilePathSystem::GetLogAndDataPath("log_file.log");
+    QString file_path=FilePathSystem::GetLogsPath("log_file.log");
     QString directory_path=QFileInfo(file_path).absolutePath();
 
     // Check and create a log folder

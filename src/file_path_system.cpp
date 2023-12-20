@@ -22,7 +22,7 @@ QString FilePathSystem::GetPath(const QString &name)
     return QDir::toNativeSeparators(GetRoot()+QDir::separator()+name);
 }
 
-QString FilePathSystem::GetImagePath(const QString &name)
+QString FilePathSystem::GetResourcesPath(const QString &name)
 {
     return QDir::toNativeSeparators(GetRoot()+QDir::separator()+"resources"+QDir::separator()+name);
 }
@@ -37,9 +37,15 @@ QString FilePathSystem::GetShaderPath(const QString &name)
     return QDir::toNativeSeparators(GetRoot()+QDir::separator()+"src"+QDir::separator()+"shader"+QDir::separator()+name);
 }
 
-QString FilePathSystem::GetLogAndDataPath(const QString &name)
+QString FilePathSystem::GetLogsPath(const QString &name)
 {
-    return QDir::toNativeSeparators(GetRoot()+QDir::separator()+"data_and_log"+QDir::separator()+name);
+    return QDir::toNativeSeparators(GetRoot()+QDir::separator()+"logs"+QDir::separator()+name);
+}
+
+QString FilePathSystem::GetResourcesPath(resourcesfiletype::ResourcesType type,const QString& name)
+{
+    resourcesfiletype::ResourcesTypeToMapper &resources_map=resourcesfiletype::ResourcesTypeToMapper::Instance();
+    return resources_map.EnumToString(type)+name;
 }
 
 QString FilePathSystem::GetRoot()

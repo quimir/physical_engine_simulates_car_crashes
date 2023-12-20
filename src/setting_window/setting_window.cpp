@@ -20,6 +20,8 @@
 #include "src_include/file_path_system.h"
 #include "src_include/main_window.h"
 #include "src_include/file_read_system.h"
+#include "src_include/file_path_system.h"
+#include <QResource>
 
 SettingWindow::SettingWindow(const QRect &window_geometry, QWidget *parent)
     : QWidget{parent},processing_button_click_(false)
@@ -37,7 +39,7 @@ SettingWindow::SettingWindow(const QRect &window_geometry, QWidget *parent)
 
 void SettingWindow::CreateBasicButton(const QSize button_size)
 {
-    SettingWindowButton* basic_button=new SettingWindowButton(FilePathSystem::GetImagePath("setting_start.png")
+    SettingWindowButton* basic_button=new SettingWindowButton(FilePathSystem::GetResourcesPath(resourcesfiletype::ResourcesType::Image,"setting_start.png")
                                                                 ,button_size*2,"基本设置",button_size*2,"setting basic");
     FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Setting basic button width:"+QString::number(basic_button->width()));
     if(nullptr==basic_button)
@@ -52,7 +54,7 @@ void SettingWindow::CreateBasicButton(const QSize button_size)
 
 void SettingWindow::CreateEnvironmentButton(const QSize button_size)
 {
-    SettingWindowButton* enviroment_button=new SettingWindowButton(FilePathSystem::GetImagePath("setting_weath.png")
+    SettingWindowButton* enviroment_button=new SettingWindowButton(FilePathSystem::GetResourcesPath(resourcesfiletype::ResourcesType::Image,"setting_weath.png")
                                                                      ,button_size*2,"环境设置",button_size*2,"setting weath");
     if(nullptr==enviroment_button)
     {
@@ -66,7 +68,7 @@ void SettingWindow::CreateEnvironmentButton(const QSize button_size)
 
 void SettingWindow::CreateMoreButton(const QSize button_size)
 {
-    SettingWindowButton* more_button=new SettingWindowButton(FilePathSystem::GetImagePath("setting_more.png")
+    SettingWindowButton* more_button=new SettingWindowButton(FilePathSystem::GetResourcesPath(resourcesfiletype::ResourcesType::Image,"setting_more.png")
                                                                ,button_size*2,"更多设置",button_size*2,"setting more");
     if(nullptr==more_button)
     {
@@ -185,7 +187,7 @@ QSize SettingWindow::GetButtonSize()
 
 void SettingWindow::CreateRetunButton(const QSize button_size)
 {
-    SettingWindowButton* return_button=new SettingWindowButton(FilePathSystem::GetImagePath("setting_return.png")
+    SettingWindowButton* return_button=new SettingWindowButton(FilePathSystem::GetResourcesPath(resourcesfiletype::ResourcesType::Image,"setting_return.png")
                                                                  ,button_size*2,"返回到上一个页面",button_size*2,"setting return");
     if(nullptr==return_button)
     {
@@ -200,8 +202,9 @@ void SettingWindow::CreateRetunButton(const QSize button_size)
 
 void SettingWindow::CreateStartButton(const QSize button_size)
 {
-    SettingWindowButton* start_button=new SettingWindowButton(FilePathSystem::GetImagePath("setting_start_up.png")
-                                                                ,button_size*2,"开始",button_size*2,"setting start",FilePathSystem::GetImagePath("setting_start_down.png"));
+    SettingWindowButton* start_button=new SettingWindowButton(FilePathSystem::GetResourcesPath(resourcesfiletype::ResourcesType::Image,"setting_start_up.png")
+                                                              ,button_size*2,"开始",button_size*2,"setting start"
+                                                              ,FilePathSystem::GetResourcesPath(resourcesfiletype::ResourcesType::Image,"setting_start_down.png"));
     if(nullptr==start_button)
     {
         FileWirteSystem::OutMessage(FileWirteSystem::Debug,QString("Failed to create the %1 button").arg("setting start"));
@@ -236,7 +239,7 @@ void SettingWindow::closeEvent(QCloseEvent *event)
 
 void SettingWindow::paintEvent(QPaintEvent *event)
 {
-    QPixmap background_image(FileReadSystem::ReadImageFile(FilePathSystem::GetImagePath("background_picture.png")));
+    QPixmap background_image(FileReadSystem::ReadImageFile(FilePathSystem::GetResourcesPath(resourcesfiletype::ResourcesType::Image,"background_picture.png")));
 
     if(background_image.isNull())
     {
@@ -302,9 +305,9 @@ void SettingWindow::ReturnToMainWindow()
     if(main_window)
     {
         QTimer::singleShot(200,this,[=](){
-        main_window->setGeometry(this->geometry());
-        main_window->show();
-        this->close();
+            main_window->setGeometry(this->geometry());
+            main_window->show();
+            this->close();
         });
     }
 }

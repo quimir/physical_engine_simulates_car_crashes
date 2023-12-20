@@ -20,8 +20,11 @@
 #include "src_include/main_entry_button.h"
 #include "src_include/setting_window/setting_window.h"
 #include "src_include/file_wirte_system.h"
-#include "src_include/file_path_system.h"
 #include "src_include/file_read_system.h"
+#include "src_include/file_path_system.h"
+#include <QQmlApplicationEngine>
+#include <QJsonArray>
+#include <QJsonDocument>
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
@@ -30,7 +33,8 @@ MainWindow::MainWindow(QWidget* parent)
     this->buttons_.resize(3);
     GetScreenWindow();
     SetUIWindow();
-
+    auto shader_file=FileReadSystem::ReadJsonFile(FilePathSystem::GetResourcesPath(resourcesfiletype::Json,"data.json"));
+    FileReadSystem::ReadResourcesTypeFilesFormJson(shader_file,resourcesfiletype::Shader);
     for(MainEntryButton* button:this->buttons_)
     {
         connect(button,&MainEntryButton::clicked,this,&MainWindow::HandleButtonClicked);
@@ -60,7 +64,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::paintEvent(QPaintEvent *event)
 {
-    QPixmap background_image(FileReadSystem::ReadImageFile(FilePathSystem::GetImagePath("background_picture.png")));
+    QPixmap background_image(FileReadSystem::ReadImageFile(FilePathSystem::GetResourcesPath(resourcesfiletype::ResourcesType::Image,"background_picture.png")));
 
     if(background_image.isNull())
     {
@@ -124,19 +128,19 @@ MainWindow::~MainWindow()
 void MainWindow::CreateWindowButton()
 {
     // Build start button
-    this->buttons_[0]=new MainEntryButton(FilePathSystem::GetImagePath("start.png"),
+    this->buttons_[0]=new MainEntryButton(FilePathSystem::GetResourcesPath(resourcesfiletype::ResourcesType::Image,"start.png"),
                                             QSize((this->width() / 2 - this->width() / 10 * 3), this->height() / 8)
                                             , "开始");
     this->buttons_[0]->move(QPoint((this->width() / 16), (this->height() - this->height() / 4)));
 
     // Build setup button
-    this->buttons_[1] = new MainEntryButton(FilePathSystem::GetImagePath("setting.png"),
+    this->buttons_[1] = new MainEntryButton(FilePathSystem::GetResourcesPath(resourcesfiletype::ResourcesType::Image,"setting.png"),
                                             QSize(this->width() / 2 - this->width() / 10 * 3, this->height() / 8)
                                             , "设置");
     this->buttons_[1]->move(QPoint(this->width() / 2 - this->width() / 9, this->height() - this->height() / 4));
 
     // Build exit button
-    this->buttons_[2] = new MainEntryButton(FilePathSystem::GetImagePath("end.png"),
+    this->buttons_[2] = new MainEntryButton(FilePathSystem::GetResourcesPath(resourcesfiletype::ResourcesType::Image,"end.png"),
                                             QSize(this->width() / 2 - this->width() / 10 * 3, this->height() / 8)
                                             , "退出");
     this->buttons_[2]->move(QPoint(this->width() - this->width() / 3.5, this->height() - this->height() / 4));

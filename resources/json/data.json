@@ -1,0 +1,12 @@
+{
+      "shader":[
+            {
+                  "vert":["text.vert","text_2.vert"],
+                  "frag":["text.frag","text_2.frag"],
+                  "geom":["text.geom",""],
+                  "mesh":["",""],
+                  "tesc":["",""],
+                  "test":["",""]
+            }
+      ]
+}

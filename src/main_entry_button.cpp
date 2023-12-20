@@ -24,17 +24,17 @@
  */
 constexpr int KTextAndIconSpacing = 5;
 
-MainEntryButton::MainEntryButton(const QString icon_path, const QSize original_size, const QString button_text)
+MainEntryButton::MainEntryButton(const QString icon_path, const QSize original_size, const QString button_text):
+    icon_path_(FileReadSystem::ReadImageFile(icon_path)),original_size_(original_size)
 {
-    if(original_size.isNull()||button_text.isNull())
+    if(this->original_size_.isEmpty()||button_text.isEmpty())
     {
         FileWirteSystem::OutMessage(FileWirteSystem::Debug,QString("Setting button original size is: %1,button text is: %2")
                                            .arg(original_size.isNull()?"null":"no null",button_text.isNull()?"null":"no null"));
     }
 
-    this->original_size_ = original_size;
     this->setText(button_text);
-    SetButtonIcon(icon_path);
+    SetButtonIcon(icon_path_);
 
     this->animation_ = new QPropertyAnimation(this, "geometry");
     this->animation_->setDuration(400);
@@ -47,7 +47,7 @@ MainEntryButton::MainEntryButton(const QString icon_path, const QSize original_s
     this->resize(this->original_size_);
 
 //    // Connect the finished signal to onAnimationFinished slot
-//    connect(this->animation_, &QPropertyAnimation::finished, this, &MainEntryButton::OnAnimationFinished);
+    //    connect(this->animation_, &QPropertyAnimation::finished, this, &MainEntryButton::OnAnimationFinished);
 }
 
 void MainEntryButton::enterEvent(QEnterEvent* event)
@@ -74,7 +74,6 @@ void MainEntryButton::AnimateSizeChange(const QSize& start_size, const QSize& en
 
 void MainEntryButton::SetButtonIcon(const QString icon_path)
 {
-    this->icon_path_ = FileReadSystem::ReadImageFile(icon_path);
     QPixmap pix(this->icon_path_);
     this->setIcon(pix);
 

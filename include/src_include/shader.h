@@ -30,9 +30,11 @@
 class Shader:protected QOpenGLFunctions_3_3_Core
 {
 public:
-    Shader(const QString& vertex_path,const QString& fragment_path,const QString& geometry_path=QString()
+    Shader(bool shader_source_code,const QString& vertex_path,const QString& fragment_path,const QString& geometry_path=QString()
            ,const QString&tessellation_control_path=QString(),const QString& tessellation_evaluation_path=QString()
            ,const QString& compute_path=QString());
+
+    Shader(QOpenGLShader *shader);
 
     void Use();
 
@@ -73,9 +75,17 @@ private:
 
     GLuint GetUniformBlockIndex(const QString& name);
 
+    GLuint AddShaderSourceCode(const QString& vertex_path,const QString& fragment_path,const QString& geometry_path
+                             ,const QString&tessellation_control_path,const QString& tessellation_evaluation_path
+                             ,const QString& compute_path);
+
+    GLuint AddShaderSourceFile(const QString& vertex_path,const QString& fragment_path,const QString& geometry_path
+                               ,const QString&tessellation_control_path,const QString& tessellation_evaluation_path
+                               ,const QString& compute_path);
+
 private:
     QOpenGLShaderProgram shader_program_;
-    QMap<QString,int> error_map_;
+    QSet<QString> error_map_;
 };
 
 #endif // SHADER_H

@@ -37,7 +37,7 @@ Thumbs.db
 *.txt.user
 *.log
 *.txt.user
-/data_and_log/*.log
+/log/*.log
 
 # qtcreator generated files
 *.pro.user*

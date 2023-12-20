@@ -1,0 +1,33 @@
+<RCC>
+    <qresource prefix="/image">
+        <file>end.png</file>
+        <file>setting.png</file>
+        <file>setting_more.png</file>
+        <file>setting_return.png</file>
+        <file>setting_start.png</file>
+        <file>setting_start_down.png</file>
+        <file>setting_start_up.png</file>
+        <file>setting_weath.png</file>
+        <file>start.png</file>
+        <file>background_picture.png</file>
+        <file>main_return.png</file>
+        <file>main_setting.png</file>
+        <file>main_start.png</file>
+    </qresource>
+    <qresource prefix="/json">
+        <file alias="basic_setting.json">json/basic_setting.json</file>
+        <file alias="data.json">json/data.json</file>
+        <file alias="environment_setting.json">json/environment_setting.json</file>
+        <file alias="more_setting.json">json/more_setting.json</file>
+    </qresource>
+    <qresource prefix="/shader">
+        <file alias="text.frag">shader/text.frag</file>
+        <file alias="text.geom">shader/text.geom</file>
+        <file alias="text.vert">shader/text.vert</file>
+        <file alias="text_2.vert">shader/text_2.vert</file>
+        <file alias="text_2.frag">shader/text_2.frag</file>
+    </qresource>
+    <qresource prefix="/style">
+        <file alias="main_entry_button_style.qml">style/main_entry_button_style.qml</file>
+    </qresource>
+</RCC>

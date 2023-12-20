@@ -45,8 +45,8 @@ else()
 endif()
 
 # Find the required packages
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools OpenGL OpenGLWidgets MultimediaWidgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools OpenGL OpenGLWidgets MultimediaWidgets)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools OpenGL OpenGLWidgets MultimediaWidgets Qml)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools OpenGL OpenGLWidgets MultimediaWidgets Qml)
 IF(MSVC)# There is currently no way to introduce PhysX with the MinGW compiler
 find_package(PHYSX REQUIRED)
 message(STATUS "Found PHYSX in ${PHYSX_INCLUDE_DIR}")
@@ -69,15 +69,7 @@ ENDIF()
 ENDIF()
 
 set(TS_FILES physical_engine_simulates_car_crashes_zh_CN.ts)
-file(GLOB QTUI_FILES "${CMAKE_SOURCE_DIR}/src/qt_ui/*.ui")
-file(GLOB STYLE_FILES "${CMAKE_SOURCE_DIR}/src/style/*.qml")
-file(GLOB SHADER_FILES
-      "${SHADER_FILE_DIRECTORY}/*.vert" # Vertex shader type file extensions
-      "${SHADER_FILE_DIRECTORY}/*.frag" # Fragment shader type file extensions
-      "${SHADER_FILE_DIRECTORY}/*.geom" # Geometry shader type file extensions
-      "${SHADER_FILE_DIRECTORY}/*.mesh" # Mesh shader type file extensions
-      "${SHADER_FILE_DIRECTORY}/*.tesc" # Tessellation control shader type file extensions
-      "${SHADER_FILE_DIRECTORY}/*.test")# Tessellation evaluation shader type file extension
+set(RESOURCE_FILES "${CMAKE_SOURCE_DIR}/resources/resources.qrc")
 file(GLOB SOURCE_FILES
       "${CMAKE_SOURCE_DIR}/include/src_include/*.h"
       "${CMAKE_SOURCE_DIR}/src/*.cpp"
@@ -90,20 +82,17 @@ set(PROJECT_SOURCES
       ${SOURCE_FILES}
 )
 
-# Add shader to separate Shader Files
-source_group("Shader Files" FILES ${SHADER_FILES})
+# # Add shader to separate Shader Files
 source_group("TS Files" FILES ${TS_FILES})
 source_group("QTUI Files" FILES ${QTUI_FILES})
-source_group("Style Files" FILES ${STYLE_FILES})
+source_group("Resource Files" FILES ${RESOURCE_FILES})
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-      qt_add_executable(
+qt_add_executable(
             ${QT_TARGET_NAME}
             ${PROJECT_SOURCES}
-            ${STYLE_FILES}
-            ${QTUI_FILES}
             ${TS_FILES}
-            ${SHADER_FILES}
+            ${RESOURCE_FILES}
             MANUAL_FINALIZATION
       )
 # Define target properties for Android with Qt 6 as:
@@ -152,6 +141,7 @@ target_link_libraries(${QT_TARGET_NAME} PRIVATE
       Qt${QT_VERSION_MAJOR}::OpenGL
       Qt${QT_VERSION_MAJOR}::OpenGLWidgets
       Qt${QT_VERSION_MAJOR}::MultimediaWidgets
+      Qt${QT_VERSION_MAJOR}::Qml
       ${LIBS}
 )
 

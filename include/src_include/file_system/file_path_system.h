@@ -33,17 +33,24 @@ public:
      * @param name File name
      * @return Top-level directory + name of the project
      */
-    static QString GetPath(const QString&name);
-    static QString GetResourcesPath(const QString &name);
-    static QString GetAttributesSettingPath(const QString &name);
-    static QString GetShaderPath(const QString& name);
-    static QString GetLogsPath(const QString& name);
-    static QString GetResourcesPath(resourcesfiletype::ResourcesType type, const QString &name);
-    static QString RCCToAbsolutePath(const QString& rcc_path);
-    static QString GetResourcesPath(const QString& type,const QString& name);
+    QString GetPath(const QString&name);
+    QString GetResourcesPath(const QString &name);
+    QString GetAttributesSettingPath(const QString &name);
+    QString GetShaderPath(const QString& name);
+    QString GetLogsPath(const QString& name);
+    QString GetResourcesPath(resourcesfiletype::ResourcesType type, const QString &name,bool suffix=false);
+    QString RCCToAbsolutePath(const QString& rcc_path);
+    QString GetResourcesPath(const QString& type,const QString& name);
+
+    static FilePathSystem& GetInstance();
 
 private:
-    static QString GetRoot();
+    static FilePathSystem& Instance();
+
+    inline FilePathSystem()
+        {};
+
+    QString GetRoot();
 
 };
 

@@ -68,6 +68,14 @@ set(LIBS assimp)
 ENDIF()
 ENDIF()
 
+set(QT_LIBS
+      Qt${QT_VERSION_MAJOR}::Widgets
+      Qt${QT_VERSION_MAJOR}::OpenGL
+      Qt${QT_VERSION_MAJOR}::OpenGLWidgets
+      Qt${QT_VERSION_MAJOR}::MultimediaWidgets
+      Qt${QT_VERSION_MAJOR}::Qml
+      Qt${QT_VERSION_MAJOR}::Core)
+
 set(TS_FILES physical_engine_simulates_car_crashes_zh_CN.ts)
 set(RESOURCE_FILES "${CMAKE_SOURCE_DIR}/resources/resources.qrc")
 file(GLOB SOURCE_FILES
@@ -140,12 +148,7 @@ configure_file(configuration/root_directory.h.in configuration/root_directory.h)
 include_directories(${CMAKE_BINARY_DIR}/configuration)
 
 target_link_libraries(${QT_TARGET_NAME} PRIVATE
-      Qt${QT_VERSION_MAJOR}::Widgets
-      Qt${QT_VERSION_MAJOR}::OpenGL
-      Qt${QT_VERSION_MAJOR}::OpenGLWidgets
-      Qt${QT_VERSION_MAJOR}::MultimediaWidgets
-      Qt${QT_VERSION_MAJOR}::Qml
-      Qt${QT_VERSION_MAJOR}::Core
+      ${QT_LIBS}
       ${LIBS}
 )
 

@@ -25,7 +25,7 @@
 #include <QResource>
 
 #include "src_include/main_window.h"
-#include "src_include/file_system/file_wirte_system.h"
+#include "src_include/file_system/file_write_system.h"
 
 int main(int argc, char *argv[])
 {
@@ -40,11 +40,9 @@ int main(int argc, char *argv[])
             break;
         }
     }
-
-    FileWirteSystem::InitalizeLogFile();
-    qInstallMessageHandler(FileWirteSystem::CustomMessageHandler);
-    FileWirteSystem::DeleteLogDay(FileWirteSystem::log_file_,1);
-    FileWirteSystem::DeleteLogFile();
+    
+    qInstallMessageHandler(FileWriteSystem::CustomMessageHandler);
+    FileWriteSystem::GetInstance().DeleteLogFile();
 
     MainWindow w;
     w.show();

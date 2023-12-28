@@ -16,15 +16,15 @@
  **/
 
 #include "src_include/start_window.h"
-#include "src_include/file_system/file_wirte_system.h"
+#include "src_include/file_system/file_write_system.h"
 
 StartWindow::StartWindow(QRect screen_size, QMap<QString, QList<QString> > shader_map):
     screen_size_(screen_size),shader_map_(shader_map)
 {
     if(this->screen_size_.isEmpty()||shader_map.isEmpty())
     {
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug
-                                    ,"No "+QString(this->screen_size_.isEmpty()?(QString("window screen size"+QString(this->shader_map_.isEmpty()?"and no shader map":""))):"shader map"));
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+                                                  ,"No "+QString(this->screen_size_.isEmpty()?(QString("window screen size"+QString(this->shader_map_.isEmpty()?"and no shader map":""))):"shader map"));
     }
     this->setGeometry(this->screen_size_);
 }
@@ -33,7 +33,8 @@ void StartWindow::initializeGL()
 {
     if(!initializeOpenGLFunctions())
     {
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Description OpenGL initialization failed");
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+                                                  ,"Description OpenGL initialization failed");
         return;
     }
     glClearColor(0.0f,0.0f,0.0f,0.0f);
@@ -58,7 +59,8 @@ void StartWindow::ReadShaderMapToShader(QMap<QString, QList<QString> > &shader_m
 {
     if(shader_map.isEmpty())
     {
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Read shader file is null");
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+                                                  ,"Read shader file is null");
     }
 
     QVector<QString> vertex_path,fragment_path,geometry_path,tessellation_control_path,tessellation_evaluation_path,compute_path;

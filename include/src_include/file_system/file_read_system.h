@@ -30,61 +30,47 @@
 class FileReadSystem
 {
 public:
-    FileReadSystem()=delete;
+    QString LoadStylesFromFile(const QString&file_name);
 
-    static QString LoadStylesFromFile(const QString&file_name);
+    QImage ReadImageFile(const QString& file_path);
 
-    /**
-     * @brief ReadImageFile Read whether the system meets the loading requirements of the image,
-     * if it meets the address of the original file,
-     * you can use the file path of.qrc or the absolute path and relative path
-     * @param file_path The path to the image file
-     * @return file_path
-     */
-    static QString ReadImageFile(const QString& file_path);
-
-    /**
-     * @brief ReadImageFile Read whether the system meets the loading requirements of the image,
-     * if it meets the address of the original file
-     * @param image_file picture file
-     * @return image_file
-     */
-    static QFile& ReadImageFile(QFile& image_file);
+    QImage ReadImageFile(QFile &image_file);
 
     /**
      * @brief ReadFileContentsToString Reads the contents of a file into a string.
      * @param file File path.
      * @return The entire contents of the file.
      */
-    static QString ReadFileContentsToString(QFile& file);
+    QString ReadFileContentsToString(QFile& file);
+
+    QMap<QString,QMap<QString,QList<QString>>> ReadGLSLFile(QMap<QString,QMap<QString,QList<QString>>>& glsl_map
+                                                              ,resourcesfiletype::ResourcesType type=resourcesfiletype::ResourcesType::GLSL);
 
     /**
-     * @brief ReadResourcesTypeFilesFormJson In general, before using this function, you need to use ReadJsonFile to get the json map. Using this function,
-     * all the values corresponding to the key can be converted from the relative path of the resource file to the entire contents of the file and
-     * all the values in the key can be replaced.
-     * @param json_map Stores all the keys and values in json.
-     * @param type For the type of the resource path, see ResourcesType.
+     * @brief ReadJsonFile Read the Json file and return to go out, the content of the Json file format, please check /resources/Json/README.md Content.
+     * @param json_file Target jsonfile
+     * @return Returns a combination of key-key-array values, ensuring that the first key is unique.
      */
-    static void ReadResourcesTypeFilesFormJson(QMap<QString,QList<QString>> json_map,resourcesfiletype::ResourcesType type);
+    QMap<QString,QMap<QString,QList<QString>>> ReadJsonFile(QFile json_file);
 
-    /**
-     * @brief ReadResourcesTypeFilesFormJson Automatically link the contents of any type of file in the resource system, but for now, it is only string friendly,
-     * and the rest is not very useful unless you want to increase the coupling of the code.
-     * @param json_map Stores all the keys and values in json.
-     */
-    static void ReadResourcesTypeFilesFormJson(QMap<QString,QList<QString>> json_map);
-
-    static QMap<QString,QMap<QString,QList<QString>>> ReadJsonFile(QFile json_file);
+    static FileReadSystem& GetInstance();
 
 private:
-    static void ParseJson(const QJsonObject& json_obj,QMap<QString, QMap<QString, QList<QString> > > &json_map);
-    static void ParseJsonObject(const QJsonObject& json_object, QMap<QString,QList<QString>>& relative_paths,const QString &key,QList<QString>& value);
-    static void ParseJsonArray(const QJsonArray& json_array, QMap<QString,QList<QString>>& relative_paths, const QString &key, QList<QString>& list_value);
+    void ParseJson(const QJsonObject& json_obj,QMap<QString, QMap<QString, QList<QString> > > &json_map);
+    void ParseJsonObject(const QJsonObject& json_object, QMap<QString,QList<QString>>& relative_paths
+                         ,const QString &key,QList<QString>& value);
+    void ParseJsonArray(const QJsonArray& json_array, QMap<QString,QList<QString>>& relative_paths,const QString &key
+                        , QList<QString>& list_value);
 private:
+    static FileReadSystem& Instance();
+
+    inline FileReadSystem():file_map_(QSet<QString>())
+        {};
+
     /**
      * @brief file_map_ Store all the files that have been read so that they don't have to be read again
      */
-    static QSet<QString> file_map_;
+    QSet<QString> file_map_;
 };
 
 #endif // FILE_SYSTEM_FILE_READ_SYSTEM_H

@@ -16,15 +16,16 @@
  **/
 
 #include "src_include/setting_window/basic_setting_window.h"
-#include "src_include/file_system/file_wirte_system.h"
+#include "src_include/file_system/file_write_system.h"
 
 BasicSettingsWindow::BasicSettingsWindow(QRect window_geometry,QWidget *parent)
     : QWidget{parent}
 {
     this->setGeometry(window_geometry);
     QVBoxLayout* layout=new QVBoxLayout(this);
-    FileWirteSystem::OutMessage(FileWirteSystem::Debug,QString("Basic setting window width: %1,height: %2")
-                                .arg(QString::number(this->width()),QString::number(this->height())));
+    FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+                                              ,QString("Basic setting window width: %1,height: %2")
+                                                  .arg(QString::number(this->width()),QString::number(this->height())));
 
     for(quint32 i=0;i<20;i++)
     {

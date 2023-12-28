@@ -16,7 +16,7 @@
  **/
 
 #include "src_include/main_entry_button.h"
-#include "src_include/file_system/file_wirte_system.h"
+#include "src_include/file_system/file_write_system.h"
 #include "src_include/file_system/file_read_system.h"
 
 /**
@@ -25,16 +25,17 @@
 constexpr int KTextAndIconSpacing = 5;
 
 MainEntryButton::MainEntryButton(const QString icon_path, const QSize original_size, const QString button_text):
-    icon_path_(FileReadSystem::ReadImageFile(icon_path)),original_size_(original_size)
+    image_(FileReadSystem::GetInstance().ReadImageFile(icon_path)),original_size_(original_size)
 {
     if(this->original_size_.isEmpty()||button_text.isEmpty())
     {
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug,QString("Setting button original size is: %1,button text is: %2")
-                                           .arg(original_size.isNull()?"null":"no null",button_text.isNull()?"null":"no null"));
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+                                                  ,QString("Setting button original size is: %1,button text is: %2")
+                                                      .arg(original_size.isNull()?"null":"no null",button_text.isNull()?"null":"no null"));
     }
 
     this->setText(button_text);
-    SetButtonIcon(icon_path_);
+    SetButtonIcon(this->image_);
 
     this->animation_ = new QPropertyAnimation(this, "geometry");
     this->animation_->setDuration(400);
@@ -46,7 +47,7 @@ MainEntryButton::MainEntryButton(const QString icon_path, const QSize original_s
 
     this->resize(this->original_size_);
 
-//    // Connect the finished signal to onAnimationFinished slot
+    //    // Connect the finished signal to onAnimationFinished slot
     //    connect(this->animation_, &QPropertyAnimation::finished, this, &MainEntryButton::OnAnimationFinished);
 }
 
@@ -72,9 +73,9 @@ void MainEntryButton::AnimateSizeChange(const QSize& start_size, const QSize& en
     this->animation_->start();
 }
 
-void MainEntryButton::SetButtonIcon(const QString icon_path)
+void MainEntryButton::SetButtonIcon(const QImage image)
 {
-    QPixmap pix(this->icon_path_);
+    QPixmap pix=QPixmap::fromImage(image);
     this->setIcon(pix);
 
     // Get font metrics

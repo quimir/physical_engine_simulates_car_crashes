@@ -17,7 +17,7 @@
 
 #include "src_include/model_animation/animation.h"
 #include "src_include/assimp_qt_coversion.h"
-#include "src_include/file_system/file_wirte_system.h"
+#include "src_include/file_system/file_write_system.h"
 
 Animation::Animation(const QString &animation_path, Model *model)
 {
@@ -25,7 +25,8 @@ Animation::Animation(const QString &animation_path, Model *model)
     const aiScene* scene=importer.ReadFile(animation_path.toStdString().c_str(),aiProcess_Triangulate);
     if((scene==nullptr)||(scene->mRootNode==nullptr))
     {
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug,QString("File Read failed animation path is: %1").arg(animation_path));
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+                                                  ,QString("File Read failed animation path is: %1").arg(animation_path));
         return;
     }
 
@@ -41,7 +42,7 @@ Animation::Animation(const QString &animation_path, Model *model)
 Bone *Animation::FindBone(const QString &name)
 {
     QList<Bone>::Iterator iter=std::find_if(this->bone_.begin(),this->bone_.end(),[&](const Bone& bone)
-                           {return bone.GetBonename()==name;});
+                                              {return bone.GetBonename()==name;});
     if(iter==this->bone_.end())
         return nullptr;
 
@@ -77,7 +78,7 @@ void Animation::ReadHierarchyData(AssimpNodeData &dest, const aiNode *src)
 {
     if(src==nullptr)
     {
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug,"No model node");
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug,"No model node");
         return;
     }
 

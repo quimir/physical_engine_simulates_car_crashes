@@ -16,7 +16,7 @@
  **/
 
 #include "src_include/vertices.h"
-#include "src_include/file_system/file_wirte_system.h"
+#include "src_include/file_system/file_write_system.h"
 #include <QFile>
 #include <QTextStream>
 
@@ -44,7 +44,8 @@ bool Vertices::LoadObjectFile(const QString &file_path)
     QFile file(file_path);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Failed to open file: "+file_path);
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+                                                  ,"Failed to open file: "+file_path);
         return false;
     }
 
@@ -103,10 +104,10 @@ void Vertices::BindDataToOpenGL()
     this->vao_.bind();
 
     this->vbo_.bind();
-    this->vbo_.allocate(this->vertices_.constData(),this->vertices_.size()*sizeof(vertices_));
+    this->vbo_.allocate(this->vertices_.constData(),static_cast<int>(this->vertices_.size()*sizeof(vertices_)));
 
     this->ebo_.bind();
-    this->ebo_.allocate(this->indices_.constData(),this->indices_.size()*sizeof(GLuint));
+    this->ebo_.allocate(this->indices_.constData(),static_cast<int>(this->indices_.size()*sizeof(GLuint)));
 
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,sizeof(Vertex),reinterpret_cast<void*>(offsetof(Vertex,position)));

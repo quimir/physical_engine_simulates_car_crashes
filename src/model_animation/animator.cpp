@@ -17,12 +17,12 @@
 
 #include <climits>
 #include "src_include/model_animation/animator.h"
-#include "src_include/file_system/file_wirte_system.h"
+#include "src_include/file_system/file_write_system.h"
 #include "src_include/model_animation/bone.h"
 
 Animator::Animator(Animation *animation)
-    :current_time_(0),current_animation_(animation)
-    ,final_bone_matrices_(QVector<geometricalias::mat4>(100,geometricalias::mat4())),delta_time_((float)INT_MAX)
+    :final_bone_matrices_(QVector<geometricalias::mat4>(100,geometricalias::mat4())),current_animation_(animation)
+    ,current_time_(0),delta_time_((float)INT_MAX)
 {
 }
 
@@ -37,7 +37,8 @@ void Animator::UpdateAnimation(float delte_time)
     }
     else
     {
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Failed to read the animation class");
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+                                                  ,"Failed to read the animation class");
         return;
     }
 }
@@ -65,7 +66,8 @@ void Animator::CalculateBoneTransform(const Animation::AssimpNodeData *node, geo
     }
     else
     {
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Failed to read the Bone class");
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+                                                  ,"Failed to read the Bone class");
         return;
     }
 
@@ -82,7 +84,8 @@ void Animator::CalculateBoneTransform(const Animation::AssimpNodeData *node, geo
     }
     else
     {
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug,QString("%1 it's been stored on the bone map").arg(node_name));
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+                                                  ,QString("%1 it's been stored on the bone map").arg(node_name));
         return;
     }
 

@@ -16,83 +16,115 @@
  **/
 
 #include "src_include/file_system/file_read_system.h"
-#include "src_include/file_system/file_wirte_system.h"
+#include "src_include/file_system/file_write_system.h"
 #include "src_include/file_system/file_path_system.h"
 #include <QJsonArray>
 #include <QJsonDocument>
 
-QSet<QString> FileReadSystem::file_map_=QSet<QString>();
 
 QString FileReadSystem::LoadStylesFromFile(const QString &file_name)
 {
     return QString();
 }
 
-QString FileReadSystem::ReadImageFile(const QString &file_path)
+QImage FileReadSystem::ReadImageFile(const QString &file_path)
 {
-    if(file_map_.contains(file_path)||file_path.isEmpty())
+    if(file_path.isEmpty())
     {
-        return file_path;
+        // eturns an invalid QImage
+        return QImage();
+    }
+
+    if (file_map_.contains(file_path))
+    {
+        // Returns the original value
+        return QImage(file_path);
     }
 
     QImageReader image_reader(file_path);
-    QFile file(file_path);
+    QImage image;
 
-    if(!file.exists())
+    if (!QFile::exists(file_path))
     {
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug,file.fileName()+"failed to open the file. Please check for details"+file.errorString());
-        return file_path;
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+                                                  , file_path + " failed to open the file. Please check for details: " + image_reader.errorString());
+        return QImage();  // eturns an invalid QImage
     }
 
-    if(!image_reader.format().isEmpty())
+    if (!image_reader.format().isEmpty())
     {
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Image name: " + image_reader.fileName() +
-                                                                ", picture format: " + QString::fromStdString(image_reader.format().toStdString()) +
-                                                                ", file width: " + QString::number(image_reader.size().width()) +
-                                                                ", height: " + QString::number(image_reader.size().height()));
+        image = image_reader.read();
+        if (image.isNull())
+        {
+            FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug,
+                                                      "Failed to read image: " + image_reader.errorString());
+            return QImage();  // eturns an invalid QImage
+        }
+
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug, "Image name: " + image_reader.fileName() +
+                                                                                              ", picture format: " + QString::fromStdString(image_reader.format().toStdString()) +
+                                                                                              ", file width: " + QString::number(image.width()) +
+                                                                                              ", height: " + QString::number(image.height()));
     }
     else
     {
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug,"The picture cannot be read because: "+image_reader.errorString());
-        return file_path;
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug,
+                                                  "The picture cannot be read because: " + image_reader.errorString());
+        return QImage();  // eturns an invalid QImage
     }
 
     file_map_.insert(file_path);
-    return file_path;
+    return image;
 }
 
-QFile &FileReadSystem::ReadImageFile(QFile &image_file)
+QImage FileReadSystem::ReadImageFile(QFile &image_file)
 {
-    if(file_map_.contains(image_file.fileName())||image_file.fileName().isEmpty())
+    if(image_file.fileName().isEmpty())
     {
-        return image_file;
+        return QImage();
     }
 
-    if(!image_file.exists())
+    if (file_map_.contains(image_file.fileName()))
     {
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug,image_file.fileName()+"failed to open the file. Please check for details"+image_file.errorString());
-        return image_file;
+        return QImage(image_file.fileName());
+    }
+
+    if (!image_file.exists())
+    {
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug, image_file.fileName()
+                                                                                              + " failed to open the file. Please check for details: " + image_file.errorString());
+        return QImage();
+    }
+
+    if (!image_file.open(QIODevice::ReadOnly))
+    {
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug, "Failed to open file: "
+                                                                                              + image_file.fileName());
+        return QImage();
     }
 
     QImageReader image_reader(&image_file);
 
-    if(!image_reader.format().isEmpty())
+    if (!image_reader.format().isEmpty())
     {
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Image name: " + image_reader.fileName() +
-                                                                ", picture format: " + QString::fromStdString(image_reader.format().toStdString()) +
-                                                                ", file width: " + QString::number(image_reader.size().width()) +
-                                                                ", height: " + QString::number(image_reader.size().height()));
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug,
+                                                  "Image name: " + image_reader.fileName() +
+                                                      ", picture format: " + QString::fromStdString(image_reader.format().toStdString()) +
+                                                      ", file width: " + QString::number(image_reader.size().width()) +
+                                                      ", height: " + QString::number(image_reader.size().height()));
+
+        QImage image = image_reader.read();
+        file_map_.insert(image_file.fileName());
+        image_file.close();
+        return image;
     }
     else
     {
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug,"The picture cannot be read because: "+image_reader.errorString());
-        return image_file;
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug,
+                                                  "The picture cannot be read because: " + image_reader.errorString());
+        image_file.close();
+        return QImage();
     }
-
-    file_map_.insert(image_file.fileName());
-    image_file.close();
-
-    return image_file;
 }
 
 QMap<QString, QMap<QString, QList<QString> > > FileReadSystem::ReadJsonFile(QFile json_file)
@@ -100,7 +132,7 @@ QMap<QString, QMap<QString, QList<QString> > > FileReadSystem::ReadJsonFile(QFil
     QMap<QString, QMap<QString,QList<QString> >> json_map;
     if(!json_file.open(QIODevice::ReadOnly|QIODevice::Text))
     {
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Failed to open the file");
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug,"Failed to open the file");
         return json_map;
     }
 
@@ -111,7 +143,7 @@ QMap<QString, QMap<QString, QList<QString> > > FileReadSystem::ReadJsonFile(QFil
     QJsonDocument json_doc=QJsonDocument::fromJson(json_data,&json_error);
     if(json_error.error!=QJsonParseError::NoError)
     {
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug,json_error.errorString());
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug,json_error.errorString());
         return json_map;
     }
 
@@ -119,6 +151,11 @@ QMap<QString, QMap<QString, QList<QString> > > FileReadSystem::ReadJsonFile(QFil
 
     file_map_.insert(json_file.fileName());
     return json_map;
+}
+
+FileReadSystem &FileReadSystem::GetInstance()
+{
+    return Instance();
 }
 
 void FileReadSystem::ParseJson(const QJsonObject &json_obj, QMap<QString, QMap<QString, QList<QString> > > &json_map)
@@ -131,7 +168,7 @@ void FileReadSystem::ParseJson(const QJsonObject &json_obj, QMap<QString, QMap<Q
 
         if (key.isEmpty())
         {
-            FileWirteSystem::OutMessage(FileWirteSystem::Debug, "Json key is null");
+            FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug, "Json key is null");
             continue;
         }
 
@@ -167,7 +204,7 @@ void FileReadSystem::ParseJsonObject(const QJsonObject& json_obj, QMap<QString, 
 
         if (key.isEmpty())
         {
-            FileWirteSystem::OutMessage(FileWirteSystem::Debug, "Json key is null");
+            FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug, "Json key is null");
             continue;
         }
 
@@ -208,114 +245,102 @@ void FileReadSystem::ParseJsonArray(const QJsonArray& json_array, QMap<QString,Q
         }
 
         list_value.append(sub_value.toString());
+    }
+
+    if(!list_value.isEmpty())
+    {
         relative_paths.insert(key,list_value);
     }
 }
 
+FileReadSystem &FileReadSystem::Instance()
+{
+    static FileReadSystem instance;
+    return instance;
+}
+
 QString FileReadSystem::ReadFileContentsToString(QFile &file)
 {
-    if(file.fileName().isEmpty()||file_map_.contains(file.fileName()))
+    if(file_map_.contains(file.fileName()))
     {
         return QString();
     }
 
     if(!file.open(QIODevice::ReadOnly|QIODevice::Text))
     {
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Failed to open the: "+file.fileName()+"file");
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+                                                  ,"Failed to open the: "+file.fileName()+"file");
+        file_map_.insert(file.fileName());
         return QString();
     }
 
     QString file_content=file.readAll();
     if(file_content.isEmpty())
     {
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug,"The file content is empty, the file name is: "+file.fileName());
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+                                                  ,"The file content is empty, the file name is: "+file.fileName());
+        file_map_.insert(file.fileName());
         file.close();
         return QString();
     }
 
     file.close();
-    file_map_.insert(file.fileName());
     return file_content;
 }
 
-void FileReadSystem::ReadResourcesTypeFilesFormJson(QMap<QString, QList<QString> > json_map, resourcesfiletype::ResourcesType type)
+QMap<QString, QMap<QString, QList<QString>>> FileReadSystem::ReadGLSLFile(QMap<QString, QMap<QString, QList<QString> > > &glsl_map, resourcesfiletype::ResourcesType type)
 {
-    if(json_map.isEmpty())
+    if(glsl_map.isEmpty())
     {
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Read json file is null");
-        return;
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug,"GLSL map is null!");
+        return glsl_map;
     }
 
-    QList<QString> keys = json_map.keys();
+    // Get all the keys
+    QMap<QString,QMap<QString,QList<QString>>>::Iterator it=glsl_map.begin();
 
-    for (const QString &key : keys)
+    while(it!=glsl_map.end())
     {
-        QList<QString> relativePaths = json_map.value(key);
-        // Store new file contents
-        QList<QString> value_codes;
-        // Determine whether you want to replace it
-        bool if_file=true;
-
-        for (QString &relativePath : relativePaths)
+        // Matches are performed regardless of case requirements
+        if(!QString::compare(it.key(),resourcesfiletype::ResourcesTypeToMapper::GetInstance().EnumToString(type),Qt::CaseInsensitive))
         {
-            QString file_code = FilePathSystem::GetResourcesPath(type,relativePath);
-            QFile file(file_code);
-            QString value_code = ReadFileContentsToString(file);
-            if(value_code.isEmpty()&&value_codes.isEmpty())
+            QMap<QString,QList<QString>> temp;
+            // Translate all the relative paths into text and save them there
+            QMap<QString,QList<QString>> value=it.value();
+            QList<QString> keys=value.keys();
+            for(const QString&key:keys)
             {
-                if_file=false;
-            }
-            else
-            {
-                if_file=true;
-                value_codes.push_back(value_code);
-            }
-        }
+                // Gets the value of the relative path
+                QList<QString> relative_paths=value.value(key);
+                QList<QString> value_codes;
+                bool if_file=true;
 
-        if(if_file)
-        {
-            json_map.insert(key,value_codes);
+                for(QString &relative_path:relative_paths)
+                {
+                    QString file_code=FilePathSystem::GetInstance().GetResourcesPath(type,relative_path);
+                    QFile file(file_code);
+                    QString value_code=ReadFileContentsToString(file);
+                    // If they are all empty then nothing is saved
+                    if(value_code.isEmpty()&&value_codes.isEmpty())
+                    {
+                        if_file=false;
+                    }
+                    else
+                    {
+                        // If one of these matches, you have to update to one of them
+                        if_file=true;
+                        value_codes.push_back(value_code);
+                    }
+                }
+                if(if_file)
+                {
+                    temp.insert(key,value_codes);
+                }
+            }
+            glsl_map.insert(resourcesfiletype::ResourcesTypeToMapper::GetInstance().EnumToString(type),temp);
+            break;
         }
     }
-}
 
-void FileReadSystem::ReadResourcesTypeFilesFormJson(QMap<QString, QList<QString> > json_map)
-{
-    if(json_map.isEmpty())
-    {
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Read json file is null");
-        return;
-    }
-
-    QList<QString> keys = json_map.keys();
-
-    for (const QString &key : keys)
-    {
-        QList<QString> relativePaths = json_map.value(key);
-        // Store new file contents
-        QList<QString> value_codes;
-        // Determine whether you want to replace it
-        bool if_file=true;
-
-        for (QString &relativePath : relativePaths)
-        {
-            QString file_code = FilePathSystem::GetResourcesPath(key,relativePath);
-            QFile file(file_code);
-            QString value_code = ReadFileContentsToString(file);
-            if(value_code.isEmpty()&&value_codes.isEmpty())
-            {
-                if_file=false;
-            }
-            else
-            {
-                if_file=true;
-                value_codes.push_back(value_code);
-            }
-        }
-
-        if(if_file)
-        {
-            json_map.insert(key,value_codes);
-        }
-    }
+    return glsl_map;
 }

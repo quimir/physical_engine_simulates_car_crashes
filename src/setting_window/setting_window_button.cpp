@@ -16,25 +16,30 @@
  **/
 
 #include "src_include/setting_window/setting_window_button.h"
-#include "src_include/file_system/file_wirte_system.h"
+#include "src_include/file_system/file_write_system.h"
 #include "src_include/file_system/file_read_system.h"
 
 SettingWindowButton::SettingWindowButton(const QString icon_path, const QSize original_size
                                          , const QString button_text, const QSize icon_size, const QString specify_the_display_text, const QString press_icon_path)
-    :press_icon_path_(press_icon_path),specify_the_display_text_(specify_the_display_text)
+    :icon_image_(FileReadSystem::GetInstance().ReadImageFile(icon_path)),press_icon_image_(FileReadSystem::GetInstance().ReadImageFile(icon_path)),specify_the_display_text_(specify_the_display_text)
 {
     if(original_size.isNull()||button_text.isNull())
     {
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug,QString("Setting button original size is: %1,button text is: %2")
-                                                                .arg(original_size.isNull()?"null":"no null",button_text.isNull()?"null":"no null"));
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+                                                  ,QString("Setting button original size is: %1,button text is: %2")
+                                                      .arg(original_size.isNull()?"null":"no null",button_text.isNull()?"null":"no null"));
+        return;
     }
     this->original_size_=original_size;
     this->setText("");
     this->button_text_=button_text;
 
-    FileReadSystem::ReadImageFile(icon_path);
-    this->icon_path_=icon_path;
-    QPixmap pix(this->icon_path_);
+    if(this->icon_image_.isNull())
+    {
+        return;
+    }
+
+    QPixmap pix=QPixmap::fromImage(this->icon_image_);
     this->setIcon(pix);
     this->setIconSize(icon_size);
     this->resize(this->original_size_);
@@ -83,12 +88,11 @@ bool SettingWindowButton::eventFilter(QObject *obj, QEvent *event)
 
 void SettingWindowButton::mousePressEvent(QMouseEvent *event)
 {
-    if(!this->press_icon_path_.isNull())
+    if(!this->press_icon_image_.isNull())
     {
         if(this->specify_the_display_text_.compare("setting start",Qt::CaseInsensitive))
         {
-            FileReadSystem::ReadImageFile(this->press_icon_path_);
-            QPixmap pix(this->press_icon_path_);
+            QPixmap pix=QPixmap::fromImage(this->press_icon_image_);
             this->setIcon(pix);
             this->setIconSize(this->original_size_);
         }
@@ -98,12 +102,11 @@ void SettingWindowButton::mousePressEvent(QMouseEvent *event)
 
 void SettingWindowButton::mouseReleaseEvent(QMouseEvent *event)
 {
-    if(!this->icon_path_.isNull())
+    if(!this->icon_image_.isNull())
     {
         if(this->specify_the_display_text_.compare("setting start",Qt::CaseInsensitive))
         {
-            FileReadSystem::ReadImageFile(this->icon_path_);
-            QPixmap pix(this->icon_path_);
+            QPixmap pix=QPixmap::fromImage(this->icon_image_);
             this->setIcon(pix);
             this->setIconSize(this->original_size_);
         }

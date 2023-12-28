@@ -43,7 +43,7 @@ public:
      * @param animation_switch Is animation enabled? It will automatically find the animation file.
      * @param gamma Gamma number or gamma effect.
      */
-    Model(QString const& path,bool animation_switch=false,bool gamma=false);
+    Model(QString const& path,bool animation_switch=false,float gamma=1.0f);
 
     /**
      * @brief Draw Start painting the model and load the shader for shading effects.
@@ -58,7 +58,7 @@ public:
      * @param gamma Gamma effect, generally not enabled by default.
      * @return The ID of the texture in OpenGL after binding is successful.
      */
-    GLuint TextureFromFile(const QString& path,const QString& directory,bool gamma);
+    GLuint TextureFromFile(const QString& path,const QString& directory,float gamma);
 
     inline QMap<QString,BoneInfo>& GetBoneInfoMap(){return this->boneinfo_map_;};
 

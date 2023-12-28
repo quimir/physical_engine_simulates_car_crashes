@@ -31,12 +31,14 @@ QString FilePathSystem::GetResourcesPath(const QString &name)
 
 QString FilePathSystem::GetAttributesSettingPath(const QString &name)
 {
-    return QDir::toNativeSeparators(GetRoot()+QDir::separator()+"resources"+QDir::separator()+"attributes _beautify_files"+QDir::separator()+name);
+    return QDir::toNativeSeparators(GetRoot()+QDir::separator()+"resources"
+                                    +QDir::separator()+"attributes _beautify_files"+QDir::separator()+name);
 }
 
 QString FilePathSystem::GetShaderPath(const QString &name)
 {
-    return QDir::toNativeSeparators(GetRoot()+QDir::separator()+"src"+QDir::separator()+"shader"+QDir::separator()+name);
+    return QDir::toNativeSeparators(GetRoot()+QDir::separator()+"src"+QDir::separator()
+                                    +"shader"+QDir::separator()+name);
 }
 
 QString FilePathSystem::GetLogsPath(const QString &name)
@@ -44,10 +46,15 @@ QString FilePathSystem::GetLogsPath(const QString &name)
     return QDir::toNativeSeparators(GetRoot()+QDir::separator()+"logs"+QDir::separator()+name);
 }
 
-QString FilePathSystem::GetResourcesPath(resourcesfiletype::ResourcesType type,const QString& name)
+QString FilePathSystem::GetResourcesPath(resourcesfiletype::ResourcesType type, const QString& name, bool suffix)
 {
-    resourcesfiletype::ResourcesTypeToMapper &resources_map=resourcesfiletype::ResourcesTypeToMapper::Instance();
-    return resources_map.EnumToString(type)+name;
+    if(suffix)
+    {
+        return resourcesfiletype::ResourcesTypeToMapper::GetInstance().EnumToStringPath(type)+name
+               +resourcesfiletype::ResourcesTypeToMapper::GetInstance().EnumToString(type).toLower();
+    }
+
+    return resourcesfiletype::ResourcesTypeToMapper::GetInstance().EnumToStringPath(type)+name;
 }
 
 QString FilePathSystem::RCCToAbsolutePath(const QString &rcc_path)
@@ -57,8 +64,18 @@ QString FilePathSystem::RCCToAbsolutePath(const QString &rcc_path)
 
 QString FilePathSystem::GetResourcesPath(const QString &type, const QString &name)
 {
-    resourcesfiletype::ResourcesTypeToMapper &resources_map=resourcesfiletype::ResourcesTypeToMapper::Instance();
-    return resources_map.EnumToString(type)+name;
+    return resourcesfiletype::ResourcesTypeToMapper::GetInstance().StringToEnumToStringPath(type)+name;
+}
+
+FilePathSystem &FilePathSystem::GetInstance()
+{
+    return Instance();
+}
+
+FilePathSystem &FilePathSystem::Instance()
+{
+    static FilePathSystem instance;
+    return instance;
 }
 
 QString FilePathSystem::GetRoot()

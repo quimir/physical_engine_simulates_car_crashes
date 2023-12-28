@@ -60,11 +60,7 @@ private:
      */
     void AnimateSizeChange(const QSize& start_size, const QSize& end_size);
 
-    /**
-     * @brief SettingButtonIcon Sets the icon for the button
-     * @param icon_path Path to the button icon
-     */
-    void SetButtonIcon(const QString icon_path);
+    void SetButtonIcon(const QImage image);
 
     /**
      * @brief SettingButtonLayout Sets the flush effect between the button icon and the text
@@ -72,10 +68,7 @@ private:
     void SetButtonLayout();
 
 private:
-    /**
-     * @brief icon_path_ Save the path to the button icon
-     */
-    QString icon_path_;
+    QImage image_;
 
     /**
      * @brief original_size_ Save the button size

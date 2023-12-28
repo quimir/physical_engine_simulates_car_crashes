@@ -17,11 +17,11 @@
 
 #include "src_include/model_animation/model.h"
 #include "src_include/assimp_qt_coversion.h"
-#include "src_include/file_system/file_wirte_system.h"
-#include "src_include/file_system/file_read_system.h"
+#include "src_include/file_system/file_write_system.h"
 #include <assimp/types.h>
+#include "src_include/render_texture.h"
 
-Model::Model(const QString& path, bool animation_switch, bool gamma) :gamma_correction_(gamma), animation_switch_(animation_switch)
+Model::Model(const QString& path, bool animation_switch, float gamma) :gamma_correction_(gamma), animation_switch_(animation_switch)
 {
     LoadModel(path);
 }
@@ -34,44 +34,10 @@ GLvoid Model::Draw(Shader& shader)
     }
 }
 
-GLuint Model::TextureFromFile(const QString& path, const QString& directory, bool gamma)
+GLuint Model::TextureFromFile(const QString& path, const QString& directory, float gamma)
 {
     QString filename = QDir(directory).filePath(path);
-    FileReadSystem::ReadImageFile(filename);
-
-    QImage image(filename);
-    GLuint texture_id;
-    glGenTextures(1, &texture_id);
-
-    GLenum format;
-    if (image.format() == QImage::Format_RGB888)
-    {
-        format = GL_RGB;
-    }
-    else if (image.format() == QImage::Format_RGBA8888)
-    {
-        format = GL_RGBA;
-    }
-    else if (image.format() == QImage::Format_Grayscale8)
-    {
-        format = GL_RED;
-    }
-    else
-    {
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug, QString("Unsupported image format: %1").arg(filename));
-        return 0;
-    }
-
-    glBindTexture(GL_TEXTURE_2D, texture_id);
-    glTexImage2D(GL_TEXTURE_2D, 0, format, image.width(), image.height(), 0, format, GL_UNSIGNED_BYTE, image.constBits());
-    glGenerateMipmap(GL_TEXTURE_2D);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    return texture_id;
+    return RenderTexture::GetInstance().TextureFromFile(filename,gamma);
 }
 
 GLvoid Model::LoadModel(const QString& path)
@@ -82,7 +48,8 @@ GLvoid Model::LoadModel(const QString& path)
     // check for errors
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
     {
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug, QString("ERROR::ASSIMP::%1").arg(importer.GetErrorString()));
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+                                                  , QString("ERROR::ASSIMP::%1").arg(importer.GetErrorString()));
         return;
     }
     // retrieve the directory path of the filepath
@@ -306,7 +273,8 @@ void Model::ExtractBoneWeightForVertices(QVector<modelattribute::Vertex>& vertic
 
         if (bone_id == -1)
         {
-            FileWirteSystem::OutMessage(FileWirteSystem::Debug, "Bone id error now is -1");
+            FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+                                                      , "Bone id error now is -1");
             return;
         }
 
@@ -320,7 +288,8 @@ void Model::ExtractBoneWeightForVertices(QVector<modelattribute::Vertex>& vertic
 
             if (vertex_id > vertices.size())
             {
-                FileWirteSystem::OutMessage(FileWirteSystem::Debug, "Bone weight id > bone weight size no this weight id");
+                FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+                                                          , "Bone weight id > bone weight size no this weight id");
                 return;
             }
             SetVertexBoneData(vertices[vertex_id], bone_id, weight);

@@ -26,7 +26,7 @@ namespace resourcesfiletype
 /**
  * @brief The ResourcesType enum Type of resource file, now existing type by json, iamge, shader, style,Obj.
  */
-enum ResourcesType
+enum class ResourcesType
 {
     Image,
     Json,
@@ -38,21 +38,20 @@ enum ResourcesType
 class ResourcesTypeToMapper
 {
 public:
-    inline static ResourcesTypeToMapper& Instance()
+    inline static ResourcesTypeToMapper& GetInstance()
     {
-        static ResourcesTypeToMapper instance;
-        return instance;
+        return Instance();
     }
 
-    inline QString EnumToString(ResourcesType type)const
+    inline QString EnumToStringPath(ResourcesType type)const
     {
         return enum_map_.value(type);
     }
 
-    inline QString EnumToString(QString type)const
+    inline QString StringToEnumToStringPath(QString type)const
     {
         QString s(type);
-        if(!s.compare("Shader",Qt::CaseInsensitive))
+        if(!s.compare("GLSL",Qt::CaseInsensitive))
             return enum_map_.value(ResourcesType::GLSL);
         else if(!s.compare("Image",Qt::CaseInsensitive))
             return enum_map_.value(ResourcesType::Image);
@@ -66,14 +65,40 @@ public:
         return QString();
     }
 
+    inline QString EnumToString(ResourcesType type)const
+    {
+        switch(type)
+        {
+        case ResourcesType::GLSL:
+            return "GLSL";
+        case ResourcesType::Image:
+            return "Image";
+        case ResourcesType::Json:
+            return "Json";
+        case ResourcesType::Style:
+            return "Style";
+        case ResourcesType::Obj:
+            return "Obj";
+
+        default:
+            return QString();
+        }
+    }
+
 private:
+    inline static ResourcesTypeToMapper& Instance()
+    {
+        static ResourcesTypeToMapper instance;
+        return instance;
+    }
+
     inline ResourcesTypeToMapper()
     {
-        enum_map_[Image]=":/image/";
-        enum_map_[Json]=":/json/";
-        enum_map_[GLSL]=":/GLSL/";
-        enum_map_[Style]=":/style/";
-        enum_map_[Obj]=":/objs/";
+        enum_map_[ResourcesType::Image]=":/image/";
+        enum_map_[ResourcesType::Json]=":/json/";
+        enum_map_[ResourcesType::GLSL]=":/GLSL/";
+        enum_map_[ResourcesType::Style]=":/style/";
+        enum_map_[ResourcesType::Obj]=":/objs/";
     }
 
     ResourcesTypeToMapper(const ResourcesTypeToMapper&) = delete;

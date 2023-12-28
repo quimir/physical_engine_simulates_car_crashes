@@ -77,6 +77,23 @@ public:
     QOpenGLShaderProgram& GetShaderProgram();
 
 private:
+    enum class ErrorMessageTypes
+    {
+        Vertex,
+        Fragment,
+        Geometry,
+        TessellationControl,
+        TessellationEvaluation,
+        Compute,
+        Create,
+        Link,
+        Shader,
+        IsLinked,
+        LocationError,
+        BlockIndexError
+    };
+
+private:
     GLint GetUniformLocation(const QString& name);
 
     GLuint GetUniformBlockIndex(const QString& name);
@@ -88,6 +105,8 @@ private:
     GLuint AddShaderSourceFile(const QString& vertex_path,const QString& fragment_path,const QString& geometry_path
                                ,const QString&tessellation_control_path,const QString& tessellation_evaluation_path
                                ,const QString& compute_path);
+
+    void ErrorMessage(ErrorMessageTypes type,const QString& other=QString());
 
 private:
     QOpenGLShaderProgram shader_program_;

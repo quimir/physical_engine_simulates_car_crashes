@@ -39,8 +39,8 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event);
 
 private:
-    QString icon_path_;
-    QString press_icon_path_;
+    QImage icon_image_;
+    QImage press_icon_image_;
     QSize original_size_;
     QString button_text_;
     QString specify_the_display_text_;

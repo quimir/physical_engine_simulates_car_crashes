@@ -16,7 +16,7 @@
  **/
 
 #include "src_include/shader.h"
-#include "src_include/file_system/file_wirte_system.h"
+#include "src_include/file_system/file_write_system.h"
 
 constexpr GLuint kFunctionError=0;
 constexpr GLuint kFunctionSucces=1;
@@ -27,30 +27,40 @@ Shader::Shader(bool shader_source_code, const QString &vertex_path, const QStrin
     if(shader_source_code)
     {
         if(!AddShaderSourceCode(vertex_path,fragment_path,geometry_path,tessellation_control_path,tessellation_evaluation_path,compute_path))
-            FileWirteSystem::OutMessage(FileWirteSystem::Debug,"The build failed. Please check the log details");
+        {
+            FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+                                                      ,"The build failed. Please check the log details");
+            return;
+        }
     }
     else
+    {
         if(!AddShaderSourceFile(vertex_path,fragment_path,geometry_path,tessellation_control_path,tessellation_evaluation_path,compute_path))
-            FileWirteSystem::OutMessage(FileWirteSystem::Debug,"The build failed. Please check the log details");
+        {
+            FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+                                                      ,"The build failed. Please check the log details");
+            return;
+        }
+    }
 }
 
 Shader::Shader(QOpenGLShader* shader)
 {
     if(!this->shader_program_.addShader(shader))
     {
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Add shader failed!");
+        ErrorMessage(ErrorMessageTypes::Shader);
         return;
     }
 
     if(!this->shader_program_.create())
     {
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Shader create failed!");
+        ErrorMessage(ErrorMessageTypes::Create);
         return;
     }
 
     if(!this->shader_program_.link())
     {
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Shader link failed due to: "+this->shader_program_.log());
+        ErrorMessage(ErrorMessageTypes::Link);
         return;
     }
 }
@@ -59,7 +69,7 @@ GLuint Shader::GetShaderID()
 {
     if(!this->shader_program_.isLinked())
     {
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Shader is not linked please link and then get the ID");
+        ErrorMessage(ErrorMessageTypes::IsLinked);
         return kFunctionError;
     }
     return this->shader_program_.programId();
@@ -149,7 +159,6 @@ void Shader::SetBlockBinding(const GLuint block_index, const GLuint block_bindin
 {
     if(block_index==GL_INVALID_INDEX)
     {
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug,QString("The bloc index error does not exist occurred in: %1 shader").arg(QString::number(this->shader_program_.programId())));
         return;
     }
 
@@ -170,7 +179,7 @@ GLint Shader::GetUniformLocation(const QString &name)
         if(!this->error_map_.contains(name))
         {
             error_map_.insert(name);
-            FileWirteSystem::OutMessage(FileWirteSystem::Debug,QString("Uniform variable %1 not found in the shader.").arg(name));
+            ErrorMessage(ErrorMessageTypes::LocationError,name);
         }
     }
 
@@ -186,7 +195,7 @@ GLuint Shader::GetUniformBlockIndex(const QString &name)
         if(!this->error_map_.contains(name))
         {
             this->error_map_.insert(name);
-            FileWirteSystem::OutMessage(FileWirteSystem::Debug,QString("Uniform block %1 not found in the shader.").arg(name));
+            ErrorMessage(ErrorMessageTypes::BlockIndexError,name);
         }
     }
 
@@ -199,7 +208,7 @@ GLuint Shader::AddShaderSourceCode(const QString &vertex_path, const QString &fr
     {
         if(!this->shader_program_.addShaderFromSourceCode(QOpenGLShader::Vertex,vertex_path))
         {
-            FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Add vertex shader failed path is: "+vertex_path);
+            ErrorMessage(ErrorMessageTypes::Vertex,vertex_path);
             return kFunctionError;
         }
     }
@@ -212,7 +221,7 @@ GLuint Shader::AddShaderSourceCode(const QString &vertex_path, const QString &fr
     {
         if(!this->shader_program_.addShaderFromSourceCode(QOpenGLShader::Fragment,fragment_path))
         {
-            FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Add fragment shader failed path is: "+fragment_path);
+            ErrorMessage(ErrorMessageTypes::Fragment,fragment_path);
             return kFunctionError;
         }
     }
@@ -221,7 +230,7 @@ GLuint Shader::AddShaderSourceCode(const QString &vertex_path, const QString &fr
     {
         if(!this->shader_program_.addShaderFromSourceCode(QOpenGLShader::Geometry,geometry_path))
         {
-            FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Add geometry shader failed path is: "+geometry_path);
+            ErrorMessage(ErrorMessageTypes::Geometry,geometry_path);
         }
     }
 
@@ -229,7 +238,7 @@ GLuint Shader::AddShaderSourceCode(const QString &vertex_path, const QString &fr
     {
         if(!this->shader_program_.addShaderFromSourceCode(QOpenGLShader::TessellationControl,tessellation_control_path))
         {
-            FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Add tessllation cotrol shader failed path is: "+tessellation_evaluation_path);
+            ErrorMessage(ErrorMessageTypes::TessellationControl,tessellation_control_path);
         }
     }
 
@@ -237,7 +246,7 @@ GLuint Shader::AddShaderSourceCode(const QString &vertex_path, const QString &fr
     {
         if(!this->shader_program_.addShaderFromSourceCode(QOpenGLShader::TessellationEvaluation,tessellation_evaluation_path))
         {
-            FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Add tessellation evluation shader failed path is: "+tessellation_evaluation_path);
+            ErrorMessage(ErrorMessageTypes::TessellationEvaluation,tessellation_evaluation_path);
         }
     }
 
@@ -245,19 +254,19 @@ GLuint Shader::AddShaderSourceCode(const QString &vertex_path, const QString &fr
     {
         if(!this->shader_program_.addShaderFromSourceCode(QOpenGLShader::Compute,compute_path))
         {
-            FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Add compute shader failed path is: "+compute_path);
+            ErrorMessage(ErrorMessageTypes::Compute,compute_path);
         }
     }
 
     if(!this->shader_program_.create())
     {
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Shader create failed");
+        ErrorMessage(ErrorMessageTypes::Create);
         return kFunctionError;
     }
 
     if(!this->shader_program_.link())
     {
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Shader link failed because: "+this->shader_program_.log());
+        ErrorMessage(ErrorMessageTypes::Link);
         return kFunctionError;
     }
 
@@ -270,7 +279,7 @@ GLuint Shader::AddShaderSourceFile(const QString &vertex_path, const QString &fr
     {
         if(!this->shader_program_.addShaderFromSourceFile(QOpenGLShader::Vertex,vertex_path))
         {
-            FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Add vertex shader failed path is: "+vertex_path);
+            ErrorMessage(ErrorMessageTypes::Vertex,vertex_path);
             return kFunctionError;
         }
     }
@@ -283,7 +292,7 @@ GLuint Shader::AddShaderSourceFile(const QString &vertex_path, const QString &fr
     {
         if(!this->shader_program_.addShaderFromSourceFile(QOpenGLShader::Fragment,fragment_path))
         {
-            FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Add fragment shader failed path is: "+fragment_path);
+            ErrorMessage(ErrorMessageTypes::Fragment,fragment_path);
             return kFunctionError;
         }
     }
@@ -292,7 +301,7 @@ GLuint Shader::AddShaderSourceFile(const QString &vertex_path, const QString &fr
     {
         if(!this->shader_program_.addShaderFromSourceFile(QOpenGLShader::Geometry,geometry_path))
         {
-            FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Add geometry shader failed path is: "+geometry_path);
+            ErrorMessage(ErrorMessageTypes::Geometry,geometry_path);
         }
     }
 
@@ -300,7 +309,7 @@ GLuint Shader::AddShaderSourceFile(const QString &vertex_path, const QString &fr
     {
         if(!this->shader_program_.addShaderFromSourceFile(QOpenGLShader::TessellationControl,tessellation_control_path))
         {
-            FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Add tessllation cotrol shader failed path is: "+tessellation_evaluation_path);
+            ErrorMessage(ErrorMessageTypes::TessellationControl,tessellation_control_path);
         }
     }
 
@@ -308,7 +317,7 @@ GLuint Shader::AddShaderSourceFile(const QString &vertex_path, const QString &fr
     {
         if(!this->shader_program_.addShaderFromSourceFile(QOpenGLShader::TessellationEvaluation,tessellation_evaluation_path))
         {
-            FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Add tessellation evluation shader failed path is: "+tessellation_evaluation_path);
+            ErrorMessage(ErrorMessageTypes::TessellationEvaluation,tessellation_evaluation_path);
         }
     }
 
@@ -316,21 +325,78 @@ GLuint Shader::AddShaderSourceFile(const QString &vertex_path, const QString &fr
     {
         if(!this->shader_program_.addShaderFromSourceFile(QOpenGLShader::Compute,compute_path))
         {
-            FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Add compute shader failed path is: "+compute_path);
+            ErrorMessage(ErrorMessageTypes::Compute,compute_path);
         }
     }
 
     if(!this->shader_program_.create())
     {
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Shader create failed");
+        ErrorMessage(ErrorMessageTypes::Create);
         return kFunctionError;
     }
 
     if(!this->shader_program_.link())
     {
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Shader link failed because: "+this->shader_program_.log());
+        ErrorMessage(ErrorMessageTypes::Link);
         return kFunctionError;
     }
 
     return kFunctionSucces;
+}
+
+void Shader::ErrorMessage(ErrorMessageTypes type, const QString &other)
+{
+    switch(type)
+    {
+    case ErrorMessageTypes::Vertex:
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+                                                  ,"Add vertex shader failed path is: "+other);
+        break;
+    case ErrorMessageTypes::Fragment:
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+                                                  ,"Add fragment shader failed path is: "+other);
+        break;
+    case ErrorMessageTypes::Geometry:
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+                                                  ,"Add geometry shader failed path is: "+other);
+        break;
+    case ErrorMessageTypes::TessellationControl:
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+                                                  ,"Add tessllation cotrol shader failed path is: "+other);
+        break;
+    case ErrorMessageTypes::TessellationEvaluation:
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+                                                  ,"Add tessellation evluation shader failed path is: "+other);
+        break;
+    case ErrorMessageTypes::Compute:
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+                                                  ,"Add compute shader failed path is: "+other);
+        break;
+    case ErrorMessageTypes::Create:
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+                                                  ,"Shader create failed");
+        break;
+    case ErrorMessageTypes::Link:
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+                                                  ,"Shader link failed because: "+this->shader_program_.log());
+        break;
+    case ErrorMessageTypes::Shader:
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+                                                  ,"Add shader failed!");
+        break;
+    case ErrorMessageTypes::IsLinked:
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+                                                  ,"Shader is not linked please link and then get the ID");
+        break;
+    case ErrorMessageTypes::LocationError:
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+                                                  ,QString("Uniform variable ")+QString(other)
+                                                      +QString("not found in the shader."));
+        break;
+    case ErrorMessageTypes::BlockIndexError:
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+                                                  ,QString("Uniform block ")+QString(other)
+                                                      +QString("not found in the shader."));
+        break;
+    }
 }

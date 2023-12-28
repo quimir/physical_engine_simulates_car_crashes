@@ -19,7 +19,7 @@
 
 #include "src_include/model_animation/bone.h"
 #include "src_include/assimp_qt_coversion.h"
-#include "src_include/file_system/file_wirte_system.h"
+#include "src_include/file_system/file_write_system.h"
 
 Bone::Bone(const QString &name, int id, const aiNodeAnim *channel)
     :local_transfrom_(geometricalias::mat4()),name_(std::move(name)),id_(id)
@@ -78,8 +78,8 @@ uint32_t Bone::GetPositionIndex(float animation_time)
             return index;
         }
     }
-
-    FileWirteSystem::OutMessage(FileWirteSystem::Debug,QString("No find %1 bone position index id is: %2").arg(name_,QString::number(id_)));
+    
+    FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug,QString("No find %1 bone position index id is: %2").arg(name_,QString::number(id_)));
     return UINT_MAX;
 }
 
@@ -92,8 +92,8 @@ uint32_t Bone::GetRotationIndex(float animation_time)
             return index;
         }
     }
-
-    FileWirteSystem::OutMessage(FileWirteSystem::Debug,QString("No find %1 bone rotation index id is: %2").arg(name_,QString::number(id_)));
+    
+    FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug,QString("No find %1 bone rotation index id is: %2").arg(name_,QString::number(id_)));
     return UINT_MAX;
 }
 
@@ -106,8 +106,8 @@ uint32_t Bone::GetScaleIndex(float animation_time)
             return index;
         }
     }
-
-    FileWirteSystem::OutMessage(FileWirteSystem::Debug,QString("No find %1 bone scale index id is: %2").arg(name_,QString::number(id_)));
+    
+    FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug,QString("No find %1 bone scale index id is: %2").arg(name_,QString::number(id_)));
     return UINT_MAX;
 }
 

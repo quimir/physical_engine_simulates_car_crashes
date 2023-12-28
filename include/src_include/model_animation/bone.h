@@ -66,13 +66,19 @@ public:
     void Update(float animation_time);
 
     inline geometricalias::mat4 Getlocaltransfrom()const
-    {return this->local_transfrom_;};
+    {
+        return this->local_transfrom_;
+    }
 
     inline QString GetBonename()const
-    {return this->name_;};
+    {
+        return this->name_;
+    }
 
     inline int GetBoneid()const
-    {return this->id_;};
+    {
+        return this->id_;
+    }
 
     /**
      * @brief GetPositionIndex Gets the current index on mKeyPositions to interpolate to based on

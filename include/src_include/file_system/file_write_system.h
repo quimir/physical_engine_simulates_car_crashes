@@ -28,25 +28,23 @@
 #include <QRegularExpression>
 #include <QFileInfo>
 
-class FileWirteSystem
+class FileWriteSystem
 {
 public:
     /**
      * @brief The MessageTypeBit enum Nessage type
      */
-    enum MessageTypeBit
+    enum class MessageTypeBit
     {
-        Debug=0x0001,
-        Warning=0x0002,
-        Critical=0x0003,
-        Fatal=0x0004,
-        Info=0x0005
+        Debug,
+        Warning,
+        Critical,
+        Fatal,
+        Info
     };
 
 public:
-    FileWirteSystem()=delete;
-
-    static void InitalizeLogFile();
+    static FileWriteSystem& GetInstance();
 
     /**
      * @brief CustomMessageHandler Create a handle to get a list of Qt messages, and use a file to store the details of the messages.
@@ -56,34 +54,42 @@ public:
      */
     static void CustomMessageHandler(QtMsgType type,const QMessageLogContext& context,const QString &msg);
 
+    inline QFile& GetLogFile()
+    {
+        return this->log_file_;
+    }
+
     /**
      * @brief OutMessage Unified log output format. The unified output content is: (Debug|Warning|Critical|Fatal): Current Date and Time (now time) (out message).
      * @param type See MessageTypeBit for details
      * @param out_string Log detail message.
      */
-    static void OutMessage(FileWirteSystem::MessageTypeBit type,const QString out_string);
+    void OutMessage(FileWriteSystem::MessageTypeBit type,const QString out_string);
 
     /**
      * @brief EndWirteLineIf the program exits normally, add a endl to the last line of the default log file.
      */
-    static void EndWirteLine();
+    void EndWirteLine();
 
     /**
      * @brief DeleteLogDay Check whether the time on the first line of the log file is greater than or equal to the time set by the user to clear the contents of the log file.
      * @param log_file_path Path of the log file.
      * @param day User specifies the number of days to clear logs.
      */
-    static void DeleteLogDay(const QString &log_file_path,const long long day);
+    void DeleteLogDay(const QString &log_file_path,const long long day);
 
-    static void DeleteLogFile();
+    void DeleteLogFile();
 
-    static void DeleteLogDay(QFile &log_file, const long long day);
+    void DeleteLogDay(QFile &log_file, const long long day);
 
 private:
+    static FileWriteSystem& Instance();
 
-    static QString GetCurrentDataTimeString();
+    FileWriteSystem();
 
-    static bool ReadFirstLogLine(const QString &file_path,QString &first_line);
+    QString GetCurrentDataTimeString();
+
+    bool ReadFirstLogLine(const QString &file_path,QString &first_line);
 
     /**
      * @brief ReadFirstLogLine Gets the first line of the log file (if it exists) and reads it to the first_line.
@@ -91,22 +97,20 @@ private:
      * @param first_line Information about the first line of a log file.
      * @return Return true on success.
      */
-    static bool ReadFirstLogLine(QFile &log_file,QString &first_line);
+    bool ReadFirstLogLine(QFile &log_file,QString &first_line);
 
     /**
      * @brief ExtractLogTime Obtain the time of the first line in the log file using a regular expression.
      * @param log_line The first line in the log file.
      * @return If yes, the time data in the format yyyy-MM-dd hh:mm:ss is returned. Otherwise, Null is returned.
      */
-    static QDateTime ExtractLogTime(const QString &log_line);
-
-public:
-    // Default location where logs are saved.
-    static QFile log_file_;
+    QDateTime ExtractLogTime(const QString &log_line);
 
 private:
+    // Default location where logs are saved.
+    QFile log_file_;
     // The output format is: (Debug|Warning|Critical|Fatal): Current Date and Time (now time) (out message).
-    static QRegularExpression regex;
+    QRegularExpression regex_;
 
 };
 

@@ -15,8 +15,8 @@
  ** limitations under the License.
  **/
 
-#ifndef FILE_READ_SYSTEM_H
-#define FILE_READ_SYSTEM_H
+#ifndef FILE_SYSTEM_FILE_READ_SYSTEM_H
+#define FILE_SYSTEM_FILE_READ_SYSTEM_H
 
 #include <QString>
 #include <QFile>
@@ -25,7 +25,7 @@
 #include <QMap>
 #include <QVector>
 #include <QMultiMap>
-#include "src_include/resources_file_type.h"
+#include "src_include/file_system/resources_file_type.h"
 
 class FileReadSystem
 {
@@ -68,29 +68,18 @@ public:
     static void ReadResourcesTypeFilesFormJson(QMap<QString,QList<QString>> json_map,resourcesfiletype::ResourcesType type);
 
     /**
-     * @brief ReadJsonFile Read the entire contents of the json file, and store the key and value in the json into the Map.
-     * @param json_file The json file can be a relative path in the.qrc or an absolute path and a relative path to the project.
-     * @return Stores all json as a map of all keys and values
+     * @brief ReadResourcesTypeFilesFormJson Automatically link the contents of any type of file in the resource system, but for now, it is only string friendly,
+     * and the rest is not very useful unless you want to increase the coupling of the code.
+     * @param json_map Stores all the keys and values in json.
      */
-    static QMap<QString,QList<QString>> ReadJsonFile(QFile json_file);
+    static void ReadResourcesTypeFilesFormJson(QMap<QString,QList<QString>> json_map);
+
+    static QMap<QString,QMap<QString,QList<QString>>> ReadJsonFile(QFile json_file);
 
 private:
-    /**
-     * @brief ParseJson We iterate over all the keys and values in the json file.
-     * If the value below the key is an array, we pass it to ParseJsonArray,
-     * and if it's an object, we continue processing until we have a single key and a single value.
-     * @param json_obj Json object
-     * @param json_map A map that stores all the keys and values in the json
-     */
-    static void ParseJson(const QJsonObject& json_obj,QMap<QString,QList<QString>>& json_map);
-
-    /**
-     * @brief ParseJsonArray Same logic as ParseJson, but it adds the key and value to the map
-     * @param json_array json array to read
-     * @param json_map json map of the records
-     * @param key json key
-     */
-    static void ParseJsonArray(const QJsonArray& json_array,QMap<QString,QList<QString>>& json_map,const QString& key);
+    static void ParseJson(const QJsonObject& json_obj,QMap<QString, QMap<QString, QList<QString> > > &json_map);
+    static void ParseJsonObject(const QJsonObject& json_object, QMap<QString,QList<QString>>& relative_paths,const QString &key,QList<QString>& value);
+    static void ParseJsonArray(const QJsonArray& json_array, QMap<QString,QList<QString>>& relative_paths, const QString &key, QList<QString>& list_value);
 private:
     /**
      * @brief file_map_ Store all the files that have been read so that they don't have to be read again
@@ -98,4 +87,4 @@ private:
     static QSet<QString> file_map_;
 };
 
-#endif // FILE_READ_SYSTEM_H
+#endif // FILE_SYSTEM_FILE_READ_SYSTEM_H

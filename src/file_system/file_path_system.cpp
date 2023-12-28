@@ -15,7 +15,9 @@
  ** limitations under the License.
  **/
 
-#include "src_include/file_path_system.h"
+#include "src_include/file_system/file_path_system.h"
+#include <QResource>
+#include <QStandardPaths>
 
 QString FilePathSystem::GetPath(const QString &name)
 {
@@ -43,6 +45,17 @@ QString FilePathSystem::GetLogsPath(const QString &name)
 }
 
 QString FilePathSystem::GetResourcesPath(resourcesfiletype::ResourcesType type,const QString& name)
+{
+    resourcesfiletype::ResourcesTypeToMapper &resources_map=resourcesfiletype::ResourcesTypeToMapper::Instance();
+    return resources_map.EnumToString(type)+name;
+}
+
+QString FilePathSystem::RCCToAbsolutePath(const QString &rcc_path)
+{
+    return QFileInfo(QResource(rcc_path).fileName()).absoluteFilePath();
+}
+
+QString FilePathSystem::GetResourcesPath(const QString &type, const QString &name)
 {
     resourcesfiletype::ResourcesTypeToMapper &resources_map=resourcesfiletype::ResourcesTypeToMapper::Instance();
     return resources_map.EnumToString(type)+name;

@@ -16,12 +16,13 @@
  **/
 
 #include "src_include/shader.h"
-#include "src_include/file_wirte_system.h"
+#include "src_include/file_system/file_wirte_system.h"
 
 constexpr GLuint kFunctionError=0;
 constexpr GLuint kFunctionSucces=1;
 
 Shader::Shader(bool shader_source_code, const QString &vertex_path, const QString &fragment_path, const QString &geometry_path, const QString &tessellation_control_path, const QString &tessellation_evaluation_path, const QString &compute_path)
+    :QOpenGLFunctions_3_3_Core()
 {
     if(shader_source_code)
     {
@@ -54,9 +55,24 @@ Shader::Shader(QOpenGLShader* shader)
     }
 }
 
+GLuint Shader::GetShaderID()
+{
+    if(!this->shader_program_.isLinked())
+    {
+        FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Shader is not linked please link and then get the ID");
+        return kFunctionError;
+    }
+    return this->shader_program_.programId();
+}
+
 void Shader::Use()
 {
     this->shader_program_.bind();
+}
+
+void Shader::ReleaseShader()
+{
+    this->shader_program_.release();
 }
 
 void Shader::SetBool(const QString &name, bool value)

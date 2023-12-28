@@ -15,37 +15,46 @@
  ** limitations under the License.
  **/
 
-#ifndef START_WINDOW_H
-#define START_WINDOW_H
+#ifndef VERTICES_H
+#define VERTICES_H
 
-#include <QOpenGLWindow>
+#include <QVector>
 #include <QOpenGLFunctions_3_3_Core>
-#include <QTimer>
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLBuffer>
-#include "src_include/shader.h"
-#include "src_include/vertices.h"
-#include <QSharedPointer>
+#include "src_include/geometricalias.h"
 
-class StartWindow : public QOpenGLWindow,protected QOpenGLFunctions_3_3_Core
+class Vertices:protected QOpenGLFunctions_3_3_Core
 {
 public:
-    StartWindow(QRect screen_size,QMap<QString,QList<QString>> shader_map);
+    struct Vertex
+    {
+        geometricalias::vec3 position;
+        geometricalias::vec3 normal;
+        geometricalias::vec2 texture_coord;
+    };
 
-    void initializeGL();
+    Vertices();
 
-    void resizeGL(int w,int h);
+    bool LoadObjectFile(const QString& file_path);
 
-    void paintGL();
+    void BindDataToOpenGL();
+
+    qint64 GetIndicesSize()const;
+
+    qint64 GetVerticesSize()const;
+
+    QOpenGLVertexArrayObject& GetVao();
+
+    QOpenGLBuffer GetVbo();
+
+    QOpenGLBuffer GetEbo();
 
 private:
-    void ReadShaderMapToShader(QMap<QString,QList<QString>>& shader_map);
-
-private:
-    QRect screen_size_;
-    QMap<QString,QList<QString>> shader_map_;
-    QVector<QSharedPointer<Shader>> shaders_;
-    QVector<Vertices> vertices_;
+    QVector<Vertex> vertices_;
+    QVector<GLuint>indices_;
+    QOpenGLVertexArrayObject vao_;
+    QOpenGLBuffer vbo_,ebo_;
 };
 
-#endif // START_WINDOW_H
+#endif // VERTICES_H

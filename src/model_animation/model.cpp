@@ -17,8 +17,8 @@
 
 #include "src_include/model_animation/model.h"
 #include "src_include/assimp_qt_coversion.h"
-#include "src_include/file_wirte_system.h"
-#include "src_include/file_read_system.h"
+#include "src_include/file_system/file_wirte_system.h"
+#include "src_include/file_system/file_read_system.h"
 #include <assimp/types.h>
 
 Model::Model(const QString& path, bool animation_switch, bool gamma) :gamma_correction_(gamma), animation_switch_(animation_switch)

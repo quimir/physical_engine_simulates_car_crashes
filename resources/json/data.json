@@ -1,12 +1,15 @@
 {
-      "shader":[
+      "GLSL":[
             {
                   "vert":["text.vert","text_2.vert"],
                   "frag":["text.frag","text_2.frag"],
                   "geom":["text.geom",""],
-                  "mesh":["",""],
                   "tesc":["",""],
-                  "test":["",""]
+                  "tese":["",""],
+                  "compute":["",""]
             }
-      ]
+      ],
+      "obj":{
+            "text":"text.obj"
+      }
 }

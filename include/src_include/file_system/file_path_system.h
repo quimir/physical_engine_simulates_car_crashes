@@ -15,15 +15,15 @@
  ** limitations under the License.
  **/
 
-#ifndef FILE_PATH_SYSTEM_H
-#define FILE_PATH_SYSTEM_H
+#ifndef FILE_SYSTEM_FILE_PATH_SYSTEM_H
+#define FILE_SYSTEM_FILE_PATH_SYSTEM_H
 
 #include <QFile>
 #include <QString>
 #include <QStandardPaths>
 #include <QDir>
 #include <QCoreApplication>
-#include "src_include/resources_file_type.h"
+#include "src_include/file_system/resources_file_type.h"
 
 class FilePathSystem
 {
@@ -39,10 +39,12 @@ public:
     static QString GetShaderPath(const QString& name);
     static QString GetLogsPath(const QString& name);
     static QString GetResourcesPath(resourcesfiletype::ResourcesType type, const QString &name);
+    static QString RCCToAbsolutePath(const QString& rcc_path);
+    static QString GetResourcesPath(const QString& type,const QString& name);
 
 private:
     static QString GetRoot();
 
 };
 
-#endif // FILE_PATH_SYSTEM_H
+#endif // FILE_SYSTEM_FILE_PATH_SYSTEM_H

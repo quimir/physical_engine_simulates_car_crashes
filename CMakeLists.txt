@@ -45,8 +45,8 @@ else()
 endif()
 
 # Find the required packages
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools OpenGL OpenGLWidgets MultimediaWidgets Qml)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools OpenGL OpenGLWidgets MultimediaWidgets Qml)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools OpenGL OpenGLWidgets MultimediaWidgets Qml Core)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools OpenGL OpenGLWidgets MultimediaWidgets Qml Core)
 IF(MSVC)# There is currently no way to introduce PhysX with the MinGW compiler
 find_package(PHYSX REQUIRED)
 message(STATUS "Found PHYSX in ${PHYSX_INCLUDE_DIR}")
@@ -76,7 +76,9 @@ file(GLOB SOURCE_FILES
       "${CMAKE_SOURCE_DIR}/include/src_include/model_animation/*.h"
       "${CMAKE_SOURCE_DIR}/include/src_include/setting_window/*.h"
       "${CMAKE_SOURCE_DIR}/src/model_animation/*.cpp"
-      "${CMAKE_SOURCE_DIR}/src/setting_window/*.cpp")
+      "${CMAKE_SOURCE_DIR}/src/setting_window/*.cpp"
+      "${CMAKE_SOURCE_DIR}/include/src_include/file_system/*.h"
+      "${CMAKE_SOURCE_DIR}/src/file_system/*.cpp")
 
 set(PROJECT_SOURCES
       ${SOURCE_FILES}
@@ -131,6 +133,7 @@ add_custom_command(
 )
 # Setting custom targets depends on the copy command
 add_custom_target(CopyDlls DEPENDS ${COPY_DONE_FLAG})
+
 add_dependencies(${QT_TARGET_NAME} CopyDlls)
 
 configure_file(configuration/root_directory.h.in configuration/root_directory.h)
@@ -142,6 +145,7 @@ target_link_libraries(${QT_TARGET_NAME} PRIVATE
       Qt${QT_VERSION_MAJOR}::OpenGLWidgets
       Qt${QT_VERSION_MAJOR}::MultimediaWidgets
       Qt${QT_VERSION_MAJOR}::Qml
+      Qt${QT_VERSION_MAJOR}::Core
       ${LIBS}
 )
 

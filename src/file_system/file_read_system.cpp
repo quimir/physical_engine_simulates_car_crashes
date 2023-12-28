@@ -15,9 +15,9 @@
  ** limitations under the License.
  **/
 
-#include "src_include/file_read_system.h"
-#include "src_include/file_wirte_system.h"
-#include "src_include/file_path_system.h"
+#include "src_include/file_system/file_read_system.h"
+#include "src_include/file_system/file_wirte_system.h"
+#include "src_include/file_system/file_path_system.h"
 #include <QJsonArray>
 #include <QJsonDocument>
 
@@ -95,9 +95,9 @@ QFile &FileReadSystem::ReadImageFile(QFile &image_file)
     return image_file;
 }
 
-QMap<QString, QList<QString> > FileReadSystem::ReadJsonFile(QFile json_file)
+QMap<QString, QMap<QString, QList<QString> > > FileReadSystem::ReadJsonFile(QFile json_file)
 {
-    QMap<QString, QList<QString> > json_map;
+    QMap<QString, QMap<QString,QList<QString> >> json_map;
     if(!json_file.open(QIODevice::ReadOnly|QIODevice::Text))
     {
         FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Failed to open the file");
@@ -121,62 +121,104 @@ QMap<QString, QList<QString> > FileReadSystem::ReadJsonFile(QFile json_file)
     return json_map;
 }
 
-void FileReadSystem::ParseJson(const QJsonObject &json_obj, QMap<QString, QList<QString> > &json_map)
+void FileReadSystem::ParseJson(const QJsonObject &json_obj, QMap<QString, QMap<QString, QList<QString> > > &json_map)
 {
-    QStringList keys=json_obj.keys();
+    QStringList keys = json_obj.keys();
 
-    for(const QString& key:keys)
+    for (const QString &key : keys)
     {
-        QJsonValue value=json_obj[key];
+        QJsonValue value = json_obj[key];
 
-        if(key.isEmpty())
+        if (key.isEmpty())
         {
-            FileWirteSystem::OutMessage(FileWirteSystem::Debug,"The json key is null");
+            FileWirteSystem::OutMessage(FileWirteSystem::Debug, "Json key is null");
             continue;
         }
 
-        if(value.isArray())
+        QMap<QString, QList<QString>> nested_map;
+        QList<QString> list_value;
+
+        if (value.isArray())
         {
-            ParseJsonArray(value.toArray(),json_map,key);
+            ParseJsonArray(value.toArray(), nested_map,key,list_value);
         }
-        else if(value.isObject())
+        else if (value.isObject())
         {
-            ParseJson(value.toObject(),json_map);
+            ParseJsonObject(value.toObject(), nested_map,key,list_value);
         }
         else
         {
             QList<QString> relative_paths;
             relative_paths.append(value.toString());
-            json_map.insert(key,relative_paths);
+            nested_map.insert(key, relative_paths);
         }
+
+        json_map.insert(key, nested_map);
     }
 }
 
-void FileReadSystem::ParseJsonArray(const QJsonArray &json_array, QMap<QString, QList<QString> > &json_map, const QString &key)
+void FileReadSystem::ParseJsonObject(const QJsonObject& json_obj, QMap<QString, QList<QString>> &nested_map,const QString &parent_key,QList<QString>& list_value)
 {
-    QList<QString> relative_paths;
+    QStringList keys = json_obj.keys();
 
+    for (const QString &key : keys)
+    {
+        QJsonValue value = json_obj[key];
+
+        if (key.isEmpty())
+        {
+            FileWirteSystem::OutMessage(FileWirteSystem::Debug, "Json key is null");
+            continue;
+        }
+
+        QMap<QString,QList<QString>> relative_paths;
+
+        if (value.isArray())
+        {
+            ParseJsonArray(value.toArray(), relative_paths,key,list_value);
+        }
+        else if (value.isObject())
+        {
+            ParseJsonObject(value.toObject(), relative_paths,key,list_value);
+        }
+        else
+        {
+            QList<QString> nested_relative_paths;
+            nested_relative_paths.append(value.toString());
+            relative_paths.insert(key,nested_relative_paths);
+        }
+
+        list_value.clear();
+        nested_map.insert(relative_paths);
+
+    }
+}
+
+void FileReadSystem::ParseJsonArray(const QJsonArray& json_array, QMap<QString,QList<QString>>& relative_paths,const QString &key,QList<QString>& list_value)
+{
     for(const QJsonValue& sub_value:json_array)
     {
         if(sub_value.isArray())
         {
-            ParseJsonArray(sub_value.toArray(),json_map,key);
+            ParseJsonArray(sub_value.toArray(),relative_paths,key,list_value);
         }
         else if(sub_value.isObject())
         {
-            ParseJson(sub_value.toObject(),json_map);
+            ParseJsonObject(sub_value.toObject(),relative_paths,key,list_value);
         }
-        else
-        {
-            relative_paths.append(sub_value.toString());
-        }
-    }
 
-    json_map.insert(key,relative_paths);
+        list_value.append(sub_value.toString());
+        relative_paths.insert(key,list_value);
+    }
 }
 
 QString FileReadSystem::ReadFileContentsToString(QFile &file)
 {
+    if(file.fileName().isEmpty()||file_map_.contains(file.fileName()))
+    {
+        return QString();
+    }
+
     if(!file.open(QIODevice::ReadOnly|QIODevice::Text))
     {
         FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Failed to open the: "+file.fileName()+"file");
@@ -186,12 +228,13 @@ QString FileReadSystem::ReadFileContentsToString(QFile &file)
     QString file_content=file.readAll();
     if(file_content.isEmpty())
     {
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug,"The file content is empty, the file name is:"+file.fileName());
+        FileWirteSystem::OutMessage(FileWirteSystem::Debug,"The file content is empty, the file name is: "+file.fileName());
         file.close();
         return QString();
     }
 
     file.close();
+    file_map_.insert(file.fileName());
     return file_content;
 }
 
@@ -199,7 +242,7 @@ void FileReadSystem::ReadResourcesTypeFilesFormJson(QMap<QString, QList<QString>
 {
     if(json_map.isEmpty())
     {
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Read shader file is null");
+        FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Read json file is null");
         return;
     }
 
@@ -216,6 +259,47 @@ void FileReadSystem::ReadResourcesTypeFilesFormJson(QMap<QString, QList<QString>
         for (QString &relativePath : relativePaths)
         {
             QString file_code = FilePathSystem::GetResourcesPath(type,relativePath);
+            QFile file(file_code);
+            QString value_code = ReadFileContentsToString(file);
+            if(value_code.isEmpty()&&value_codes.isEmpty())
+            {
+                if_file=false;
+            }
+            else
+            {
+                if_file=true;
+                value_codes.push_back(value_code);
+            }
+        }
+
+        if(if_file)
+        {
+            json_map.insert(key,value_codes);
+        }
+    }
+}
+
+void FileReadSystem::ReadResourcesTypeFilesFormJson(QMap<QString, QList<QString> > json_map)
+{
+    if(json_map.isEmpty())
+    {
+        FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Read json file is null");
+        return;
+    }
+
+    QList<QString> keys = json_map.keys();
+
+    for (const QString &key : keys)
+    {
+        QList<QString> relativePaths = json_map.value(key);
+        // Store new file contents
+        QList<QString> value_codes;
+        // Determine whether you want to replace it
+        bool if_file=true;
+
+        for (QString &relativePath : relativePaths)
+        {
+            QString file_code = FilePathSystem::GetResourcesPath(key,relativePath);
             QFile file(file_code);
             QString value_code = ReadFileContentsToString(file);
             if(value_code.isEmpty()&&value_codes.isEmpty())

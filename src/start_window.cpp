@@ -16,16 +16,17 @@
  **/
 
 #include "src_include/start_window.h"
-#include "src_include/file_wirte_system.h"
+#include "src_include/file_system/file_wirte_system.h"
 
-StartWindow::StartWindow(QRect screen_size, Shader *shader):
-    screen_size_(screen_size),shader_(shader),vao_(0),vbo_(0),ebo_(0)
+StartWindow::StartWindow(QRect screen_size, QMap<QString, QList<QString> > shader_map):
+    screen_size_(screen_size),shader_map_(shader_map)
 {
-    this->setGeometry(this->screen_size_);
-    if(!this->shader_)
+    if(this->screen_size_.isEmpty()||shader_map.isEmpty())
     {
-        FileWirteSystem::OutMessage(FileWirteSystem::Debug,"The shader is not initialized");
+        FileWirteSystem::OutMessage(FileWirteSystem::Debug
+                                    ,"No "+QString(this->screen_size_.isEmpty()?(QString("window screen size"+QString(this->shader_map_.isEmpty()?"and no shader map":""))):"shader map"));
     }
+    this->setGeometry(this->screen_size_);
 }
 
 void StartWindow::initializeGL()
@@ -38,22 +39,10 @@ void StartWindow::initializeGL()
     glClearColor(0.0f,0.0f,0.0f,0.0f);
     glClearDepth(1.0);
     glEnable(GL_DEPTH_TEST);
+    ReadShaderMapToShader(this->shader_map_);
 
-    GLfloat vertices[] = {
-        -0.5f, -0.5f, 0.0f,
-        0.5f, -0.5f, 0.0f,
-        0.0f,  0.5f, 0.0f
-    };
-
-    glGenVertexArrays(1,&this->vao_);
-    glGenBuffers(1,&this->vbo_);
-    glBindVertexArray(this->vao_);
-    glBindBuffer(GL_ARRAY_BUFFER,this->vbo_);
-    glBufferData(GL_ARRAY_BUFFER,sizeof(vertices),vertices,GL_STATIC_DRAW);
-    glEnableVertexAttribArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER,0);
-    glBindVertexArray(0);
 }
+
 
 void StartWindow::resizeGL(int w, int h)
 {
@@ -62,10 +51,59 @@ void StartWindow::resizeGL(int w, int h)
 
 void StartWindow::paintGL()
 {
-    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-    this->shader_->GetShaderProgram().bind();
-    glBindVertexArray(this->vao_);
-    glDrawArrays(GL_TRIANGLES,0,3);
-    glBindVertexArray(0);
-    this->shader_->GetShaderProgram().release();
+    glClear(GL_COLOR_BUFFER_BIT);
+}
+
+void StartWindow::ReadShaderMapToShader(QMap<QString, QList<QString> > &shader_map)
+{
+    if(shader_map.isEmpty())
+    {
+        FileWirteSystem::OutMessage(FileWirteSystem::Debug,"Read shader file is null");
+    }
+
+    QVector<QString> vertex_path,fragment_path,geometry_path,tessellation_control_path,tessellation_evaluation_path,compute_path;
+    QList<QString> shader_keys=shader_map.keys();
+
+    for(const QString&key:shader_keys)
+    {
+        QList<QString> value_codes=shader_map.value(key);
+
+        for(QString& shader_path:value_codes)
+        {
+            if(!shader_path.isEmpty())
+            {
+                if(key=="vert")
+                {
+                    vertex_path.push_back(shader_path);
+                }
+                else if(key=="frag")
+                {
+                    fragment_path.push_back(shader_path);
+                }
+                else if(key=="geom")
+                {
+                    geometry_path.push_back(shader_path);
+                }
+                else if(key=="tesc")
+                {
+                    tessellation_control_path.push_back(shader_path);
+                }
+                else if(key=="tese")
+                {
+                    tessellation_evaluation_path.push_back(shader_path);
+                }
+                else
+                {
+                    compute_path.push_back(shader_path);
+                }
+            }
+        }
+    }
+
+    for(qlonglong i=0;i<vertex_path.size();i++)
+    {
+        QSharedPointer<Shader> shader=QSharedPointer<Shader>::create(true,vertex_path[i]
+                                                                       ,fragment_path[i],geometry_path[i],tessellation_control_path[i],tessellation_evaluation_path[i],compute_path[i]);
+        this->shaders_.append(shader);
+    }
 }

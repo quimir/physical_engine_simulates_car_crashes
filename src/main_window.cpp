@@ -19,9 +19,9 @@
 #include "qapplication.h"
 #include "src_include/main_entry_button.h"
 #include "src_include/setting_window/setting_window.h"
-#include "src_include/file_wirte_system.h"
-#include "src_include/file_read_system.h"
-#include "src_include/file_path_system.h"
+#include "src_include/file_system/file_wirte_system.h"
+#include "src_include/file_system/file_read_system.h"
+#include "src_include/file_system/file_path_system.h"
 #include <QQmlApplicationEngine>
 #include <QJsonArray>
 #include <QJsonDocument>
@@ -34,7 +34,7 @@ MainWindow::MainWindow(QWidget* parent)
     GetScreenWindow();
     SetUIWindow();
     auto shader_file=FileReadSystem::ReadJsonFile(FilePathSystem::GetResourcesPath(resourcesfiletype::Json,"data.json"));
-    FileReadSystem::ReadResourcesTypeFilesFormJson(shader_file,resourcesfiletype::Shader);
+    //FileReadSystem::ReadResourcesTypeFilesFormJson(shader_file);
     for(MainEntryButton* button:this->buttons_)
     {
         connect(button,&MainEntryButton::clicked,this,&MainWindow::HandleButtonClicked);

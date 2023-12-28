@@ -16,8 +16,8 @@
  **/
 
 #include "src_include/setting_window/setting_window_button.h"
-#include "src_include/file_wirte_system.h"
-#include "src_include/file_read_system.h"
+#include "src_include/file_system/file_wirte_system.h"
+#include "src_include/file_system/file_read_system.h"
 
 SettingWindowButton::SettingWindowButton(const QString icon_path, const QSize original_size
                                          , const QString button_text, const QSize icon_size, const QString specify_the_display_text, const QString press_icon_path)

@@ -19,7 +19,7 @@
 
 #include "src_include/model_animation/bone.h"
 #include "src_include/assimp_qt_coversion.h"
-#include "src_include/file_wirte_system.h"
+#include "src_include/file_system/file_wirte_system.h"
 
 Bone::Bone(const QString &name, int id, const aiNodeAnim *channel)
     :local_transfrom_(geometricalias::mat4()),name_(std::move(name)),id_(id)

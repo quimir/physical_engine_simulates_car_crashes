@@ -34,6 +34,7 @@ namespace assimpqtcoversion
  */
 inline static geometricalias::mat4 ConvertMatrixToQtFormat(const aiMatrix4x4& from)
 {
+    Q_UNUSED(0);
     QMatrix4x4 q_matrix;
     for(int i=0;i<4;i++)
         for(int j=0;j<4;j++)
@@ -48,6 +49,7 @@ inline static geometricalias::mat4 ConvertMatrixToQtFormat(const aiMatrix4x4& fr
  */
 inline static geometricalias::vec3 GetQtVec3(const aiVector3D& vec)
 {
+    Q_UNUSED(0);
     return geometricalias::vec3(vec.x,vec.y,vec.z);
 }
 
@@ -58,6 +60,7 @@ inline static geometricalias::vec3 GetQtVec3(const aiVector3D& vec)
  */
 inline static geometricalias::quat GetQtQuat(const aiQuaternion& pOrientation)
 {
+    Q_UNUSED(0);
     return geometricalias::quat(pOrientation.w,pOrientation.x,pOrientation.y,pOrientation.z);
 }
 }

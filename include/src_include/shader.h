@@ -36,7 +36,13 @@ public:
 
     Shader(QOpenGLShader *shader);
 
+    Shader(const Shader&)=delete;
+
+    GLuint GetShaderID();
+
     void Use();
+
+    void ReleaseShader();
 
     void SetBool(const QString& name,bool value);
 

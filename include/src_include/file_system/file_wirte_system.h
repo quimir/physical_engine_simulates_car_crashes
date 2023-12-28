@@ -15,8 +15,8 @@
  ** limitations under the License.
  **/
 
-#ifndef FILE_WIRTE_SYSTEM_H
-#define FILE_WIRTE_SYSTEM_H
+#ifndef FILE_SYSTEM_FILE_WIRTE_SYSTEM_H
+#define FILE_SYSTEM_FILE_WIRTE_SYSTEM_H
 
 #include <QCoreApplication>
 #include <QDebug>
@@ -110,4 +110,4 @@ private:
 
 };
 
-#endif // FILE_WIRTE_SYSTEM_H
+#endif // FILE_SYSTEM_FILE_WIRTE_SYSTEM_H

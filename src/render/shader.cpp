@@ -15,14 +15,15 @@
  ** limitations under the License.
  **/
 
-#include "src_include/shader.h"
+#include "src_include/render/shader.h"
 #include "src_include/file_system/file_write_system.h"
 
 constexpr GLuint kFunctionError=0;
-constexpr GLuint kFunctionSucces=1;
+constexpr GLuint kFunctionSuccess=1;
 
-Shader::Shader(bool shader_source_code, const QString &vertex_path, const QString &fragment_path, const QString &geometry_path, const QString &tessellation_control_path, const QString &tessellation_evaluation_path, const QString &compute_path)
-    :QOpenGLFunctions_3_3_Core()
+Shader::Shader(bool shader_source_code, const QString &vertex_path, const QString &fragment_path
+               , const QString &geometry_path, const QString &tessellation_control_path, const QString &tessellation_evaluation_path, const QString &compute_path)
+    :QOpenGLFunctions_4_3_Core()
 {
     if(shader_source_code)
     {
@@ -65,6 +66,13 @@ Shader::Shader(QOpenGLShader* shader)
     }
 }
 
+Shader::~Shader()
+{
+    this->shader_program_.removeAllShaders();
+    this->shader_program_.release();
+    this->error_map_.clear();
+}
+
 GLuint Shader::GetShaderID()
 {
     if(!this->shader_program_.isLinked())
@@ -78,11 +86,6 @@ GLuint Shader::GetShaderID()
 void Shader::Use()
 {
     this->shader_program_.bind();
-}
-
-void Shader::ReleaseShader()
-{
-    this->shader_program_.release();
 }
 
 void Shader::SetBool(const QString &name, bool value)
@@ -170,6 +173,27 @@ QOpenGLShaderProgram &Shader::GetShaderProgram()
     return this->shader_program_;
 }
 
+QString Shader::GLSLTypesToString(GLSLTypes type)
+{
+    switch(type)
+    {
+    case GLSLTypes::Vertex:
+        return "vert";
+    case GLSLTypes::Fragment:
+        return "frag";
+    case GLSLTypes::Geometry:
+        return "geom";
+    case GLSLTypes::TessellationControl:
+        return "tesc";
+    case GLSLTypes::TessellationEvaluation:
+        return "tese";
+    case GLSLTypes::Compute:
+        return "compute";
+    default:
+        return QString();
+    }
+}
+
 GLint Shader::GetUniformLocation(const QString &name)
 {
     GLint location=this->shader_program_.uniformLocation(name);
@@ -208,7 +232,7 @@ GLuint Shader::AddShaderSourceCode(const QString &vertex_path, const QString &fr
     {
         if(!this->shader_program_.addShaderFromSourceCode(QOpenGLShader::Vertex,vertex_path))
         {
-            ErrorMessage(ErrorMessageTypes::Vertex,vertex_path);
+            ErrorMessage(GLSLTypes::Vertex,vertex_path);
             return kFunctionError;
         }
     }
@@ -221,7 +245,7 @@ GLuint Shader::AddShaderSourceCode(const QString &vertex_path, const QString &fr
     {
         if(!this->shader_program_.addShaderFromSourceCode(QOpenGLShader::Fragment,fragment_path))
         {
-            ErrorMessage(ErrorMessageTypes::Fragment,fragment_path);
+            ErrorMessage(GLSLTypes::Fragment,fragment_path);
             return kFunctionError;
         }
     }
@@ -230,7 +254,7 @@ GLuint Shader::AddShaderSourceCode(const QString &vertex_path, const QString &fr
     {
         if(!this->shader_program_.addShaderFromSourceCode(QOpenGLShader::Geometry,geometry_path))
         {
-            ErrorMessage(ErrorMessageTypes::Geometry,geometry_path);
+            ErrorMessage(GLSLTypes::Geometry,geometry_path);
         }
     }
 
@@ -238,7 +262,7 @@ GLuint Shader::AddShaderSourceCode(const QString &vertex_path, const QString &fr
     {
         if(!this->shader_program_.addShaderFromSourceCode(QOpenGLShader::TessellationControl,tessellation_control_path))
         {
-            ErrorMessage(ErrorMessageTypes::TessellationControl,tessellation_control_path);
+            ErrorMessage(GLSLTypes::TessellationControl,tessellation_control_path);
         }
     }
 
@@ -246,7 +270,7 @@ GLuint Shader::AddShaderSourceCode(const QString &vertex_path, const QString &fr
     {
         if(!this->shader_program_.addShaderFromSourceCode(QOpenGLShader::TessellationEvaluation,tessellation_evaluation_path))
         {
-            ErrorMessage(ErrorMessageTypes::TessellationEvaluation,tessellation_evaluation_path);
+            ErrorMessage(GLSLTypes::TessellationEvaluation,tessellation_evaluation_path);
         }
     }
 
@@ -254,7 +278,7 @@ GLuint Shader::AddShaderSourceCode(const QString &vertex_path, const QString &fr
     {
         if(!this->shader_program_.addShaderFromSourceCode(QOpenGLShader::Compute,compute_path))
         {
-            ErrorMessage(ErrorMessageTypes::Compute,compute_path);
+            ErrorMessage(GLSLTypes::Compute,compute_path);
         }
     }
 
@@ -270,7 +294,7 @@ GLuint Shader::AddShaderSourceCode(const QString &vertex_path, const QString &fr
         return kFunctionError;
     }
 
-    return kFunctionSucces;
+    return kFunctionSuccess;
 }
 
 GLuint Shader::AddShaderSourceFile(const QString &vertex_path, const QString &fragment_path, const QString &geometry_path, const QString &tessellation_control_path, const QString &tessellation_evaluation_path, const QString &compute_path)
@@ -279,7 +303,7 @@ GLuint Shader::AddShaderSourceFile(const QString &vertex_path, const QString &fr
     {
         if(!this->shader_program_.addShaderFromSourceFile(QOpenGLShader::Vertex,vertex_path))
         {
-            ErrorMessage(ErrorMessageTypes::Vertex,vertex_path);
+            ErrorMessage(GLSLTypes::Vertex,vertex_path);
             return kFunctionError;
         }
     }
@@ -292,7 +316,7 @@ GLuint Shader::AddShaderSourceFile(const QString &vertex_path, const QString &fr
     {
         if(!this->shader_program_.addShaderFromSourceFile(QOpenGLShader::Fragment,fragment_path))
         {
-            ErrorMessage(ErrorMessageTypes::Fragment,fragment_path);
+            ErrorMessage(GLSLTypes::Fragment,fragment_path);
             return kFunctionError;
         }
     }
@@ -301,7 +325,7 @@ GLuint Shader::AddShaderSourceFile(const QString &vertex_path, const QString &fr
     {
         if(!this->shader_program_.addShaderFromSourceFile(QOpenGLShader::Geometry,geometry_path))
         {
-            ErrorMessage(ErrorMessageTypes::Geometry,geometry_path);
+            ErrorMessage(GLSLTypes::Geometry,geometry_path);
         }
     }
 
@@ -309,7 +333,7 @@ GLuint Shader::AddShaderSourceFile(const QString &vertex_path, const QString &fr
     {
         if(!this->shader_program_.addShaderFromSourceFile(QOpenGLShader::TessellationControl,tessellation_control_path))
         {
-            ErrorMessage(ErrorMessageTypes::TessellationControl,tessellation_control_path);
+            ErrorMessage(GLSLTypes::TessellationControl,tessellation_control_path);
         }
     }
 
@@ -317,7 +341,7 @@ GLuint Shader::AddShaderSourceFile(const QString &vertex_path, const QString &fr
     {
         if(!this->shader_program_.addShaderFromSourceFile(QOpenGLShader::TessellationEvaluation,tessellation_evaluation_path))
         {
-            ErrorMessage(ErrorMessageTypes::TessellationEvaluation,tessellation_evaluation_path);
+            ErrorMessage(GLSLTypes::TessellationEvaluation,tessellation_evaluation_path);
         }
     }
 
@@ -325,7 +349,7 @@ GLuint Shader::AddShaderSourceFile(const QString &vertex_path, const QString &fr
     {
         if(!this->shader_program_.addShaderFromSourceFile(QOpenGLShader::Compute,compute_path))
         {
-            ErrorMessage(ErrorMessageTypes::Compute,compute_path);
+            ErrorMessage(GLSLTypes::Compute,compute_path);
         }
     }
 
@@ -341,37 +365,13 @@ GLuint Shader::AddShaderSourceFile(const QString &vertex_path, const QString &fr
         return kFunctionError;
     }
 
-    return kFunctionSucces;
+    return kFunctionSuccess;
 }
 
 void Shader::ErrorMessage(ErrorMessageTypes type, const QString &other)
 {
     switch(type)
     {
-    case ErrorMessageTypes::Vertex:
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
-                                                  ,"Add vertex shader failed path is: "+other);
-        break;
-    case ErrorMessageTypes::Fragment:
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
-                                                  ,"Add fragment shader failed path is: "+other);
-        break;
-    case ErrorMessageTypes::Geometry:
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
-                                                  ,"Add geometry shader failed path is: "+other);
-        break;
-    case ErrorMessageTypes::TessellationControl:
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
-                                                  ,"Add tessllation cotrol shader failed path is: "+other);
-        break;
-    case ErrorMessageTypes::TessellationEvaluation:
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
-                                                  ,"Add tessellation evluation shader failed path is: "+other);
-        break;
-    case ErrorMessageTypes::Compute:
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
-                                                  ,"Add compute shader failed path is: "+other);
-        break;
     case ErrorMessageTypes::Create:
         FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
                                                   ,"Shader create failed");
@@ -397,6 +397,43 @@ void Shader::ErrorMessage(ErrorMessageTypes type, const QString &other)
         FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
                                                   ,QString("Uniform block ")+QString(other)
                                                       +QString("not found in the shader."));
+        break;
+    }
+}
+
+void Shader::ErrorMessage(GLSLTypes type, const QString &path)
+{
+    switch(type)
+    {
+    case GLSLTypes::Vertex:
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+                                                  ,"Add vertex shader failed path is: "
+                                                      +path+this->shader_program_.log());
+        break;
+    case GLSLTypes::Fragment:
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+                                                  ,"Add fragment shader failed path is: "
+                                                      +path+this->shader_program_.log());
+        break;
+    case GLSLTypes::Geometry:
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+                                                  ,"Add geometry shader failed path is: "
+                                                      +path+this->shader_program_.log());
+        break;
+    case GLSLTypes::TessellationControl:
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+                                                  ,"Add tessllation cotrol shader failed path is: "
+                                                      +path+this->shader_program_.log());
+        break;
+    case GLSLTypes::TessellationEvaluation:
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+                                                  ,"Add tessellation evluation shader failed path is: "
+                                                      +path+this->shader_program_.log());
+        break;
+    case GLSLTypes::Compute:
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+                                                  ,"Add compute shader failed path is: "
+                                                      +path+this->shader_program_.log());
         break;
     }
 }

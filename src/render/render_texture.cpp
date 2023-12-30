@@ -15,9 +15,14 @@
  ** limitations under the License.
  **/
 
-#include "src_include/render_texture.h"
+#include "src_include/render/render_texture.h"
 #include "src_include/file_system/file_read_system.h"
 #include "src_include/file_system/file_write_system.h"
+
+RenderTexture &RenderTexture::GetInstance()
+{
+    return instance();
+}
 
 GLuint RenderTexture::TextureFromFile(const QString &path, float gamma)
 {
@@ -90,6 +95,12 @@ GLuint RenderTexture::LoadCubeMap(QVector<QString> faces, float gamma)
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
     return texture_id;
+}
+
+RenderTexture &RenderTexture::instance()
+{
+    static RenderTexture instance;
+    return instance;
 }
 
 QImage RenderTexture::ApplyGammaCorrection(const QImage &input_image, float gamma)

@@ -24,7 +24,7 @@
 namespace resourcesfiletype
 {
 /**
- * @brief The ResourcesType enum Type of resource file, now existing type by json, iamge, shader, style,Obj.
+ * @enum The ResourcesType enum Type of resource file, now existing type by json, iamge, shader, style,Obj.
  */
 enum class ResourcesType
 {
@@ -38,68 +38,46 @@ enum class ResourcesType
 class ResourcesTypeToMapper
 {
 public:
-    inline static ResourcesTypeToMapper& GetInstance()
-    {
-        return Instance();
-    }
+    /**
+     * @brief GetInstance The only way to access an object of class ResourcesTypeToMapper,
+     *  no other method can access its object, and the only way to call a function of class ResourcesTypeToMapper.
+     * @return Unique object.
+     */
+    static ResourcesTypeToMapper& GetInstance();
 
-    inline QString EnumToStringPath(ResourcesType type)const
-    {
-        return enum_map_.value(type);
-    }
+    /**
+     * @brief EnumToStringPath Relative path translation from ResourcesTypes types to RCC
+     * @param type RCC existing types
+     * @return The relative path of type to RCC
+     */
+    QString EnumToStringPath(ResourcesType type)const;
 
-    inline QString StringToEnumToStringPath(QString type)const
-    {
-        QString s(type);
-        if(!s.compare("GLSL",Qt::CaseInsensitive))
-            return enum_map_.value(ResourcesType::GLSL);
-        else if(!s.compare("Image",Qt::CaseInsensitive))
-            return enum_map_.value(ResourcesType::Image);
-        else if(!s.compare("Style",Qt::CaseInsensitive))
-            return enum_map_.value(ResourcesType::Style);
-        else if(!s.compare("Obj",Qt::CaseInsensitive))
-            return enum_map_.value(ResourcesType::Obj);
-        else if(!s.compare("Json",Qt::CaseInsensitive))
-            return enum_map_.value(ResourcesType::Json);
+    /**
+     * @brief StringToEnumToStringPath Look for a name that matches the RCC resource file (regardless of case rules)
+     * , and if it matches, return the relative path to the RCC for that type.
+     * @param type A string to evaluate
+     * @return The relative path of the type in RCC
+     */
+    QString StringToEnumToStringPath(QString type)const;
 
-        return QString();
-    }
-
-    inline QString EnumToString(ResourcesType type)const
-    {
-        switch(type)
-        {
-        case ResourcesType::GLSL:
-            return "GLSL";
-        case ResourcesType::Image:
-            return "Image";
-        case ResourcesType::Json:
-            return "Json";
-        case ResourcesType::Style:
-            return "Style";
-        case ResourcesType::Obj:
-            return "Obj";
-
-        default:
-            return QString();
-        }
-    }
+    /**
+     * @brief EnumToString Converts a fixed type from the ResourcesTypes type to a string
+     * @param type target type
+     * @return Converted string
+     */
+    QString EnumToString(ResourcesType type)const;
 
 private:
-    inline static ResourcesTypeToMapper& Instance()
-    {
-        static ResourcesTypeToMapper instance;
-        return instance;
-    }
+    /**
+     * @brief Instance Gets the unique object of the ResourcesTypeToMapper.
+     * @return Unique object.
+     */
+    static ResourcesTypeToMapper& Instance();
 
-    inline ResourcesTypeToMapper()
-    {
-        enum_map_[ResourcesType::Image]=":/image/";
-        enum_map_[ResourcesType::Json]=":/json/";
-        enum_map_[ResourcesType::GLSL]=":/GLSL/";
-        enum_map_[ResourcesType::Style]=":/style/";
-        enum_map_[ResourcesType::Obj]=":/objs/";
-    }
+    /**
+     * @brief ResourcesTypeToMapper Initialize the basic data of the class.
+     */
+    ResourcesTypeToMapper();
 
     ResourcesTypeToMapper(const ResourcesTypeToMapper&) = delete;
     ResourcesTypeToMapper& operator=(const ResourcesTypeToMapper&) = delete;

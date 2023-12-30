@@ -16,16 +16,20 @@
  **/
 
 #include "src_include/start_window.h"
+#include "src_include/file_system/file_path_system.h"
 #include "src_include/file_system/file_write_system.h"
+#include "src_include/file_system/resources_file_type.h"
 
-StartWindow::StartWindow(QRect screen_size, QMap<QString, QList<QString> > shader_map):
-    screen_size_(screen_size),shader_map_(shader_map)
+StartWindow::StartWindow(QRect screen_size, QMap<QString,QMap<QString,QList<QString>>> render_map):
+    QOpenGLFunctions_4_3_Core(),screen_size_(screen_size),render_map_(render_map)
 {
-    if(this->screen_size_.isEmpty()||shader_map.isEmpty())
+    if(this->screen_size_.isEmpty()||render_map.isEmpty())
     {
         FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
-                                                  ,"No "+QString(this->screen_size_.isEmpty()?(QString("window screen size"+QString(this->shader_map_.isEmpty()?"and no shader map":""))):"shader map"));
+                                                  ,"No "+QString(this->screen_size_.isEmpty()?(QString("window screen size"+QString(this->render_map_.isEmpty()?"and no shader map":""))):"shader map"));
     }
+
+    SetSurfaceFormat();
     this->setGeometry(this->screen_size_);
 }
 
@@ -40,8 +44,7 @@ void StartWindow::initializeGL()
     glClearColor(0.0f,0.0f,0.0f,0.0f);
     glClearDepth(1.0);
     glEnable(GL_DEPTH_TEST);
-    ReadShaderMapToShader(this->shader_map_);
-
+    ReadRenderingMap(this->render_map_);
 }
 
 
@@ -52,60 +55,134 @@ void StartWindow::resizeGL(int w, int h)
 
 void StartWindow::paintGL()
 {
+    glClearColor(0.2f,0.3f,0.3f,1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
+
+    this->shaders_[2]->Use();
+
+    this->vertices_[1]->BindDataToOpenGL();
+    this->vertices_[1]->DrawElements();
 }
 
-void StartWindow::ReadShaderMapToShader(QMap<QString, QList<QString> > &shader_map)
+void StartWindow::SetSurfaceFormat(QPair<int, int> major_version, int color_buffer, int depth_buffer)
 {
-    if(shader_map.isEmpty())
+    setSurfaceType(QSurface::OpenGLSurface);
+
+    QSurfaceFormat format;
+    format.setVersion(major_version.first,major_version.second);
+
+    format.setRedBufferSize(color_buffer);
+    format.setGreenBufferSize(color_buffer);
+    format.setBlueBufferSize(color_buffer);
+    format.setAlphaBufferSize(color_buffer);
+
+    format.setDepthBufferSize(depth_buffer);
+
+    setFormat(format);
+}
+
+
+
+void StartWindow::ReadGLSLMapToShader(QMap<QString, QList<QString> > &glsl_map)
+{
+    if(glsl_map.isEmpty())
     {
         FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
                                                   ,"Read shader file is null");
+        return;
     }
 
-    QVector<QString> vertex_path,fragment_path,geometry_path,tessellation_control_path,tessellation_evaluation_path,compute_path;
-    QList<QString> shader_keys=shader_map.keys();
+    QMap<QString,QVector<QString>> shader_paths_map;
 
-    for(const QString&key:shader_keys)
+    shader_paths_map[Shader::GLSLTypesToString(Shader::GLSLTypes::Vertex).toLower()]=QVector<QString>();
+    shader_paths_map[Shader::GLSLTypesToString(Shader::GLSLTypes::Fragment).toLower()] = QVector<QString>();
+    shader_paths_map[Shader::GLSLTypesToString(Shader::GLSLTypes::Geometry).toLower()] = QVector<QString>();
+    shader_paths_map[Shader::GLSLTypesToString(Shader::GLSLTypes::TessellationControl).toLower()] = QVector<QString>();
+    shader_paths_map[Shader::GLSLTypesToString(Shader::GLSLTypes::TessellationEvaluation).toLower()] = QVector<QString>();
+    shader_paths_map[Shader::GLSLTypesToString(Shader::GLSLTypes::Compute).toLower()] = QVector<QString>();
+
+    QList<QString> shader_keys=glsl_map.keys();
+
+    for(const QString& key :shader_keys)
     {
-        QList<QString> value_codes=shader_map.value(key);
+        QList<QString> value_codes=glsl_map.value(key);
 
-        for(QString& shader_path:value_codes)
+        QVector<QString>& shader_paths=shader_paths_map[key.toLower()];
+
+        for(const QString& shader_path:value_codes)
         {
             if(!shader_path.isEmpty())
             {
-                if(key=="vert")
-                {
-                    vertex_path.push_back(shader_path);
-                }
-                else if(key=="frag")
-                {
-                    fragment_path.push_back(shader_path);
-                }
-                else if(key=="geom")
-                {
-                    geometry_path.push_back(shader_path);
-                }
-                else if(key=="tesc")
-                {
-                    tessellation_control_path.push_back(shader_path);
-                }
-                else if(key=="tese")
-                {
-                    tessellation_evaluation_path.push_back(shader_path);
-                }
-                else
-                {
-                    compute_path.push_back(shader_path);
-                }
+                shader_paths.push_back(shader_path);
             }
         }
     }
 
-    for(qlonglong i=0;i<vertex_path.size();i++)
+    int shader_count = shader_paths_map[Shader::GLSLTypesToString(Shader::GLSLTypes::Vertex).toLower()].size();
+
+    for(int i=0;i<shader_count;i++)
     {
-        QSharedPointer<Shader> shader=QSharedPointer<Shader>::create(true,vertex_path[i]
-                                                                       ,fragment_path[i],geometry_path[i],tessellation_control_path[i],tessellation_evaluation_path[i],compute_path[i]);
-        this->shaders_.append(shader);
+        try {
+            QSharedPointer<Shader> shader=QSharedPointer<Shader>::create
+                (true,shader_paths_map[Shader::GLSLTypesToString(Shader::GLSLTypes::Vertex).toLower()].value(i),
+                 shader_paths_map[Shader::GLSLTypesToString(Shader::GLSLTypes::Fragment).toLower()].value(i),
+                 shader_paths_map[Shader::GLSLTypesToString(Shader::GLSLTypes::Geometry).toLower()].value(i),
+                 shader_paths_map[Shader::GLSLTypesToString(Shader::GLSLTypes::TessellationControl).toLower()].value(i),
+                 shader_paths_map[Shader::GLSLTypesToString(Shader::GLSLTypes::TessellationEvaluation).toLower()].value(i),
+                 shader_paths_map[Shader::GLSLTypesToString(Shader::GLSLTypes::Compute).toLower()].value(i));
+            this->shaders_.push_back(shader);
+        }
+        catch (const std::bad_alloc &e)
+        {
+            FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug,"Shader create failed!"+QString::number(i)+e.what());
+        }
+    }
+}
+
+void StartWindow::ReadRenderingMap(QMap<QString, QMap<QString, QList<QString> > > &render_map)
+{
+    QMap<QString,QMap<QString,QList<QString>>>::Iterator it=render_map.begin();
+
+    while(it!=render_map.end())
+    {
+        if(!QString::compare(it.key(),resourcesfiletype::ResourcesTypeToMapper::GetInstance().EnumToString(resourcesfiletype::ResourcesType::GLSL),Qt::CaseInsensitive))
+        {
+            QMap<QString,QList<QString>> glsl_map=it.value();
+            ReadGLSLMapToShader(glsl_map);
+        }
+
+        if(!QString::compare(it.key(),resourcesfiletype::ResourcesTypeToMapper::GetInstance().EnumToString(resourcesfiletype::ResourcesType::Obj),Qt::CaseInsensitive))
+        {
+            QMap<QString,QList<QString>> vertices_map=it.value();
+            ReadVertices(vertices_map);
+        }
+
+        it++;
+    }
+}
+
+void StartWindow::ReadVertices(QMap<QString, QList<QString> > &vertices_map)
+{
+    if(vertices_map.isEmpty())
+    {
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug,"Vertices is null!");
+        return;
+    }
+
+    auto vertices_keys=vertices_map.keys();
+
+    for(const QString& key:vertices_keys)
+    {
+        QList<QString> value_codes=vertices_map.value(key);
+
+        for(QString& vertices_path:value_codes)
+        {
+            if(!vertices_path.isEmpty())
+            {
+                auto vertices=QSharedPointer<Vertices>::create();
+                vertices->LoadObjectFile(FilePathSystem::GetInstance().GetResourcesPath(resourcesfiletype::ResourcesType::Obj,vertices_path));
+                this->vertices_.push_back(vertices);
+            }
+        }
     }
 }

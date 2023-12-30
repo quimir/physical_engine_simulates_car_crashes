@@ -15,8 +15,8 @@
  ** limitations under the License.
  **/
 
-#ifndef FIRST_PERSON_CAMERA_H
-#define FIRST_PERSON_CAMERA_H
+#ifndef RENDER_FIRST_PERSON_CAMERA_H
+#define RENDER_FIRST_PERSON_CAMERA_H
 
 #include <QObject>
 
@@ -90,4 +90,4 @@ private:
     float zoom_;
 };
 
-#endif // FIRST_PERSON_CAMERA_H
+#endif // RENDER_FIRST_PERSON_CAMERA_H

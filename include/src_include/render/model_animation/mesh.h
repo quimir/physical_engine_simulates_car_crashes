@@ -15,20 +15,20 @@
  ** limitations under the License.
  **/
 
-#ifndef MODEL_ANIMATION_MESH_H
-#define MODEL_ANIMATION_MESH_H
+#ifndef RENDER_MODEL_ANIMATION_MESH_H
+#define RENDER_MODEL_ANIMATION_MESH_H
 
 #include <QObject>
 #include <QVector>
-#include <QOpenGLFunctions_4_5_Core>
+#include <QOpenGLFunctions_4_3_Core>
 
-#include "src_include/shader.h"
-#include "src_include/model_animation/modelattribute.h"
+#include "src_include/render/shader.h"
+#include "src_include/render/model_animation/modelattribute.h"
 
 /**
  * @brief The Mesh class Grid information used to load the model
  */
-class Mesh:protected QOpenGLFunctions_3_3_Core
+class Mesh:protected QOpenGLFunctions_4_3_Core
 {
 public:
     Mesh(QVector<modelattribute::Vertex> vertices,QVector<GLuint> indices,QVector<modelattribute::Texture> textures)
@@ -78,4 +78,4 @@ private:
     GLuint VBO_,EBO_;
 };
 
-#endif // MODEL_ANIMATION_MESH_H
+#endif // RENDER_MODEL_ANIMATION_MESH_H

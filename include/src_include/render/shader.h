@@ -15,34 +15,48 @@
  ** limitations under the License.
  **/
 
-#ifndef SHADER_H
-#define SHADER_H
+#ifndef RENDER_SHADER_H
+#define RENDER_SHADER_H
 
 #include <QString>
 #include <QFile>
 #include <QTextStream>
 #include <QOpenGLShaderProgram>
 #include <QMap>
-#include <QOpenGLFunctions_3_3_Core>
+#include <QOpenGLFunctions_4_3_Core>
 
 #include "src_include/geometricalias.h"
 
-class Shader:protected QOpenGLFunctions_3_3_Core
+class Shader:protected QOpenGLFunctions_4_3_Core
 {
 public:
-    Shader(bool shader_source_code,const QString& vertex_path,const QString& fragment_path,const QString& geometry_path=QString()
-           ,const QString&tessellation_control_path=QString(),const QString& tessellation_evaluation_path=QString()
+    enum class GLSLTypes
+    {
+        Vertex,
+        Fragment,
+        Geometry,
+        TessellationControl,
+        TessellationEvaluation,
+        Compute,
+    };
+public:
+    Shader(bool shader_source_code
+           ,const QString& vertex_path
+           ,const QString& fragment_path
+           ,const QString& geometry_path=QString()
+           ,const QString& tessellation_control_path=QString()
+           ,const QString& tessellation_evaluation_path=QString()
            ,const QString& compute_path=QString());
 
     Shader(QOpenGLShader *shader);
 
     Shader(const Shader&)=delete;
 
+    ~Shader();
+
     GLuint GetShaderID();
 
     void Use();
-
-    void ReleaseShader();
 
     void SetBool(const QString& name,bool value);
 
@@ -76,15 +90,11 @@ public:
 
     QOpenGLShaderProgram& GetShaderProgram();
 
+    static QString GLSLTypesToString(GLSLTypes type);
+
 private:
     enum class ErrorMessageTypes
     {
-        Vertex,
-        Fragment,
-        Geometry,
-        TessellationControl,
-        TessellationEvaluation,
-        Compute,
         Create,
         Link,
         Shader,
@@ -99,8 +109,8 @@ private:
     GLuint GetUniformBlockIndex(const QString& name);
 
     GLuint AddShaderSourceCode(const QString& vertex_path,const QString& fragment_path,const QString& geometry_path
-                             ,const QString&tessellation_control_path,const QString& tessellation_evaluation_path
-                             ,const QString& compute_path);
+                               ,const QString&tessellation_control_path,const QString& tessellation_evaluation_path
+                               ,const QString& compute_path);
 
     GLuint AddShaderSourceFile(const QString& vertex_path,const QString& fragment_path,const QString& geometry_path
                                ,const QString&tessellation_control_path,const QString& tessellation_evaluation_path
@@ -108,9 +118,11 @@ private:
 
     void ErrorMessage(ErrorMessageTypes type,const QString& other=QString());
 
+    void ErrorMessage(GLSLTypes type,const QString&path);
+
 private:
     QOpenGLShaderProgram shader_program_;
     QSet<QString> error_map_;
 };
 
-#endif // SHADER_H
+#endif // RENDER_SHADER_H

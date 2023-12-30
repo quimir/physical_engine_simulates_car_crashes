@@ -15,12 +15,12 @@
  ** limitations under the License.
  **/
 
-#ifndef MODEL_ANIMATION_MODEL_H
-#define MODEL_ANIMATION_MODEL_H
+#ifndef RENDER_MODEL_ANIMATION_MODEL_H
+#define RENDER_MODEL_ANIMATION_MODEL_H
 
 #include <cstdint>
 
-#include <QOpenGLFunctions_3_3_Core>
+#include <QOpenGLFunctions_4_3_Core>
 #include <QString>
 #include <QMap>
 #include <QVector>
@@ -31,10 +31,10 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include "src_include/model_animation/mesh.h"
-#include "src_include/model_animation/animdata.h"
+#include "src_include/render/model_animation/mesh.h"
+#include "src_include/render/model_animation/animdata.h"
 
-class Model:protected QOpenGLFunctions_3_3_Core
+class Model:protected QOpenGLFunctions_4_3_Core
 {
 public:
     /**
@@ -134,4 +134,4 @@ private:
     uint32_t bone_counter_;
 };
 
-#endif // MODEL_ANIMATION_MODEL_H
+#endif // RENDER_MODEL_ANIMATION_MODEL_H

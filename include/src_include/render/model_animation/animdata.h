@@ -15,8 +15,8 @@
  ** limitations under the License.
  **/
 
-#ifndef MODEL_ANIMATION_ANIMDATA_H
-#define MODEL_ANIMATION_ANIMDATA_H
+#ifndef RENDER_MODEL_ANIMATION_ANIMDATA_H
+#define RENDER_MODEL_ANIMATION_ANIMDATA_H
 
 #include "src_include/geometricalias.h"
 
@@ -33,4 +33,4 @@ struct BoneInfo
     geometricalias::mat4 offset;
 };
 
-#endif // MODEL_ANIMATION_ANIMDATA_H
+#endif // RENDER_MODEL_ANIMATION_ANIMDATA_H

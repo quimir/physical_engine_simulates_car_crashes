@@ -16,9 +16,9 @@
  **/
 
 #include <climits>
-#include "src_include/model_animation/animator.h"
+#include "src_include/render/model_animation/animator.h"
 #include "src_include/file_system/file_write_system.h"
-#include "src_include/model_animation/bone.h"
+#include "src_include/render/model_animation/bone.h"
 
 Animator::Animator(Animation *animation)
     :final_bone_matrices_(QVector<geometricalias::mat4>(100,geometricalias::mat4())),current_animation_(animation)

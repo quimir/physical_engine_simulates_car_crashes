@@ -19,18 +19,18 @@
 #define START_WINDOW_H
 
 #include <QOpenGLWindow>
-#include <QOpenGLFunctions_3_3_Core>
+#include <QOpenGLFunctions_4_3_Core>
 #include <QTimer>
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLBuffer>
-#include "src_include/shader.h"
-#include "src_include/vertices.h"
+#include "src_include/render/shader.h"
+#include "src_include/render/vertices.h"
 #include <QSharedPointer>
 
-class StartWindow : public QOpenGLWindow,protected QOpenGLFunctions_3_3_Core
+class StartWindow : public QOpenGLWindow,protected QOpenGLFunctions_4_3_Core
 {
 public:
-    StartWindow(QRect screen_size,QMap<QString,QList<QString>> shader_map);
+    StartWindow(QRect screen_size,QMap<QString,QMap<QString,QList<QString>>> render_map);
 
     void initializeGL();
 
@@ -38,14 +38,22 @@ public:
 
     void paintGL();
 
+    void SetSurfaceFormat(QPair<int,int> major_version=QPair<int,int>(4,3), int color_buffer=8, int depth_buffer=24);
+
 private:
-    void ReadShaderMapToShader(QMap<QString,QList<QString>>& shader_map);
+    void ReadGLSLMapToShader(QMap<QString,QList<QString>>& glsl_map);
+
+    void ReadRenderingMap(QMap<QString,QMap<QString,QList<QString>>>& render_map);
+
+    void ReadVertices(QMap<QString,QList<QString>>& vertices_map);
+
+    void ReadModel(QMap<QString,QList<QString>>& model_map);
 
 private:
     QRect screen_size_;
-    QMap<QString,QList<QString>> shader_map_;
+    QMap<QString,QMap<QString,QList<QString>>> render_map_;
     QVector<QSharedPointer<Shader>> shaders_;
-    QVector<Vertices> vertices_;
+    QVector<QSharedPointer<Vertices>> vertices_;
 };
 
 #endif // START_WINDOW_H

@@ -15,8 +15,8 @@
  ** limitations under the License.
  **/
 
-#ifndef RENDER_TEXTURE_H
-#define RENDER_TEXTURE_H
+#ifndef RENDER_RENDER_TEXTURE_H
+#define RENDER_RENDER_TEXTURE_H
 
 #include <QOpenGLFunctions_4_3_Core>
 #include <QFile>
@@ -26,21 +26,14 @@
 class RenderTexture:private QOpenGLFunctions_4_3_Core
 {
 public:
-    inline static RenderTexture& GetInstance()
-    {
-        return instance();
-    }
+    static RenderTexture& GetInstance();
 
     GLuint TextureFromFile(const QString& path,float gamma=1.0f);
 
     GLuint LoadCubeMap(QVector<QString> faces,float gamma=1.0f);
 
 private:
-    inline static RenderTexture& instance()
-    {
-        static RenderTexture instance;
-        return instance;
-    }
+    static RenderTexture& instance();
 
     inline RenderTexture():QOpenGLFunctions_4_3_Core()
     {
@@ -51,4 +44,4 @@ private:
     GLenum GetOpenGLFormat(const QImage& image);
 };
 
-#endif // RENDER_TEXTURE_H
+#endif // RENDER_RENDER_TEXTURE_H

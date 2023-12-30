@@ -15,8 +15,8 @@
  ** limitations under the License.
  **/
 
-#include "src_include/model_animation/animation.h"
-#include "src_include/assimp_qt_coversion.h"
+#include "src_include/render/model_animation/animation.h"
+#include "src_include/render/assimp_qt_coversion.h"
 #include "src_include/file_system/file_write_system.h"
 
 Animation::Animation(const QString &animation_path, Model *model)

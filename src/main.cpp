@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
     }
     
     qInstallMessageHandler(FileWriteSystem::CustomMessageHandler);
-    FileWriteSystem::GetInstance().DeleteLogFile();
+    FileWriteSystem::GetInstance().RemoveDefaultLogFile();
 
     MainWindow w;
     w.show();

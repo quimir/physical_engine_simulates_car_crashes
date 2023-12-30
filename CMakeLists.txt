@@ -81,12 +81,14 @@ set(RESOURCE_FILES "${CMAKE_SOURCE_DIR}/resources/resources.qrc")
 file(GLOB SOURCE_FILES
       "${CMAKE_SOURCE_DIR}/include/src_include/*.h"
       "${CMAKE_SOURCE_DIR}/src/*.cpp"
-      "${CMAKE_SOURCE_DIR}/include/src_include/model_animation/*.h"
       "${CMAKE_SOURCE_DIR}/include/src_include/setting_window/*.h"
-      "${CMAKE_SOURCE_DIR}/src/model_animation/*.cpp"
       "${CMAKE_SOURCE_DIR}/src/setting_window/*.cpp"
       "${CMAKE_SOURCE_DIR}/include/src_include/file_system/*.h"
-      "${CMAKE_SOURCE_DIR}/src/file_system/*.cpp")
+      "${CMAKE_SOURCE_DIR}/src/file_system/*.cpp"
+      "${CMAKE_SOURCE_DIR}/include/src_include/render/*.h"
+      "${CMAKE_SOURCE_DIR}/include/src_include/render/model_animation/*.h"
+      "${CMAKE_SOURCE_DIR}/src/render/*.cpp"
+      "${CMAKE_SOURCE_DIR}/src/render/model_animation/*.cpp")
 
 set(PROJECT_SOURCES
       ${SOURCE_FILES}
@@ -98,7 +100,7 @@ source_group("QTUI Files" FILES ${QTUI_FILES})
 source_group("Resource Files" FILES ${RESOURCE_FILES})
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-qt_add_executable(
+      qt_add_executable(
             ${QT_TARGET_NAME}
             ${PROJECT_SOURCES}
             ${TS_FILES}

@@ -15,16 +15,16 @@
  ** limitations under the License.
  **/
 
-#ifndef VERTICES_H
-#define VERTICES_H
+#ifndef RENDER_VERTICES_H
+#define RENDER_VERTICES_H
 
 #include <QVector>
-#include <QOpenGLFunctions_3_3_Core>
+#include <QOpenGLFunctions_4_3_Core>
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLBuffer>
 #include "src_include/geometricalias.h"
 
-class Vertices:protected QOpenGLFunctions_3_3_Core
+class Vertices:protected QOpenGLFunctions_4_3_Core
 {
 public:
     struct Vertex
@@ -36,9 +36,17 @@ public:
 
     Vertices();
 
+    Vertices(const Vertices& other)=delete;
+
+    Vertices& operator=(const Vertices& other) = delete;
+
     bool LoadObjectFile(const QString& file_path);
 
     void BindDataToOpenGL();
+
+    void DrawArrays(GLenum mode=GL_TRIANGLES);
+
+    void DrawElements(GLenum mode=GL_TRIANGLES);
 
     qint64 GetIndicesSize()const;
 
@@ -50,11 +58,13 @@ public:
 
     QOpenGLBuffer GetEbo();
 
+    ~Vertices();
+
 private:
     QVector<Vertex> vertices_;
-    QVector<GLuint>indices_;
+    QVector<GLuint> indices_;
     QOpenGLVertexArrayObject vao_;
     QOpenGLBuffer vbo_,ebo_;
 };
 
-#endif // VERTICES_H
+#endif // RENDER_VERTICES_H

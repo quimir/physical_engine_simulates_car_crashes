@@ -15,7 +15,7 @@
  ** limitations under the License.
  **/
 
-#include "src_include/model_animation/mesh.h"
+#include "src_include/render/model_animation/mesh.h"
 
 GLvoid Mesh::Draw(Shader &shader)
 {

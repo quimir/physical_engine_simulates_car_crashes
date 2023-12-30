@@ -1,8 +1,5 @@
-#version 430 core
+#version 330 core
 out vec4 frag_color;
-
-in vec3 frag_normal;
-in vec2 frag_tex_coords;
 
 void main()
 {

@@ -32,7 +32,7 @@ class FileWriteSystem
 {
 public:
     /**
-     * @brief The MessageTypeBit enum Nessage type
+     * @enum MessageTypeBit enum Nessage type,The temporary types are Debug, Warning, Critical, Fatal, and Info. See the Qt manual for details on what these types do.
      */
     enum class MessageTypeBit
     {
@@ -44,7 +44,13 @@ public:
     };
 
 public:
-    static FileWriteSystem& GetInstance();
+    /**
+     * @brief GetInstance The only way to access an object of class FileWriteSystem,
+     *  no other method can access its object, and the only way to call a function of class FileWriteSystem.
+     * @param log_file Log file path, default path when not set.
+     * @return Unique object.
+     */
+    static FileWriteSystem& GetInstance(QString log_file=QString());
 
     /**
      * @brief CustomMessageHandler Create a handle to get a list of Qt messages, and use a file to store the details of the messages.
@@ -72,24 +78,65 @@ public:
     void EndWirteLine();
 
     /**
-     * @brief DeleteLogDay Check whether the time on the first line of the log file is greater than or equal to the time set by the user to clear the contents of the log file.
+     * @brief RemoveLogDay Check whether the time on the first line of the log file is greater than or equal to the time set by the user to clear the contents of the log file.
      * @param log_file_path Path of the log file.
      * @param day User specifies the number of days to clear logs.
      */
-    void DeleteLogDay(const QString &log_file_path,const long long day);
+    void RemoveLogDay(const QString &log_file_path,const long long day);
 
-    void DeleteLogFile();
+    /**
+     * @brief RemoveDefaultLogFile Remove all information from the default logfile.
+     */
+    void RemoveDefaultLogFile();
 
-    void DeleteLogDay(QFile &log_file, const long long day);
+    /**
+     * @brief RemoveLogDay Check whether the time on the first line of the log file is greater than or equal to the time set by the user to clear the contents of the log file.
+     * @param log_file Log files that need to be removed. If not, it is the default log file.
+     * @param day User specifies the number of days to clear logs.
+     */
+    void RemoveLogDay(QFile &log_file, const long long day);
+
+    /**
+     * @brief ResetLogFileThe RESET log file is set according to the name of the log file passed in.
+     * If the file does not exist with respect to the system, the default log file will be re-invoked.
+     * @param log_file The reset log file.
+     * @return Returns true if the reset was successful, false otherwise.
+     */
+    bool ResetLogFile(QFile& log_file);
+
+    /**
+     * @brief ResetLogFileResets the logfile. The file is set according to the path of the logfile passed in. If not, the default logfile is invoked again.
+     * @param log_file_path Log file path that needs to be reset.
+     * @return Returns true if the reset was successful, false otherwise.
+     */
+    bool ResetLogFile(const QString& log_file_path);
 
 private:
-    static FileWriteSystem& Instance();
+    /**
+     * @brief Instance Gets the unique object of the FileWriteSystem
+     * @param log_file Log file path, default path when not set.
+     * @return Unique object.
+     */
+    static FileWriteSystem& Instance(QString log_file=QString());
 
-    FileWriteSystem();
+    /**
+     * @brief FileWriteSystem Initialize the basic data of the class, allowing to set its own log file path.
+     * @param log_file Log file path, default path when not set.
+     */
+    FileWriteSystem(QString log_file=QString());
 
+    /**
+     * @brief GetCurrentDataTimeString Gets the normalized time format
+     * @return Normalized time string
+     */
     QString GetCurrentDataTimeString();
 
-    bool ReadFirstLogLine(const QString &file_path,QString &first_line);
+    /**
+     * @brief SetDefaultLogFile Set the default logfile, usually located in the /logs/ directory, the default directory file name is log_file.log can be reset by ResetLogFile.
+     * The /logs/ directory is created automatically if it doesn't exist in the project.
+     * @return Path to the log file.
+     */
+    QString SetDefaultLogFile();
 
     /**
      * @brief ReadFirstLogLine Gets the first line of the log file (if it exists) and reads it to the first_line.
@@ -109,9 +156,9 @@ private:
 private:
     // Default location where logs are saved.
     QFile log_file_;
+
     // The output format is: (Debug|Warning|Critical|Fatal): Current Date and Time (now time) (out message).
     QRegularExpression regex_;
-
 };
 
 #endif // FILE_SYSTEM_FILE_WIRTE_SYSTEM_H

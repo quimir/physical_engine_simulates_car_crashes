@@ -15,14 +15,14 @@
  ** limitations under the License.
  **/
 
-#ifndef MODEL_ANIMATION_ANIMATION_H
-#define MODEL_ANIMATION_ANIMATION_H
+#ifndef RENDER_MODEL_ANIMATION_ANIMATION_H
+#define RENDER_MODEL_ANIMATION_ANIMATION_H
 
 #include <QtAlgorithms>
 
-#include "src_include/model_animation/model.h"
-#include "src_include/model_animation/animdata.h"
-#include "src_include/model_animation/bone.h"
+#include "src_include/render/model_animation/model.h"
+#include "src_include/render/model_animation/animdata.h"
+#include "src_include/render/model_animation/bone.h"
 
 class Animation
 {
@@ -105,4 +105,4 @@ private:
     QMap<QString,BoneInfo> bone_info_map_;
 };
 
-#endif // MODEL_ANIMATION_ANIMATION_H
+#endif // RENDER_MODEL_ANIMATION_ANIMATION_H

@@ -23,8 +23,9 @@
     <qresource prefix="/style">
         <file alias="main_entry_button_style.qml">style/main_entry_button_style.qml</file>
     </qresource>
-    <qresource prefix="/obj">
+    <qresource prefix="/objs">
         <file alias="text.obj">objs/text.obj</file>
+        <file alias="text2.obj">objs/text_2.obj</file>
     </qresource>
     <qresource prefix="/GLSL">
         <file alias="text.frag">GLSL/text.frag</file>
@@ -32,5 +33,7 @@
         <file alias="text.vert">GLSL/text.vert</file>
         <file alias="text_2.frag">GLSL/text_2.frag</file>
         <file alias="text_2.vert">GLSL/text_2.vert</file>
+        <file alias="text_3.frag">GLSL/text_3.frag</file>
+        <file alias="text_3.vert">GLSL/text_3.vert</file>
     </qresource>
 </RCC>

@@ -29,18 +29,6 @@ QString FilePathSystem::GetResourcesPath(const QString &name)
     return QDir::toNativeSeparators(GetRoot()+QDir::separator()+"resources"+QDir::separator()+name);
 }
 
-QString FilePathSystem::GetAttributesSettingPath(const QString &name)
-{
-    return QDir::toNativeSeparators(GetRoot()+QDir::separator()+"resources"
-                                    +QDir::separator()+"attributes _beautify_files"+QDir::separator()+name);
-}
-
-QString FilePathSystem::GetShaderPath(const QString &name)
-{
-    return QDir::toNativeSeparators(GetRoot()+QDir::separator()+"src"+QDir::separator()
-                                    +"shader"+QDir::separator()+name);
-}
-
 QString FilePathSystem::GetLogsPath(const QString &name)
 {
     return QDir::toNativeSeparators(GetRoot()+QDir::separator()+"logs"+QDir::separator()+name);

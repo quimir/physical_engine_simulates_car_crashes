@@ -17,8 +17,8 @@
 
 #include <climits>
 
-#include "src_include/model_animation/bone.h"
-#include "src_include/assimp_qt_coversion.h"
+#include "src_include/render/model_animation/bone.h"
+#include "src_include/render/assimp_qt_coversion.h"
 #include "src_include/file_system/file_write_system.h"
 
 Bone::Bone(const QString &name, int id, const aiNodeAnim *channel)

@@ -22,6 +22,7 @@
 #include "src_include/file_system/file_write_system.h"
 #include "src_include/file_system/file_read_system.h"
 #include "src_include/file_system/file_path_system.h"
+#include "src_include/start_window.h"
 #include <QQmlApplicationEngine>
 #include <QJsonArray>
 #include <QJsonDocument>
@@ -33,8 +34,6 @@ MainWindow::MainWindow(QWidget* parent)
     this->buttons_.resize(3);
     GetScreenWindow();
     SetUIWindow();
-    auto shader_file=FileReadSystem::GetInstance().ReadJsonFile(FilePathSystem::GetInstance().GetResourcesPath(resourcesfiletype::ResourcesType::Json,"data.json"));
-    FileReadSystem::GetInstance().ReadGLSLFile(shader_file);
     for(MainEntryButton* button:this->buttons_)
     {
         connect(button,&MainEntryButton::clicked,this,&MainWindow::HandleButtonClicked);
@@ -104,6 +103,11 @@ void MainWindow::HandleButtonClicked()
     if(clicked_button==this->buttons_[0])
     {
         FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug, "clicked start_button");
+        auto shader_file=FileReadSystem::GetInstance().ReadJsonFile(FilePathSystem::GetInstance().GetResourcesPath(resourcesfiletype::ResourcesType::Json,"data.json"));
+        FileReadSystem::GetInstance().ReadGLSLFile(shader_file);
+        StartWindow* start_window=new StartWindow(this->geometry(),shader_file);
+        start_window->show();
+        this->close();
     }
     else if(clicked_button==this->buttons_[1])
     {

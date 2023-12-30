@@ -17,10 +17,11 @@
 
 #include "src_include/file_system/file_write_system.h"
 #include "src_include/file_system/file_path_system.h"
+#include "src_include/file_system/file_read_system.h"
 
-FileWriteSystem &FileWriteSystem::GetInstance()
+FileWriteSystem &FileWriteSystem::GetInstance(QString log_file)
 {
-    return Instance();
+    return Instance(log_file);
 }
 
 void FileWriteSystem::CustomMessageHandler(QtMsgType type,const QMessageLogContext& context,const QString &msg)
@@ -74,11 +75,11 @@ void FileWriteSystem::EndWirteLine()
     log_file_.close();
 }
 
-void FileWriteSystem::DeleteLogDay(const QString &log_file_path, const long long day)
+void FileWriteSystem::RemoveLogDay(const QString &log_file_path, const long long day)
 {
     QString first_log_line;
 
-    if(ReadFirstLogLine(log_file_path,first_log_line))
+    if(FileReadSystem::GetInstance().ReadFileFirstLine(log_file_path,first_log_line))
     {
         QDateTime first_log_time=ExtractLogTime(first_log_line);
 
@@ -97,7 +98,7 @@ void FileWriteSystem::DeleteLogDay(const QString &log_file_path, const long long
 
 }
 
-void FileWriteSystem::DeleteLogFile()
+void FileWriteSystem::RemoveDefaultLogFile()
 {
     if(log_file_.exists())
     {
@@ -106,11 +107,11 @@ void FileWriteSystem::DeleteLogFile()
     }
 }
 
-void FileWriteSystem::DeleteLogDay(QFile &log_file, const long long day)
+void FileWriteSystem::RemoveLogDay(QFile &log_file, const long long day)
 {
     QString first_log_line;
 
-    if(ReadFirstLogLine(log_file,first_log_line))
+    if(FileReadSystem::GetInstance().ReadFileFirstLine(log_file,first_log_line))
     {
         QDateTime first_log_time=ExtractLogTime(first_log_line);
 
@@ -128,36 +129,98 @@ void FileWriteSystem::DeleteLogDay(QFile &log_file, const long long day)
     }
 }
 
-FileWriteSystem &FileWriteSystem::Instance()
+bool FileWriteSystem::ResetLogFile(QFile &log_file)
 {
-    static FileWriteSystem instance;
-    return instance;
-}
-
-FileWriteSystem::FileWriteSystem():log_file_(QFile()),regex_("\"(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2})\"")
-{
-    QString file_path=FilePathSystem::GetInstance().GetLogsPath("log_file.log");
-    QString directory_path=QFileInfo(file_path).absolutePath();
-
-    // Check and create a log folder
-    QDir directory(directory_path);
-    if(!directory.exists())
+    if(!log_file.filesystemFileName().empty())
     {
-        if (!directory.mkpath(directory_path))
+        std::filesystem::path log_file_name=this->log_file_.filesystemFileName();
+        this->log_file_.setFileName(log_file.filesystemFileName());
+
+        if(!this->log_file_.exists())
         {
-            qWarning() << "Failed to create log directory.";
+            if(!this->log_file_.open(QIODevice::WriteOnly|QIODevice::Append))
+            {
+                qWarning() << "Failed to create/open log file.";
+                this->log_file_.close();
+                this->log_file_.setFileName(log_file_name);
+                return false;
+            }
+
+            this->log_file_.close();
+            return true;
         }
     }
 
-    log_file_.setFileName(file_path);
+    return false;
+}
+
+bool FileWriteSystem::ResetLogFile(const QString &log_file_path)
+{
+    if(!log_file_path.isEmpty())
+    {
+        std::filesystem::path log_file_name=this->log_file_.filesystemFileName();
+        this->log_file_.setFileName(log_file_path);
+
+        if(!this->log_file_.exists())
+        {
+            if(!this->log_file_.open(QIODevice::WriteOnly|QIODevice::Append))
+            {
+                qWarning() << "Failed to create/open log file.";
+                this->log_file_.close();
+                this->log_file_.setFileName(log_file_name);
+                return false;
+            }
+
+            this->log_file_.close();
+            return true;
+        }
+    }
+
+    return false;
+}
+
+FileWriteSystem &FileWriteSystem::Instance(QString log_file)
+{
+    static FileWriteSystem instance(log_file);
+    return instance;
+}
+
+FileWriteSystem::FileWriteSystem(QString log_file):log_file_(QFile()),regex_("\"(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2})\"")
+{
+    QString default_log_file=SetDefaultLogFile();
+    bool if_file=false;
+    if(log_file.isEmpty())
+    {
+        this->log_file_.setFileName(default_log_file);
+    }
+    else
+    {
+        this->log_file_.setFileName(log_file);
+    }
 
     // Check and create log files
     if (!log_file_.exists()) {
         if (!log_file_.open(QIODevice::WriteOnly | QIODevice::Append))
         {
+            if_file=true;
             qWarning() << "Failed to create/open log file.";
         }
         log_file_.close();
+    }
+
+    // If this file does not exist then a default log file is set.
+    if(if_file)
+    {
+        this->log_file_.setFileName(default_log_file);
+
+        // Check and create log files
+        if (!log_file_.exists()) {
+            if (!log_file_.open(QIODevice::WriteOnly | QIODevice::Append))
+            {
+                qWarning() << "Failed to create/open log file.";
+            }
+            log_file_.close();
+        }
     }
 }
 
@@ -167,38 +230,24 @@ QString FileWriteSystem::GetCurrentDataTimeString()
     return current_date_time.toString("yyyy-MM-dd hh:mm:ss");
 }
 
-bool FileWriteSystem::ReadFirstLogLine(const QString &file_path, QString &first_line)
+QString FileWriteSystem::SetDefaultLogFile()
 {
-    QFile file(file_path);
-    if(file.open(QIODevice::ReadOnly|QIODevice::Text))
+    QString log_file_path;
+    log_file_path=FilePathSystem::GetInstance().GetLogsPath("log_file.log");
+    QString directory_path=QFileInfo(log_file_path).absolutePath();
+
+    QDir directory(directory_path);
+    if(!directory.exists())
     {
-        QTextStream in(&file);
-        if(!in.atEnd())
+        if (!directory.mkpath(directory_path))
         {
-            first_line=in.readLine();
-            file.close();
-            return true;
+            qWarning() << "Failed to create log directory.";
         }
-        file.close();
     }
-    return false;
+
+    return log_file_path;
 }
 
-bool FileWriteSystem::ReadFirstLogLine(QFile &log_file, QString &first_line)
-{
-    if(log_file.open(QIODevice::ReadOnly|QIODevice::Text))
-    {
-        QTextStream in(&log_file);
-        if(!in.atEnd())
-        {
-            first_line=in.readLine();
-            log_file.close();
-            return true;
-        }
-        log_file.close();
-    }
-    return false;
-}
 
 QDateTime FileWriteSystem::ExtractLogTime(const QString &log_line)
 {

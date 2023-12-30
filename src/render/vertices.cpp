@@ -15,13 +15,15 @@
  ** limitations under the License.
  **/
 
-#include "src_include/vertices.h"
+#include "src_include/render/vertices.h"
 #include "src_include/file_system/file_write_system.h"
 #include <QFile>
 #include <QTextStream>
 
-Vertices::Vertices()
+Vertices::Vertices():QOpenGLFunctions_4_3_Core()
 {
+    initializeOpenGLFunctions();
+
     this->vao_.create();
     this->vao_.bind();
 
@@ -31,7 +33,7 @@ Vertices::Vertices()
 
     this->ebo_.create();
     this->ebo_.bind();
-    this->vbo_.setUsagePattern(QOpenGLBuffer::StaticDraw);
+    this->ebo_.setUsagePattern(QOpenGLBuffer::StaticDraw);
 
     this->vao_.release();
 }
@@ -104,7 +106,7 @@ void Vertices::BindDataToOpenGL()
     this->vao_.bind();
 
     this->vbo_.bind();
-    this->vbo_.allocate(this->vertices_.constData(),static_cast<int>(this->vertices_.size()*sizeof(vertices_)));
+    this->vbo_.allocate(this->vertices_.constData(),static_cast<int>(this->vertices_.size()*sizeof(Vertex)));
 
     this->ebo_.bind();
     this->ebo_.allocate(this->indices_.constData(),static_cast<int>(this->indices_.size()*sizeof(GLuint)));
@@ -121,6 +123,20 @@ void Vertices::BindDataToOpenGL()
     this->vao_.release();
     this->vbo_.release();
     this->ebo_.release();
+}
+
+void Vertices::DrawArrays(GLenum mode)
+{
+    this->vao_.bind();
+    glDrawArrays(mode,0,static_cast<GLsizei>(this->vertices_.size()));
+    this->vao_.release();
+}
+
+void Vertices::DrawElements(GLenum mode)
+{
+    this->vao_.bind();
+    glDrawElements(mode,static_cast<GLsizei>(this->indices_.size()),GL_UNSIGNED_INT,nullptr);
+    this->vao_.release();
 }
 
 qint64 Vertices::GetIndicesSize() const
@@ -146,4 +162,13 @@ QOpenGLBuffer Vertices::GetVbo()
 QOpenGLBuffer Vertices::GetEbo()
 {
     return this->ebo_;
+}
+
+Vertices::~Vertices()
+{
+    this->vao_.destroy();
+    this->vbo_.destroy();
+    this->ebo_.destroy();
+    this->vertices_.clear();
+    this->indices_.clear();
 }

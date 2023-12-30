@@ -15,8 +15,8 @@
  ** limitations under the License.
  **/
 
-#ifndef MODEL_ANIMATION_ANIMATOR_H
-#define MODEL_ANIMATION_ANIMATOR_H
+#ifndef RENDER_MODEL_ANIMATION_ANIMATOR_H
+#define RENDER_MODEL_ANIMATION_ANIMATOR_H
 
 #include <QVector>
 #include <QMap>
@@ -24,7 +24,7 @@
 #include <assimp/scene.h>
 #include <assimp/Importer.hpp>
 
-#include "src_include/model_animation/animation.h"
+#include "src_include/render/model_animation/animation.h"
 #include "src_include/geometricalias.h"
 
 class Animator
@@ -72,4 +72,4 @@ private:
     float delta_time_;
 };
 
-#endif // MODEL_ANIMATION_ANIMATOR_H
+#endif // RENDER_MODEL_ANIMATION_ANIMATOR_H

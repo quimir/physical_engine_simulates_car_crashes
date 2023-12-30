@@ -15,8 +15,8 @@
  ** limitations under the License.
  **/
 
-#ifndef ASSIMP_QT_COVERSION_H
-#define ASSIMP_QT_COVERSION_H
+#ifndef RENDER_ASSIMP_QT_COVERSION_H
+#define RENDER_ASSIMP_QT_COVERSION_H
 
 #include "src_include/geometricalias.h"
 
@@ -65,4 +65,4 @@ inline static geometricalias::quat GetQtQuat(const aiQuaternion& pOrientation)
 }
 }
 
-#endif // ASSIMP_QT_COVERSION_H
+#endif // RENDER_ASSIMP_QT_COVERSION_H

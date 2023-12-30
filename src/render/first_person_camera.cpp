@@ -15,7 +15,7 @@
  ** limitations under the License.
  **/
 
-#include "src_include/first_person_camera.h"
+#include "src_include/render/first_person_camera.h"
 
 geometricalias::mat4 FirstPersonCamera::GetViewMatrix() const
 {

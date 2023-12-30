@@ -15,11 +15,11 @@
  ** limitations under the License.
  **/
 
-#include "src_include/model_animation/model.h"
-#include "src_include/assimp_qt_coversion.h"
+#include "src_include/render/model_animation/model.h"
+#include "src_include/render/assimp_qt_coversion.h"
 #include "src_include/file_system/file_write_system.h"
 #include <assimp/types.h>
-#include "src_include/render_texture.h"
+#include "src_include/render/render_texture.h"
 
 Model::Model(const QString& path, bool animation_switch, float gamma) :gamma_correction_(gamma), animation_switch_(animation_switch)
 {

@@ -15,8 +15,8 @@
  ** limitations under the License.
  **/
 
-#ifndef MODEL_ANIMATION_BONE_H
-#define MODEL_ANIMATION_BONE_H
+#ifndef RENDER_MODEL_ANIMATION_BONE_H
+#define RENDER_MODEL_ANIMATION_BONE_H
 
 #include <stdint.h>
 
@@ -178,4 +178,4 @@ private:
 };
 
 
-#endif // MODEL_ANIMATION_BONE_H
+#endif // RENDER_MODEL_ANIMATION_BONE_H

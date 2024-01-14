@@ -16,12 +16,13 @@
  **/
 
 #include "src_include/start_window.h"
+#include "qevent.h"
 #include "src_include/file_system/file_path_system.h"
 #include "src_include/file_system/file_write_system.h"
 #include "src_include/file_system/resources_file_type.h"
 
 StartWindow::StartWindow(QRect screen_size, QMap<QString,QMap<QString,QList<QString>>> render_map):
-    QOpenGLFunctions_4_3_Core(),screen_size_(screen_size),render_map_(render_map)
+    QOpenGLFunctions_4_3_Core(),screen_size_(screen_size),render_map_(render_map),camera_(geometricalias::vec3(0.0f,0.0f,3.0f))
 {
     if(this->screen_size_.isEmpty()||render_map.isEmpty())
     {
@@ -31,6 +32,7 @@ StartWindow::StartWindow(QRect screen_size, QMap<QString,QMap<QString,QList<QStr
 
     SetSurfaceFormat();
     this->setGeometry(this->screen_size_);
+    connect(&this->camera_,&FirstPersonCamera::ViewMatrixChanged,this,&StartWindow::UpdateViewMatrix);
 }
 
 void StartWindow::initializeGL()
@@ -41,27 +43,39 @@ void StartWindow::initializeGL()
                                                   ,"Description OpenGL initialization failed");
         return;
     }
-    glClearColor(0.0f,0.0f,0.0f,0.0f);
-    glClearDepth(1.0);
+
+    glClearColor(1.0f,1.0f,0.0f,1.0f);
     glEnable(GL_DEPTH_TEST);
     ReadRenderingMap(this->render_map_);
+    auto vertices=QSharedPointer<Vertices>::create();
+    vertices->Text(this->shaders_[0]);
+    this->vertices_.push_back(vertices);
 }
 
 
 void StartWindow::resizeGL(int w, int h)
 {
+    this->projection_.setToIdentity();
+    this->projection_.perspective(this->camera_.GetZoom(),w/float(h),0.01f,100.0f);
+
     glViewport(0,0,w,h);
 }
 
 void StartWindow::paintGL()
 {
-    glClearColor(0.2f,0.3f,0.3f,1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+    setCursor(Qt::BlankCursor);
 
-    this->shaders_[2]->Use();
+    this->shaders_[0]->Use();
 
-    this->vertices_[1]->BindDataToOpenGL();
-    this->vertices_[1]->DrawElements();
+    geometricalias::mat4 view_matrix=this->camera_.GetViewMatrix();
+    this->shaders_[0]->SetMat4("matrix",projection_*view_matrix);
+
+    this->vertices_[0]->GetVao().bind();
+    glDrawArrays(GL_TRIANGLES,0,9);
+    this->vertices_[0]->GetVao().release();
+
+    this->shaders_[0]->Release();
 }
 
 void StartWindow::SetSurfaceFormat(QPair<int, int> major_version, int color_buffer, int depth_buffer)
@@ -79,6 +93,37 @@ void StartWindow::SetSurfaceFormat(QPair<int, int> major_version, int color_buff
     format.setDepthBufferSize(depth_buffer);
 
     setFormat(format);
+}
+
+StartWindow::~StartWindow()
+{
+    unsetCursor();
+}
+
+void StartWindow::keyPressEvent(QKeyEvent *event)
+{
+    if(event->key()==Qt::Key_W)
+    {
+        this->camera_.ProcessKeyInput(FirstPersonCamera::FORWARD,0.1f);
+    }
+    else if(event->key()==Qt::Key_S)
+    {
+        this->camera_.ProcessKeyInput(FirstPersonCamera::BACKWARD,0.1f);
+    }
+    else if(event->key()==Qt::Key_A)
+    {
+        this->camera_.ProcessKeyInput(FirstPersonCamera::LEFT,0.1f);
+    }
+    else if(event->key()==Qt::Key_D)
+    {
+        this->camera_.ProcessKeyInput(FirstPersonCamera::RIGHT,0.1f);
+    }
+    else if(event->key()==Qt::Key_Escape)
+    {
+        this->close();
+    }
+
+    update();
 }
 
 
@@ -151,11 +196,11 @@ void StartWindow::ReadRenderingMap(QMap<QString, QMap<QString, QList<QString> > 
             ReadGLSLMapToShader(glsl_map);
         }
 
-        if(!QString::compare(it.key(),resourcesfiletype::ResourcesTypeToMapper::GetInstance().EnumToString(resourcesfiletype::ResourcesType::Obj),Qt::CaseInsensitive))
-        {
-            QMap<QString,QList<QString>> vertices_map=it.value();
-            ReadVertices(vertices_map);
-        }
+        // if(!QString::compare(it.key(),resourcesfiletype::ResourcesTypeToMapper::GetInstance().EnumToString(resourcesfiletype::ResourcesType::Obj),Qt::CaseInsensitive))
+        // {
+        //     QMap<QString,QList<QString>> vertices_map=it.value();
+        //     ReadVertices(vertices_map);
+        // }
 
         it++;
     }
@@ -184,5 +229,43 @@ void StartWindow::ReadVertices(QMap<QString, QList<QString> > &vertices_map)
                 this->vertices_.push_back(vertices);
             }
         }
+    }
+}
+
+void StartWindow::mouseMoveEvent(QMouseEvent *event)
+{
+    if(this->camera_.GetFirstMouse())
+    {
+        this->camera_.SetLastMouseX(event->position().x());
+        this->camera_.SetLastMouseY(event->position().y());
+        this->camera_.SetFirstMouse();
+    }
+
+    float xoffset=event->position().x()-this->camera_.GetLastMouseX();
+    float yoffset=this->camera_.GetLastMouseY()-event->position().y();
+
+    this->camera_.SetLastMouseX(event->position().x());
+    this->camera_.SetLastMouseY(event->position().y());
+
+    this->camera_.ProcessMouseMovement(xoffset,yoffset);
+
+    update();
+}
+
+void StartWindow::wheelEvent(QWheelEvent *event)
+{
+    float yoffset=event->angleDelta().y();
+    this->camera_.ProcessMouseScroll(yoffset);
+
+    update();
+}
+
+void StartWindow::UpdateViewMatrix(const geometricalias::mat4 &view_matrix)
+{
+    for(int i=0;i<this->shaders_.size();i++)
+    {
+        this->shaders_[i]->Use();
+        this->shaders_[i]->SetMat4("matrix",this->projection_*view_matrix);
+        this->shaders_[i]->Release();
     }
 }

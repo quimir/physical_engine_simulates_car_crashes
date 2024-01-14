@@ -56,7 +56,7 @@ public:
 
     GLuint GetShaderID();
 
-    void Use();
+    bool Use();
 
     void SetBool(const QString& name,bool value);
 
@@ -87,6 +87,8 @@ public:
     GLuint GetBlockIndex(const QString& name);
 
     void SetBlockBinding(const GLuint block_index,const GLuint block_binding);
+
+    void Release();
 
     QOpenGLShaderProgram& GetShaderProgram();
 

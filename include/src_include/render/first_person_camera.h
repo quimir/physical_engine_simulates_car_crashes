@@ -50,14 +50,31 @@ public:
                                float yaw=camerasetting::YAW,float pitch=camerasetting::PITCH,QObject *parent=nullptr)
         :QObject(parent),position_(position),front_(geometricalias::vec3(0.0f,0.0f,-1.0f))
         ,world_up_(up),yaw_(yaw),pitch_(pitch),movement_speed_(camerasetting::SPEED),
-        mouse_sensitivity_(camerasetting::SENSITIVITY),zoom_(camerasetting::ZOOM)
+        mouse_sensitivity_(camerasetting::SENSITIVITY),zoom_(camerasetting::ZOOM),last_mouse_x_(0.0f),last_mouse_y_(0.0f)
+        ,first_mouse_(true)
     {
         UpdateCameraVectors();
     }
 
+    void SetPosition(const geometricalias::vec3& position);
+
     geometricalias::mat4 GetViewMatrix()const;
 
     geometricalias::vec3 GetPosition()const;
+
+    float GetLastMouseX() const;
+
+    void SetLastMouseX(float new_last_mouse_x);
+
+    float GetLastMouseY() const;
+
+    void SetLastMouseY(float new_last_mouse_y);
+
+    bool GetFirstMouse() const;
+
+    void SetFirstMouse();
+
+    float GetZoom() const;
 
 private:
     void UpdateCameraVectors();
@@ -88,6 +105,11 @@ private:
     float movement_speed_;
     float mouse_sensitivity_;
     float zoom_;
+
+    float last_mouse_x_;
+    float last_mouse_y_;
+
+    bool first_mouse_;
 };
 
 #endif // RENDER_FIRST_PERSON_CAMERA_H

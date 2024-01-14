@@ -22,7 +22,9 @@
 #include <QOpenGLFunctions_4_3_Core>
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLBuffer>
+#include <QSharedPointer>
 #include "src_include/geometricalias.h"
+#include "src_include/render/shader.h"
 
 class Vertices:protected QOpenGLFunctions_4_3_Core
 {
@@ -39,6 +41,8 @@ public:
     Vertices(const Vertices& other)=delete;
 
     Vertices& operator=(const Vertices& other) = delete;
+
+    bool Text(QSharedPointer<Shader> shader);
 
     bool LoadObjectFile(const QString& file_path);
 

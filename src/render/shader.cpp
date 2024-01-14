@@ -83,9 +83,9 @@ GLuint Shader::GetShaderID()
     return this->shader_program_.programId();
 }
 
-void Shader::Use()
+bool Shader::Use()
 {
-    this->shader_program_.bind();
+    return this->shader_program_.bind();
 }
 
 void Shader::SetBool(const QString &name, bool value)
@@ -166,6 +166,14 @@ void Shader::SetBlockBinding(const GLuint block_index, const GLuint block_bindin
     }
 
     glUniformBlockBinding(this->shader_program_.programId(),block_index,block_binding);
+}
+
+void Shader::Release()
+{
+    if(this->shader_program_.isLinked())
+    {
+        this->shader_program_.release();
+    }
 }
 
 QOpenGLShaderProgram &Shader::GetShaderProgram()

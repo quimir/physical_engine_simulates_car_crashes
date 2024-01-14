@@ -19,10 +19,11 @@
 #include "src_include/file_system/file_write_system.h"
 #include <QFile>
 #include <QTextStream>
+#include "src_include/geometricalias.h"
 
 Vertices::Vertices():QOpenGLFunctions_4_3_Core()
 {
-    initializeOpenGLFunctions();
+    //initializeOpenGLFunctions();
 
     this->vao_.create();
     this->vao_.bind();
@@ -36,6 +37,36 @@ Vertices::Vertices():QOpenGLFunctions_4_3_Core()
     this->ebo_.setUsagePattern(QOpenGLBuffer::StaticDraw);
 
     this->vao_.release();
+}
+
+bool Vertices::Text(QSharedPointer<Shader> shader)
+{
+    QVector<geometricalias::vec3> vertices;
+    QVector<geometricalias::vec4> colors;
+
+    vertices << QVector3D(-1.0f, -1.0f, 0.0f)
+             << QVector3D(1.0f, -1.0f, 0.0f)
+             << QVector3D(0.0f, 1.0f, 0.0f);
+
+    colors << QVector4D(1.0f, 0.0f, 0.0f, 1.0f)
+           << QVector4D(0.0f, 1.0f, 0.0f, 1.0f)
+           << QVector4D(0.0f, 0.0f, 1.0f, 1.0f);
+
+    this->vao_.bind();
+    this->vbo_.bind();
+
+    this->vbo_.allocate(vertices.constData(),vertices.size()*sizeof(geometricalias::vec3));
+    shader->GetShaderProgram().enableAttributeArray(0);
+    shader->GetShaderProgram().setAttributeBuffer(0,GL_FLOAT,0,3);
+
+    this->ebo_.bind();
+    this->ebo_.allocate(colors.constData(),colors.size()*sizeof(geometricalias::vec4));
+    shader->GetShaderProgram().enableAttributeArray(1);
+    shader->GetShaderProgram().setAttributeBuffer(1,GL_FLOAT,0,4);
+
+    this->vao_.release();
+
+    return true;
 }
 
 bool Vertices::LoadObjectFile(const QString &file_path)

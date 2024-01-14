@@ -17,6 +17,12 @@
 
 #include "src_include/render/first_person_camera.h"
 
+void FirstPersonCamera::SetPosition(const geometricalias::vec3 &position)
+{
+    this->position_=position;
+    UpdateCameraVectors();
+}
+
 geometricalias::mat4 FirstPersonCamera::GetViewMatrix() const
 {
     geometricalias::mat4 view;
@@ -72,6 +78,7 @@ void FirstPersonCamera::ProcessMouseMovement(float xoffset, float yoffset, bool 
     this->yaw_+=xoffset;
     this->pitch_+=yoffset;
 
+    // make sure that when pitch is out of bounds, screen doesn't get flipped
     if(constrain_pitch)
     {
         if(this->pitch_>89.0f)
@@ -80,6 +87,7 @@ void FirstPersonCamera::ProcessMouseMovement(float xoffset, float yoffset, bool 
             this->pitch_=-89.0f;
     }
 
+    // update Front, Right and Up Vectors using the updated Euler angles
     UpdateCameraVectors();
 
     emit ViewMatrixChanged(GetViewMatrix());
@@ -94,4 +102,39 @@ void FirstPersonCamera::ProcessMouseScroll(float yoffset)
         this->zoom_=45.0f;
 
     emit ViewMatrixChanged(GetViewMatrix());
+}
+
+float FirstPersonCamera::GetZoom() const
+{
+    return zoom_;
+}
+
+bool FirstPersonCamera::GetFirstMouse() const
+{
+    return first_mouse_;
+}
+
+void FirstPersonCamera::SetFirstMouse()
+{
+    first_mouse_ =false;
+}
+
+float FirstPersonCamera::GetLastMouseY() const
+{
+    return last_mouse_y_;
+}
+
+void FirstPersonCamera::SetLastMouseY(float new_last_mouse_y)
+{
+    last_mouse_y_ = new_last_mouse_y;
+}
+
+float FirstPersonCamera::GetLastMouseX() const
+{
+    return last_mouse_x_;
+}
+
+void FirstPersonCamera::SetLastMouseX(float new_last_mouse_x)
+{
+    last_mouse_x_ = new_last_mouse_x;
 }

@@ -1,14 +1,13 @@
-#version 430 core
-layout(location=0) in vec3 a_pos;
-layout(location=1) in vec3 a_normal;
-layout(location=2) in vec2 a_tex_coords;
+#version 330 core
+layout(location=0) in vec4 pos_attr;
+layout(location=1) in vec4 col_attr;
 
-out vec3 frag_normal;
-out vec2 frag_tex_coords;
+out vec4 col;
+
+uniform mat4 matrix;
 
 void main()
 {
-      frag_normal=a_normal;
-      frag_tex_coords=a_tex_coords;
-      gl_Position=vec4(a_pos,1.0);
+      col=col_attr;
+      gl_Position=matrix*pos_attr;
 }

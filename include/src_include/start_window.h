@@ -25,6 +25,7 @@
 #include <QOpenGLBuffer>
 #include "src_include/render/shader.h"
 #include "src_include/render/vertices.h"
+#include "src_include/render/first_person_camera.h"
 #include <QSharedPointer>
 
 class StartWindow : public QOpenGLWindow,protected QOpenGLFunctions_4_3_Core
@@ -32,13 +33,19 @@ class StartWindow : public QOpenGLWindow,protected QOpenGLFunctions_4_3_Core
 public:
     StartWindow(QRect screen_size,QMap<QString,QMap<QString,QList<QString>>> render_map);
 
-    void initializeGL();
+    void initializeGL()override;
 
-    void resizeGL(int w,int h);
+    void resizeGL(int w,int h)override;
 
-    void paintGL();
+    void paintGL()override;
 
     void SetSurfaceFormat(QPair<int,int> major_version=QPair<int,int>(4,3), int color_buffer=8, int depth_buffer=24);
+
+    ~StartWindow();
+
+    // QWindow interface
+protected:
+    void keyPressEvent(QKeyEvent *event)override;
 
 private:
     void ReadGLSLMapToShader(QMap<QString,QList<QString>>& glsl_map);
@@ -54,6 +61,20 @@ private:
     QMap<QString,QMap<QString,QList<QString>>> render_map_;
     QVector<QSharedPointer<Shader>> shaders_;
     QVector<QSharedPointer<Vertices>> vertices_;
+    FirstPersonCamera camera_;
+    geometricalias::mat4 projection_;
+
+
+    // QWindow interface
+public:
+    void mouseMoveEvent(QMouseEvent *event)override;
+
+    // QWindow interface
+public:
+    void wheelEvent(QWheelEvent *event)override;
+
+protected slots:
+    void UpdateViewMatrix(const geometricalias::mat4& view_matrix);
 };
 
 #endif // START_WINDOW_H

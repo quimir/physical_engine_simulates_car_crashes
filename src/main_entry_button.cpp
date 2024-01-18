@@ -29,7 +29,7 @@ MainEntryButton::MainEntryButton(const QString icon_path, const QSize original_s
 {
     if(this->original_size_.isEmpty()||button_text.isEmpty())
     {
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug
                                                   ,QString("Setting button original size is: %1,button text is: %2")
                                                       .arg(original_size.isNull()?"null":"no null",button_text.isNull()?"null":"no null"));
     }

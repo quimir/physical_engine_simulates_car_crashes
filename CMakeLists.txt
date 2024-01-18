@@ -68,6 +68,7 @@ set(LIBS assimp)
 ENDIF()
 ENDIF()
 
+#Add a link parameter about Qt
 set(QT_LIBS
       Qt${QT_VERSION_MAJOR}::Widgets
       Qt${QT_VERSION_MAJOR}::OpenGL
@@ -96,7 +97,6 @@ set(PROJECT_SOURCES
 
 # # Add shader to separate Shader Files
 source_group("TS Files" FILES ${TS_FILES})
-source_group("QTUI Files" FILES ${QTUI_FILES})
 source_group("Resource Files" FILES ${RESOURCE_FILES})
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

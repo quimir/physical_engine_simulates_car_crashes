@@ -35,5 +35,10 @@
         <file alias="text_2.vert">GLSL/text_2.vert</file>
         <file alias="text_3.frag">GLSL/text_3.frag</file>
         <file alias="text_3.vert">GLSL/text_3.vert</file>
+        <file>model_loading.vert</file>
+        <file>model_loading.frag</file>
+    </qresource>
+    <qresource prefix="/model">
+        <file alias="backpack.obj">model/backpack/backpack.obj</file>
     </qresource>
 </RCC>

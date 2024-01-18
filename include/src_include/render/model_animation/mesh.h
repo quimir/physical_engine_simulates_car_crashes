@@ -20,26 +20,35 @@
 
 #include <QObject>
 #include <QVector>
-#include <QOpenGLFunctions_4_3_Core>
+#include <QOpenGLBuffer>
+#include <QOpenGLVertexArrayObject>
+#include <QScopedPointer>
 
+#include "src_include/render/opengl_function_base.h"
 #include "src_include/render/shader.h"
 #include "src_include/render/model_animation/modelattribute.h"
 
 /**
  * @brief The Mesh class Grid information used to load the model
  */
-class Mesh:protected QOpenGLFunctions_4_3_Core
+class Mesh:public OpenGLFunctionBase
 {
 public:
     Mesh(QVector<modelattribute::Vertex> vertices,QVector<GLuint> indices,QVector<modelattribute::Texture> textures)
         :vertices_(std::move(vertices)),indices_(std::move(indices)),textures_(std::move(textures))
-    {SetupMesh();}
+    {
+        SetupMesh();
+    };
 
     Mesh(Mesh&& other)noexcept:vertices_(std::move(other.vertices_)),indices_(std::move(other.indices_)),textures_(std::move(other.textures_))
-    {SetupMesh();};
+    {
+        SetupMesh();
+    };
 
     Mesh(const Mesh&other):vertices_(other.vertices_),indices_(other.indices_),textures_(other.textures_)
-    {SetupMesh();};
+    {
+        SetupMesh();
+    };
 
     inline Mesh& operator=(const Mesh& other)
     {
@@ -58,7 +67,7 @@ public:
      * This function is called by other classes without explicitly calling it.
      * @param shader Bound shader
      */
-    GLvoid Draw(Shader &shader);
+    GLvoid Draw(QScopedPointer<Shader> &shader);
 
 private:
     /**
@@ -66,16 +75,16 @@ private:
      */
     GLvoid SetupMesh();
 
-public:
+private:
     /* Mesh data*/
-
     QVector<modelattribute::Vertex> vertices_;
     QVector<GLuint> indices_;
     QVector<modelattribute::Texture> textures_;
-    GLuint VAO_;
-private:
-    // render data
-    GLuint VBO_,EBO_;
+
+    /* render data */
+    QOpenGLVertexArrayObject vao_;
+    QOpenGLBuffer vbo_;
+    QOpenGLBuffer ebo_;
 };
 
 #endif // RENDER_MODEL_ANIMATION_MESH_H

@@ -71,11 +71,14 @@ public:
     QString GetResourcesPath(resourcesfiletype::ResourcesType type, const QString &name,bool suffix=false);
 
     /**
-     * @brief RCCToAbsolutePath From the relative path of the RCC to the absolute path in the system
+     * @brief RCCToAbsolutePath The absolute path from the relative path of RCC to the binary form of the file,
+     * for example: /RCC/.... in RCC After parsing, you get: project build path +....
      * @param rcc_path The relative path of the file in RCC
      * @return The absolute path of the file on the system
      */
     QString RCCToAbsolutePath(const QString& rcc_path);
+
+    QString ExtractResource(const QString& resource_path,const QString& destination_dir);
 
     /**
      * @brief GetResourcesPath Returns the location of the file relative to the RCC resource system under the RCC resource system.

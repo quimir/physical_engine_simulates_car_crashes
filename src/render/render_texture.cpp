@@ -17,7 +17,6 @@
 
 #include "src_include/render/render_texture.h"
 #include "src_include/file_system/file_read_system.h"
-#include "src_include/file_system/file_write_system.h"
 
 RenderTexture &RenderTexture::GetInstance()
 {
@@ -26,6 +25,7 @@ RenderTexture &RenderTexture::GetInstance()
 
 GLuint RenderTexture::TextureFromFile(const QString &path, float gamma)
 {
+    // Convert QImage to OpenGL texture
     QImage image=FileReadSystem::GetInstance().ReadImageFile(path);
     if(image.isNull())
     {
@@ -37,35 +37,22 @@ GLuint RenderTexture::TextureFromFile(const QString &path, float gamma)
         image=ApplyGammaCorrection(image,gamma);
     }
 
-    GLuint texture_id;
-    glGenTextures(1,&texture_id);
+    this->texture_.reset(new QOpenGLTexture(image.mirrored()));
+    this->texture_->create();
+    this->texture_->setWrapMode(QOpenGLTexture::DirectionS, QOpenGLTexture::Repeat);
+    this->texture_->setWrapMode(QOpenGLTexture::DirectionT, QOpenGLTexture::Repeat);
+    this->texture_->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
+    this->texture_->setMagnificationFilter(QOpenGLTexture::Linear);
 
-    GLenum format=GetOpenGLFormat(image);
-    if(!format)
-    {
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
-                                                  , QString("Unsupported image format: ")+path);
-        return 0;
-    }
+    this->texture_->generateMipMaps();
 
-    glBindTexture(GL_TEXTURE_2D, texture_id);
-    glTexImage2D(GL_TEXTURE_2D, 0, format, image.width(), image.height(), 0, format, GL_UNSIGNED_BYTE, image.constBits());
-    glGenerateMipmap(GL_TEXTURE_2D);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    return texture_id;
+    return this->texture_->textureId();
 }
 
 GLuint RenderTexture::LoadCubeMap(QVector<QString> faces, float gamma)
 {
-    GLuint texture_id;
-    glGenBuffers(1,&texture_id);
-    glBindTexture(GL_TEXTURE_CUBE_MAP,texture_id);
-
+    this->texture_.reset(new QOpenGLTexture(QOpenGLTexture::TargetCubeMap));
+    this->texture_->create();
     for(qsizetype i=0;i<faces.size();i++)
     {
         QImage image=FileReadSystem::GetInstance().ReadImageFile(faces[i]);
@@ -79,28 +66,39 @@ GLuint RenderTexture::LoadCubeMap(QVector<QString> faces, float gamma)
             image=ApplyGammaCorrection(image,gamma);
         }
 
-        GLenum format=GetOpenGLFormat(image);
-        if(!format)
-        {
-            FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
-                                                      , QString("Unsupported image format: ")+faces[i]);
-        }
-        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X+i,0,format,image.width(),image.height(),0,format,GL_UNSIGNED_BYTE,image.constBits());
+        this->texture_->setData(QOpenGLTexture::CubeMapPositiveX + i, QOpenGLTexture::RGBA, QOpenGLTexture::UInt8, image.constBits());
+
     }
 
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    this->texture_->setMinificationFilter(QOpenGLTexture::Linear);
+    this->texture_->setMagnificationFilter(QOpenGLTexture::Linear);
+    this->texture_->setWrapMode(QOpenGLTexture::DirectionS, QOpenGLTexture::ClampToEdge);
+    this->texture_->setWrapMode(QOpenGLTexture::DirectionT, QOpenGLTexture::ClampToEdge);
+    this->texture_->setWrapMode(QOpenGLTexture::DirectionR, QOpenGLTexture::ClampToEdge);
 
-    return texture_id;
+    this->texture_->generateMipMaps();
+
+    return this->texture_->textureId();
+}
+
+QString RenderTexture::TextureTypeToString(TextureType type) const
+{
+    return this->texture_type_map_.value(type);
 }
 
 RenderTexture &RenderTexture::instance()
 {
     static RenderTexture instance;
     return instance;
+}
+
+RenderTexture::RenderTexture():OpenGLFunctionBase(),texture_(nullptr)
+{
+    ContextOpenGL();
+    this->texture_type_map_[TextureType::kTextureDiffuse]="texture_diffuse";
+    this->texture_type_map_[TextureType::kTextureSpecular]="texture_specular";
+    this->texture_type_map_[TextureType::kTextureNormal]="texture_normal";
+    this->texture_type_map_[TextureType::kTextureHeight]="texture_height";
 }
 
 QImage RenderTexture::ApplyGammaCorrection(const QImage &input_image, float gamma)

@@ -17,7 +17,7 @@
 
 #include "src_include/render/model_animation/mesh.h"
 
-GLvoid Mesh::Draw(Shader &shader)
+GLvoid Mesh::Draw(QScopedPointer<Shader>& shader)
 {
     // bind appropriate textures
     GLuint diffuse_nr=1;
@@ -49,15 +49,15 @@ GLvoid Mesh::Draw(Shader &shader)
         }
 
         // now set the sampler to the correct texture unit
-        shader.SetUint(QString(name+number),i);
+        shader->SetUint(QString(name+number),i);
         // and finally bind the texture
         glBindTexture(GL_TEXTURE_2D,this->textures_[i].id);
     }
 
     // draw mesh
-    glBindVertexArray(this->VAO_);
+    this->vao_.bind();
     glDrawElements(GL_TRIANGLES,static_cast<GLsizei>(this->indices_.size()),GL_UNSIGNED_INT,0);
-    glBindVertexArray(0);
+    this->vao_.release();
 
     // always good practice to set everything back to defaults once configured.
     glActiveTexture(GL_TEXTURE0);
@@ -65,21 +65,26 @@ GLvoid Mesh::Draw(Shader &shader)
 
 GLvoid Mesh::SetupMesh()
 {
-    // create buffers/arrays
-    glGenVertexArrays(1,&this->VAO_);
-    glGenBuffers(1,&this->VBO_);
-    glGenBuffers(1,&this->EBO_);
+    if(!ContextOpenGL())
+    {
+        return;
+    }
 
-    glBindVertexArray(this->VAO_);
+    // create buffers/arrays
+    this->vao_.create();
+    this->vao_.bind();
+
     // load data into vertex buffers
-    glBindBuffer(GL_ARRAY_BUFFER,this->VBO_);
+    this->vbo_.create();
+    this->vbo_.bind();
     // A great thing about structs is that their memory layout is sequential for all its items.
     // The effect is that we can simply pass a pointer to the struct and it translates perfectly to a QVector3D/2 array which
     // again translates to 3/2 floats which translates to a byte array.
-    glBufferData(GL_ARRAY_BUFFER,this->vertices_.size()*sizeof(modelattribute::Vertex),&this->vertices_[0],GL_STATIC_DRAW);
+    this->vbo_.allocate(this->vertices_.data(),static_cast<int>(this->vertices_.size()*sizeof(modelattribute::Vertex)));
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,this->EBO_);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER,this->indices_.size()*sizeof(GLuint),&this->indices_[0],GL_STATIC_DRAW);
+    this->ebo_.create();
+    this->ebo_.bind();
+    this->ebo_.allocate(this->indices_.data(),static_cast<int>(this->indices_.size()*sizeof(GLuint)));
 
     // set the vertex attribute pointers
     // vertex positions
@@ -103,5 +108,8 @@ GLvoid Mesh::SetupMesh()
     // vertex bone weights
     glEnableVertexAttribArray(6);
     glVertexAttribPointer(6,modelattribute::KMaxBoneInfluence,GL_FLOAT,GL_FALSE,sizeof(modelattribute::Vertex),(void*)offsetof(modelattribute::Vertex,weights));
-    glBindVertexArray(0);
+
+    this->vao_.release();
+    this->vbo_.release();
+    this->ebo_.release();
 }

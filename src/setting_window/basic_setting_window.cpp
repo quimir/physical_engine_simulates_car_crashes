@@ -23,7 +23,7 @@ BasicSettingsWindow::BasicSettingsWindow(QRect window_geometry,QWidget *parent)
 {
     this->setGeometry(window_geometry);
     QVBoxLayout* layout=new QVBoxLayout(this);
-    FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+    FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug
                                               ,QString("Basic setting window width: %1,height: %2")
                                                   .arg(QString::number(this->width()),QString::number(this->height())));
 

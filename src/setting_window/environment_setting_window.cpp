@@ -27,7 +27,7 @@ EnvironmentSettingWindow::EnvironmentSettingWindow(QRect window_geometry, QWidge
 {
     this->setGeometry(window_geometry);
     QVBoxLayout* layout=new QVBoxLayout(this);
-    FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug,QString("environment setting window width: %1,height: %2")
+    FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug,QString("environment setting window width: %1,height: %2")
                                 .arg(QString::number(this->width()),QString::number(this->height())));
 
     for(quint32 i=0;i<20;i++)

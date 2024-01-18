@@ -18,13 +18,26 @@
 #ifndef RENDER_RENDER_TEXTURE_H
 #define RENDER_RENDER_TEXTURE_H
 
-#include <QOpenGLFunctions_4_3_Core>
 #include <QFile>
 #include <QString>
 #include <QVector>
+#include <QOpenGLTexture>
+#include <QScopedPointer>
+#include <QMap>
 
-class RenderTexture:private QOpenGLFunctions_4_3_Core
+#include "src_include/render/opengl_function_base.h"
+
+class RenderTexture:public OpenGLFunctionBase
 {
+public:
+    enum class TextureType
+    {
+        kTextureDiffuse=0,
+        kTextureSpecular,
+        kTextureNormal,
+        kTextureHeight
+    };
+
 public:
     static RenderTexture& GetInstance();
 
@@ -32,16 +45,21 @@ public:
 
     GLuint LoadCubeMap(QVector<QString> faces,float gamma=1.0f);
 
+    QString TextureTypeToString(TextureType type)const;
+
 private:
     static RenderTexture& instance();
 
-    inline RenderTexture():QOpenGLFunctions_4_3_Core()
-    {
-    }
+    RenderTexture();
 
     QImage ApplyGammaCorrection(const QImage& input_image,float gamma);
 
     GLenum GetOpenGLFormat(const QImage& image);
+
+private:
+    QScopedPointer<QOpenGLTexture> texture_;
+
+    QMap<TextureType,QString> texture_type_map_;
 };
 
 #endif // RENDER_RENDER_TEXTURE_H

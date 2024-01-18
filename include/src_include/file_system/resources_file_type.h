@@ -28,11 +28,13 @@ namespace resourcesfiletype
  */
 enum class ResourcesType
 {
-    Image,
-    Json,
+    kImage,
+    kJson,
     GLSL,
-    Style,
-    Obj
+    kStyle,
+    kObj,
+    kModel,
+    kNone // error
 };
 
 class ResourcesTypeToMapper
@@ -66,6 +68,8 @@ public:
      * @return Converted string
      */
     QString EnumToString(ResourcesType type)const;
+
+    ResourcesType StringToEnum(QString type)const;
 
 private:
     /**

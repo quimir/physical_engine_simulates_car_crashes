@@ -23,10 +23,11 @@
 
 Model::Model(const QString& path, bool animation_switch, float gamma) :gamma_correction_(gamma), animation_switch_(animation_switch)
 {
+    ContextOpenGL();
     LoadModel(path);
 }
 
-GLvoid Model::Draw(Shader& shader)
+GLvoid Model::Draw(QScopedPointer<Shader>& shader)
 {
     for (GLuint i = 0; i < this->meshes_.size(); i++)
     {
@@ -48,7 +49,7 @@ GLvoid Model::LoadModel(const QString& path)
     // check for errors
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
     {
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug
                                                   , QString("ERROR::ASSIMP::%1").arg(importer.GetErrorString()));
         return;
     }
@@ -97,23 +98,18 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 
             if (mesh->mTextureCoords[0])
             {
-                geometricalias::vec2 vec;
-                vec.setX(mesh->mTextureCoords[0][i].x);
-                vec.setY(mesh->mTextureCoords[0][i].y);
+                geometricalias::vec2 vec(mesh->mTextureCoords[0][i].x,mesh->mTextureCoords[0][i].y);
                 vertex.tex_coords = vec;
             }
             else
             {
-                vertex.tex_coords = geometricalias::vec2(0.0f, 0.0f);
+                vertex.tex_coords= geometricalias::vec2(0.0f, 0.0f);
             }
         }
         else
         {
-            geometricalias::vec3 verctor;// we declare a placeholder vector since assimp uses its own vector class that doesn't directly convert to QVector3D class so we transfer the data to this placeholder QVector3D first.
+            geometricalias::vec3 verctor(mesh->mVertices[i].x,mesh->mVertices[i].y,mesh->mVertices[i].z);// we declare a placeholder vector since assimp uses its own vector class that doesn't directly convert to QVector3D class so we transfer the data to this placeholder QVector3D first.
             // position
-            verctor.setX(mesh->mVertices[i].x);
-            verctor.setY(mesh->mVertices[i].y);
-            verctor.setZ(mesh->mVertices[i].z);
             vertex.position = verctor;
             // normals
             if (mesh->HasNormals())
@@ -126,11 +122,9 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
             // texture coordinates
             if (mesh->mTextureCoords[0])// does the mesh contain texture coordinates?
             {
-                geometricalias::vec2 vec;
                 // a vertex can contain up to 8 different texture coordinates. We thus make the assumption that we won't
                 // use models where a vertex can have multiple texture coordinates so we always take the first set (0).
-                vec.setX(mesh->mTextureCoords[0][i].x);
-                vec.setY(mesh->mTextureCoords[0][i].y);
+                geometricalias::vec2 vec(mesh->mTextureCoords[0][i].x,mesh->mTextureCoords[0][i].y);
                 vertex.tex_coords = vec;
                 // tangent
                 verctor.setX(mesh->mTangents[i].x);
@@ -164,12 +158,6 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 
     // process materials
     aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-    // we assume a convention for sampler names in the shaders. Each diffuse texture should be named
-    // as 'texture_diffuseN' where N is a sequential number ranging from 1 to MAX_SAMPLER_NUMBER.
-    // Same applies to other texture as the following list summarizes:
-    // diffuse: texture_diffuseN
-    // specular: texture_specularN
-    // normal: texture_normalN
 
     // 1.diffuse maps
     QVector<modelattribute::Texture> diffuse_maps = LoadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
@@ -273,7 +261,7 @@ void Model::ExtractBoneWeightForVertices(QVector<modelattribute::Vertex>& vertic
 
         if (bone_id == -1)
         {
-            FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+            FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug
                                                       , "Bone id error now is -1");
             return;
         }
@@ -288,7 +276,7 @@ void Model::ExtractBoneWeightForVertices(QVector<modelattribute::Vertex>& vertic
 
             if (vertex_id > vertices.size())
             {
-                FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+                FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug
                                                           , "Bone weight id > bone weight size no this weight id");
                 return;
             }

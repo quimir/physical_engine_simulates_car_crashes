@@ -52,15 +52,15 @@ void FileWriteSystem::CustomMessageHandler(QtMsgType type,const QMessageLogConte
 
 void FileWriteSystem::OutMessage(MessageTypeBit type, const QString out_string)
 {
-    if(type==MessageTypeBit::Debug)
+    if(type==MessageTypeBit::kDebug)
     {
         qDebug()<<"Current Date and Time:"<<FileWriteSystem::GetCurrentDataTimeString()<<out_string;
     }
-    else if(type==MessageTypeBit::Warning)
+    else if(type==MessageTypeBit::kWarning)
     {
         qWarning()<<"Current Date and Time:"<<FileWriteSystem::GetCurrentDataTimeString()<<out_string;
     }
-    else if(type==MessageTypeBit::Critical)
+    else if(type==MessageTypeBit::kCritical)
     {
         qCritical()<<"Current Date and Time:"<<FileWriteSystem::GetCurrentDataTimeString()<<out_string;
     }
@@ -91,7 +91,7 @@ void FileWriteSystem::RemoveLogDay(const QString &log_file_path, const long long
             if(log_file.exists())
             {
                 log_file.remove();
-                OutMessage(MessageTypeBit::Debug,QString("log file deleted due to exceeding: %1 day").arg(QString::number(day)));
+                OutMessage(MessageTypeBit::kDebug,QString("log file deleted due to exceeding: %1 day").arg(QString::number(day)));
             }
         }
     }
@@ -103,7 +103,7 @@ void FileWriteSystem::RemoveDefaultLogFile()
     if(log_file_.exists())
     {
         log_file_.remove();
-        OutMessage(MessageTypeBit::Debug,"Using delete log file");
+        OutMessage(MessageTypeBit::kDebug,"Using delete log file");
     }
 }
 
@@ -123,7 +123,7 @@ void FileWriteSystem::RemoveLogDay(QFile &log_file, const long long day)
             if(log_file.exists())
             {
                 log_file.remove();
-                OutMessage(MessageTypeBit::Debug,QString("log file deleted due to exceeding: %1 day").arg(QString::number(day)));
+                OutMessage(MessageTypeBit::kDebug,QString("log file deleted due to exceeding: %1 day").arg(QString::number(day)));
             }
         }
     }

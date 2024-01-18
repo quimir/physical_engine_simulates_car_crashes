@@ -20,7 +20,6 @@
 
 #include <cstdint>
 
-#include <QOpenGLFunctions_4_3_Core>
 #include <QString>
 #include <QMap>
 #include <QVector>
@@ -32,9 +31,10 @@
 #include <assimp/postprocess.h>
 
 #include "src_include/render/model_animation/mesh.h"
+#include "src_include/render/opengl_function_base.h"
 #include "src_include/render/model_animation/animdata.h"
 
-class Model:protected QOpenGLFunctions_4_3_Core
+class Model:public OpenGLFunctionBase
 {
 public:
     /**
@@ -49,7 +49,7 @@ public:
      * @brief Draw Start painting the model and load the shader for shading effects.
      * @param shader Shader object, which is used to color the model to show the coloring effect.
      */
-    GLvoid Draw(Shader& shader);
+    GLvoid Draw(QScopedPointer<Shader> &shader);
 
     /**
      * @brief TextureFromFile Find the texture map and bind it to OpenGL.
@@ -60,9 +60,15 @@ public:
      */
     GLuint TextureFromFile(const QString& path,const QString& directory,float gamma);
 
-    inline QMap<QString,BoneInfo>& GetBoneInfoMap(){return this->boneinfo_map_;};
+    inline QMap<QString,BoneInfo>& GetBoneInfoMap()
+    {
+        return this->boneinfo_map_;
+    };
 
-    inline uint32_t& GetBoneCout(){return this->bone_counter_;};
+    inline uint32_t& GetBoneCout()
+    {
+        return this->bone_counter_;
+    };
 
 private:
     /**

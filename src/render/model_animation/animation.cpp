@@ -25,7 +25,7 @@ Animation::Animation(const QString &animation_path, Model *model)
     const aiScene* scene=importer.ReadFile(animation_path.toStdString().c_str(),aiProcess_Triangulate);
     if((scene==nullptr)||(scene->mRootNode==nullptr))
     {
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug
                                                   ,QString("File Read failed animation path is: %1").arg(animation_path));
         return;
     }
@@ -78,7 +78,7 @@ void Animation::ReadHierarchyData(AssimpNodeData &dest, const aiNode *src)
 {
     if(src==nullptr)
     {
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug,"No model node");
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug,"No model node");
         return;
     }
 

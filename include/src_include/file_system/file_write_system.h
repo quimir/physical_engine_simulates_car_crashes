@@ -32,15 +32,15 @@ class FileWriteSystem
 {
 public:
     /**
-     * @enum MessageTypeBit enum Nessage type,The temporary types are Debug, Warning, Critical, Fatal, and Info. See the Qt manual for details on what these types do.
+     * @enum MessageTypeBit enum Nessage type,The temporary types are kDebug, kWarning, kCritical, kFatal, and kInfo. See the Qt manual for details on what these types do.
      */
     enum class MessageTypeBit
     {
-        Debug,
-        Warning,
-        Critical,
-        Fatal,
-        Info
+        kDebug,
+        kWarning,
+        kCritical,
+        kFatal,
+        kInfo
     };
 
 public:

@@ -40,7 +40,7 @@ QImage FileReadSystem::ReadImageFile(const QString &file_path)
 
     if (!QFile::exists(file_path))
     {
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug
                                                   , file_path + " failed to open the file. Please check for details: " + image_reader.errorString());
         return QImage();  // eturns an invalid QImage
     }
@@ -50,12 +50,12 @@ QImage FileReadSystem::ReadImageFile(const QString &file_path)
         image = image_reader.read();
         if (image.isNull())
         {
-            FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug,
+            FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug,
                                                       "Failed to read image: " + image_reader.errorString());
             return QImage();  // eturns an invalid QImage
         }
-
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+        
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug
                                                   , "Image name: " + image_reader.fileName() +
                                                       ", picture format: " + QString::fromStdString(image_reader.format().toStdString()) +
                                                       ", file width: " + QString::number(image.width()) +
@@ -63,7 +63,7 @@ QImage FileReadSystem::ReadImageFile(const QString &file_path)
     }
     else
     {
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug,
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug,
                                                   "The picture cannot be read because: " + image_reader.errorString());
         return QImage();  // eturns an invalid QImage
     }
@@ -86,7 +86,7 @@ QImage FileReadSystem::ReadImageFile(QFile &image_file)
 
     if (!image_file.exists())
     {
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug,
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug,
                                                   image_file.fileName()
                                                       + " failed to open the file. Please check for details: " + image_file.errorString());
         return QImage();
@@ -94,7 +94,7 @@ QImage FileReadSystem::ReadImageFile(QFile &image_file)
 
     if (!image_file.open(QIODevice::ReadOnly))
     {
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug,
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug,
                                                   "Failed to open file: "
                                                       + image_file.fileName());
         return QImage();
@@ -104,7 +104,7 @@ QImage FileReadSystem::ReadImageFile(QFile &image_file)
 
     if (!image_reader.format().isEmpty())
     {
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug,
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug,
                                                   "Image name: " + image_reader.fileName() +
                                                       ", picture format: " + QString::fromStdString(image_reader.format().toStdString()) +
                                                       ", file width: " + QString::number(image_reader.size().width()) +
@@ -117,7 +117,7 @@ QImage FileReadSystem::ReadImageFile(QFile &image_file)
     }
     else
     {
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug,
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug,
                                                   "The picture cannot be read because: " + image_reader.errorString());
         image_file.close();
         return QImage();
@@ -129,7 +129,7 @@ QMap<QString, QMap<QString, QList<QString> > > FileReadSystem::ReadJsonFile(QFil
     QMap<QString, QMap<QString,QList<QString> >> json_map;
     if(!json_file.open(QIODevice::ReadOnly|QIODevice::Text))
     {
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug
                                                   ,"Failed to open the file");
         return json_map;
     }
@@ -141,7 +141,7 @@ QMap<QString, QMap<QString, QList<QString> > > FileReadSystem::ReadJsonFile(QFil
     QJsonDocument json_doc=QJsonDocument::fromJson(json_data,&json_error);
     if(json_error.error!=QJsonParseError::NoError)
     {
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug,json_error.errorString());
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug,json_error.errorString());
         return json_map;
     }
 
@@ -171,7 +171,7 @@ bool FileReadSystem::ReadFileFirstLine(const QString &file_path, QString &first_
 {
     if(file_path.isEmpty())
     {
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug,"File path is null!");
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug,"File path is null!");
         return false;
     }
 
@@ -205,7 +205,7 @@ void FileReadSystem::ParseJson(const QJsonObject &json_obj, QMap<QString, QMap<Q
 
         if (key.isEmpty())
         {
-            FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug, "Json key is null");
+            FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug, "Json key is null");
             continue;
         }
 
@@ -241,7 +241,7 @@ void FileReadSystem::ParseJsonObject(const QJsonObject& json_obj, QMap<QString, 
 
         if (key.isEmpty())
         {
-            FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug, "Json key is null");
+            FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug, "Json key is null");
             continue;
         }
 
@@ -305,7 +305,7 @@ QString FileReadSystem::ReadFileContentsToString(QFile &file)
 
     if(!file.open(QIODevice::ReadOnly|QIODevice::Text))
     {
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug
                                                   ,"Failed to open the: "+file.fileName()+"file");
         file_map_.insert(file.fileName());
         return QString();
@@ -314,7 +314,7 @@ QString FileReadSystem::ReadFileContentsToString(QFile &file)
     QString file_content=file.readAll();
     if(file_content.isEmpty())
     {
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug
                                                   ,"The file content is empty, the file name is: "+file.fileName());
         file_map_.insert(file.fileName());
         file.close();
@@ -329,7 +329,7 @@ QMap<QString, QMap<QString, QList<QString>>> FileReadSystem::ReadGLSLFile(QMap<Q
 {
     if(glsl_map.isEmpty())
     {
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug,"GLSL map is null!");
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug,"GLSL map is null!");
         return glsl_map;
     }
 

@@ -36,12 +36,12 @@ class FirstPersonCamera : public QObject
     Q_OBJECT
 
 public:
-    enum cameramovement
+    enum class cameramovement
     {
-        FORWARD,
-        BACKWARD,
-        LEFT,
-        RIGHT
+        kForward,
+        kBackward,
+        kLeet,
+        kRight
     };
 
 public:

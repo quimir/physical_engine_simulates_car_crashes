@@ -19,16 +19,16 @@
 #define START_WINDOW_H
 
 #include <QOpenGLWindow>
-#include <QOpenGLFunctions_4_3_Core>
-#include <QTimer>
-#include <QOpenGLVertexArrayObject>
-#include <QOpenGLBuffer>
-#include "src_include/render/shader.h"
-#include "src_include/render/vertices.h"
-#include "src_include/render/first_person_camera.h"
-#include <QSharedPointer>
+#include <QScopedPointer>
 
-class StartWindow : public QOpenGLWindow,protected QOpenGLFunctions_4_3_Core
+#include "src_include/render/opengl_function_base.h"
+#include "src_include/render/shader.h"
+#include "src_include/render/model_animation/model.h"
+#include "src_include/render/first_person_camera.h"
+#include "src_include/file_system/resources_file_type.h"
+#include "src_include/render/render_timer.h"
+
+class StartWindow : public QOpenGLWindow,public OpenGLFunctionBase
 {
 public:
     StartWindow(QRect screen_size,QMap<QString,QMap<QString,QList<QString>>> render_map);
@@ -47,34 +47,28 @@ public:
 protected:
     void keyPressEvent(QKeyEvent *event)override;
 
-private:
-    void ReadGLSLMapToShader(QMap<QString,QList<QString>>& glsl_map);
-
-    void ReadRenderingMap(QMap<QString,QMap<QString,QList<QString>>>& render_map);
-
-    void ReadVertices(QMap<QString,QList<QString>>& vertices_map);
-
-    void ReadModel(QMap<QString,QList<QString>>& model_map);
-
-private:
-    QRect screen_size_;
-    QMap<QString,QMap<QString,QList<QString>>> render_map_;
-    QVector<QSharedPointer<Shader>> shaders_;
-    QVector<QSharedPointer<Vertices>> vertices_;
-    FirstPersonCamera camera_;
-    geometricalias::mat4 projection_;
-
-
-    // QWindow interface
-public:
     void mouseMoveEvent(QMouseEvent *event)override;
 
-    // QWindow interface
-public:
     void wheelEvent(QWheelEvent *event)override;
 
 protected slots:
     void UpdateViewMatrix(const geometricalias::mat4& view_matrix);
+
+private:
+    void ReadRenderingMap(QMap<QString,QMap<QString,QList<QString>>>& render_map);
+
+    bool ReadAnyMap(resourcesfiletype::ResourcesType map_type,QMap<QString,QList<QString>>& any_map);
+
+private:
+    QRect screen_size_;
+    RenderTimer timer_;
+
+    QMap<QString,QMap<QString,QList<QString>>> render_map_;
+    QVector<QScopedPointer<Shader>> shaders_;
+    QVector<QScopedPointer<Model>> models_;
+
+    FirstPersonCamera camera_;
+    geometricalias::mat4 projection_;
 };
 
 #endif // START_WINDOW_H

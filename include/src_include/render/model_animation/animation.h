@@ -90,7 +90,7 @@ private:
     /**
      * @brief ticks_per_second_ Animation second counter
      */
-    int ticks_per_second_;
+    qint32 ticks_per_second_;
     /**
      * @brief bone_ Save bone data
      */

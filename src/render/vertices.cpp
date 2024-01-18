@@ -77,7 +77,7 @@ bool Vertices::LoadObjectFile(const QString &file_path)
     QFile file(file_path);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug
                                                   ,"Failed to open file: "+file_path);
         return false;
     }

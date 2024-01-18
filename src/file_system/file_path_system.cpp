@@ -16,6 +16,7 @@
  **/
 
 #include "src_include/file_system/file_path_system.h"
+#include "src_include/file_system/file_write_system.h"
 #include <QResource>
 #include <QStandardPaths>
 
@@ -48,6 +49,37 @@ QString FilePathSystem::GetResourcesPath(resourcesfiletype::ResourcesType type, 
 QString FilePathSystem::RCCToAbsolutePath(const QString &rcc_path)
 {
     return QFileInfo(QResource(rcc_path).fileName()).absoluteFilePath();
+}
+
+QString FilePathSystem::ExtractResource(const QString &resource_path, const QString &destination_dir)
+{
+    QFile resource_file(resource_path);
+    if(resource_file.open(QIODevice::ReadOnly))
+    {
+        QByteArray data=resource_file.readAll();
+        resource_file.close();
+
+        QString file_name=QFileInfo(resource_path).fileName();
+        QString destination_path=QDir(destination_dir).filePath(file_name);
+
+        QFile destination_file(destination_path);
+
+        if(destination_file.open(QIODevice::WriteOnly))
+        {
+            destination_file.write(data);
+            destination_file.close();
+            FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug,"Resource extracted to: "+destination_path);
+            return destination_path;
+
+        }
+        else
+        {
+            FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug,"Failed to extract resource.");
+        }
+    }
+    
+    FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug,"Failed to open resource file.");
+    return QString();
 }
 
 QString FilePathSystem::GetResourcesPath(const QString &type, const QString &name)

@@ -37,7 +37,7 @@ void Animator::UpdateAnimation(float delte_time)
     }
     else
     {
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug
                                                   ,"Failed to read the animation class");
         return;
     }
@@ -66,7 +66,7 @@ void Animator::CalculateBoneTransform(const Animation::AssimpNodeData *node, geo
     }
     else
     {
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug
                                                   ,"Failed to read the Bone class");
         return;
     }
@@ -84,7 +84,7 @@ void Animator::CalculateBoneTransform(const Animation::AssimpNodeData *node, geo
     }
     else
     {
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug
                                                   ,QString("%1 it's been stored on the bone map").arg(node_name));
         return;
     }

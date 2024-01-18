@@ -23,7 +23,7 @@ MoreSettingWindow::MoreSettingWindow(QRect window_geometry, QWidget *parent)
 {
     this->setGeometry(window_geometry);
     QVBoxLayout* layout=new QVBoxLayout(this);
-    FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::Debug,QString("more setting window width: %1,height: %2")
+    FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug,QString("more setting window width: %1,height: %2")
                                                             .arg(QString::number(this->width()),QString::number(this->height())));
 
     for(quint32 i=0;i<20;i++)

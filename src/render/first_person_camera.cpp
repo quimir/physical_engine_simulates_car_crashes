@@ -50,21 +50,20 @@ void FirstPersonCamera::ProcessKeyInput(cameramovement direction, float delta_ti
 {
     float velocity=this->mouse_sensitivity_*delta_time;
 
-    if(direction==FORWARD)
+    switch (direction)
     {
+    case cameramovement::kForward:
         this->position_+=this->front_*velocity;
-    }
-    else if(direction==BACKWARD)
-    {
+        break;
+    case cameramovement::kBackward:
         this->position_-=this->front_*velocity;
-    }
-    else if(direction==LEFT)
-    {
+        break;
+    case cameramovement::kLeet:
         this->position_-=this->right_*velocity;
-    }
-    else if(direction==RIGHT)
-    {
+        break;
+    case cameramovement::kRight:
         this->position_+=this->right_*velocity;
+        break;
     }
 
     emit ViewMatrixChanged(GetViewMatrix());

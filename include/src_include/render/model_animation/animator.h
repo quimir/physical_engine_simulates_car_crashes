@@ -37,7 +37,8 @@ public:
     Animator(Animation* animation);
 
     /**
-     * @brief UpdateAnimation Remove the animation differences caused by the device
+     * @brief UpdateAnimation Remove the animation differences caused by
+     * the device
      * @param delte_time Device difference time
      */
     void UpdateAnimation(float delte_time);
@@ -50,11 +51,13 @@ public:
 
     /**
      * @brief CalculateBoneTransform The skeletal final transformation matrix of the animation node is computed recursively,
-     * and the array storing the final matrix is updated. If the node or skeleton is not found, output debugging information and return.
+     * and the array storing the final matrix is updated. If the node or
+     * skeleton is not found, output debugging information and return.
      * @param node Animation node data
      * @param parent_transfrom Matrix data for calculation
      */
-    void CalculateBoneTransform(const Animation::AssimpNodeData* node,geometricalias::mat4 parent_transfrom);
+    void CalculateBoneTransform(const Animation::AssimpNodeData* node,
+                                geometricalias::mat4 parent_transfrom);
 
     inline QVector<geometricalias::mat4> GetFinalBoneMatrices()
     {

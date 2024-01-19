@@ -31,15 +31,14 @@
 class StartWindow : public QOpenGLWindow,public OpenGLFunctionBase
 {
 public:
-    StartWindow(QRect screen_size,QMap<QString,QMap<QString,QList<QString>>> render_map);
+    StartWindow(QRect screen_size,
+                QMap<QString,QMap<QString,QList<QString>>> render_map);
 
     void initializeGL()override;
 
     void resizeGL(int w,int h)override;
 
     void paintGL()override;
-
-    void SetSurfaceFormat(QPair<int,int> major_version=QPair<int,int>(4,3), int color_buffer=8, int depth_buffer=24);
 
     ~StartWindow();
 
@@ -55,9 +54,11 @@ protected slots:
     void UpdateViewMatrix(const geometricalias::mat4& view_matrix);
 
 private:
-    void ReadRenderingMap(QMap<QString,QMap<QString,QList<QString>>>& render_map);
+    void ReadRenderingMap(
+    QMap<QString,QMap<QString,QList<QString>>>& render_map);
 
-    bool ReadAnyMap(resourcesfiletype::ResourcesType map_type,QMap<QString,QList<QString>>& any_map);
+    bool ReadAnyMap(resourcesfiletype::ResourcesType map_type,
+                    QMap<QString,QList<QString>>& any_map);
 
 private:
     QRect screen_size_;

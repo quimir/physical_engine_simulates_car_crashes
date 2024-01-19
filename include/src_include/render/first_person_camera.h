@@ -45,12 +45,17 @@ public:
     };
 
 public:
-    explicit FirstPersonCamera(geometricalias::vec3 position=geometricalias::vec3(0.0f,0.0f,0.0f)
-                               ,geometricalias::vec3 up=geometricalias::vec3(0.0f,1.0f,0.0f),
-                               float yaw=camerasetting::YAW,float pitch=camerasetting::PITCH,QObject *parent=nullptr)
-        :QObject(parent),position_(position),front_(geometricalias::vec3(0.0f,0.0f,-1.0f))
-        ,world_up_(up),yaw_(yaw),pitch_(pitch),movement_speed_(camerasetting::SPEED),
-        mouse_sensitivity_(camerasetting::SENSITIVITY),zoom_(camerasetting::ZOOM),last_mouse_x_(0.0f),last_mouse_y_(0.0f)
+    explicit FirstPersonCamera(
+        geometricalias::vec3 position=geometricalias::vec3(0.0f,0.0f,0.0f),
+        geometricalias::vec3 up=geometricalias::vec3(0.0f,1.0f,0.0f),
+        float yaw=camerasetting::YAW,float pitch=camerasetting::PITCH,
+        QObject *parent=nullptr)
+        :QObject(parent),position_(position),
+        front_(geometricalias::vec3(0.0f,0.0f,-1.0f))
+        ,world_up_(up),yaw_(yaw),pitch_(pitch),
+        movement_speed_(camerasetting::SPEED),
+        mouse_sensitivity_(camerasetting::SENSITIVITY),
+        zoom_(camerasetting::ZOOM),last_mouse_x_(0.0f),last_mouse_y_(0.0f)
         ,first_mouse_(true)
     {
         UpdateCameraVectors();
@@ -80,9 +85,11 @@ private:
     void UpdateCameraVectors();
 
 public slots:
-    void ProcessKeyInput(FirstPersonCamera::cameramovement direction,float delta_time);
+    void ProcessKeyInput(FirstPersonCamera::cameramovement direction,
+                         float delta_time);
 
-    void ProcessMouseMovement(float xoffset,float yoffset,bool constrain_pitch=true);
+    void ProcessMouseMovement(float xoffset,float yoffset,
+                              bool constrain_pitch=true);
 
     void ProcessMouseScroll(float yoffset);
 

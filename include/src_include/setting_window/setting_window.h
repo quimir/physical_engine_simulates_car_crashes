@@ -31,7 +31,8 @@ class SettingWindow : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SettingWindow(const QRect& window_geometry,QWidget *parent = nullptr);
+    explicit SettingWindow(const QRect& window_geometry,
+                           QWidget *parent = nullptr);
 
     void CreateBasicButton(const QSize button_size);
 

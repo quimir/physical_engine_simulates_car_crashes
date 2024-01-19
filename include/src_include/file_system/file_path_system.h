@@ -26,63 +26,79 @@
 #include "src_include/file_system/resources_file_type.h"
 
 /**
- * @brief The FilePathSystem class his class has been largely replaced by RCC'S resource management SYSTEM,
- * only SOME FUNCTIONS ARE STILL available. Please specify your own information if you want to use this class.
+ * @brief The FilePathSystem class his class has been largely replaced
+ * by RCC'S resource management SYSTEM, only SOME FUNCTIONS ARE STILL
+ * available. Please specify your own information if you want to use
+ * this class.
  */
 class FilePathSystem
 {
 public:
     /**
-     * @brief GetInstance The only way to access an object of class FilePathSystem,
-     *  no other method can access its object, and the only way to call a function of class FilePathSystem.
+     * @brief GetInstance The only way to access an object of class
+     * FilePathSystem, no other method can access its object, and the
+     * only way to call a function of class FilePathSystem.
      * @return Unique object.
      */
     static FilePathSystem& GetInstance();
 
     /**
-     * @brief GetPath Returns the top-level directory of the project + name
-     * @param name File name
-     * @return Top-level directory + name of the project
+     * @brief GetPath Returns the top-level directory of the project + name.
+     * @param name File name.
+     * @return Top-level directory + name of the project.
      */
     QString GetPath(const QString&name);
 
     /**
-     * @brief GetResourcesPath Return the absolute path under the Resources folder,
-     * that is: the absolute path of the project + the absolute path location of the Resources in the project + the file name.
-     * @param name The name of the desired file
-     * @return the absolute path of the project + the absolute path location of the Resources in the project + the file name.
+     * @brief GetResourcesPath Return the absolute path under the
+     * Resources folder,that is: the absolute path of the project + the
+     * absolute path location of the Resources in the project + the file
+     * name.
+     * @param name The name of the desired file.
+     * @return the absolute path of the project + the absolute path location
+     *  of the Resources in the project + the file name.
      */
     QString GetResourcesPath(const QString &name);
 
     /**
-     * @brief GetLogsPath Returns the absolute path to the requirements in the logs folder of this project
+     * @brief GetLogsPath Returns the absolute path to the requirements
+     * in the logs folder of this project.
      * @param name The name of the desired file
-     * @return the absolute path of the project + the absolute path location of the logs in the project + the file name.
+     * @return the absolute path of the project + the absolute path location
+     * of the logs in the project + the file name.
      */
     QString GetLogsPath(const QString& name);
 
     /**
-     * @brief GetResourcesPath Returns the location of the file relative to the RCC resource system under the RCC resource system.
-     * @param type For the types of RCC resource files, see the ResourcesType enumeration class for details
-     * @param name Name of the file
-     * @param suffix Autofill file type, which is still experimental and not ope
-     * @return RCC relative path + name
+     * @brief GetResourcesPath Returns the location of the file relative to
+     * the RCC resource system under the RCC resource system.
+     * @param type For the types of RCC resource files, see the
+     * ResourcesType enumeration class for details.
+     * @param name Name of the file.
+     * @param suffix Autofill file type, which is still experimental
+     * and not ope.
+     * @return RCC relative path + name.
      */
-    QString GetResourcesPath(resourcesfiletype::ResourcesType type, const QString &name,bool suffix=false);
+    QString GetResourcesPath(resourcesfiletype::ResourcesType type,
+                             const QString &name,bool suffix=false);
 
     /**
-     * @brief RCCToAbsolutePath The absolute path from the relative path of RCC to the binary form of the file,
-     * for example: /RCC/.... in RCC After parsing, you get: project build path +....
+     * @brief RCCToAbsolutePath The absolute path from the relative path of
+     * RCC to the binary form of the file,for example: /RCC/.... in RCC
+     * After parsing, you get: project build path +....
      * @param rcc_path The relative path of the file in RCC
      * @return The absolute path of the file on the system
      */
     QString RCCToAbsolutePath(const QString& rcc_path);
 
-    QString ExtractResource(const QString& resource_path,const QString& destination_dir);
+    QString ExtractResource(const QString& resource_path,
+                            const QString& destination_dir);
 
     /**
-     * @brief GetResourcesPath Returns the location of the file relative to the RCC resource system under the RCC resource system.
-     * @param type For the types of RCC resource files, see the ResourcesType enumeration class for details
+     * @brief GetResourcesPath Returns the location of the file relative
+     * to the RCC resource system under the RCC resource system.
+     * @param type For the types of RCC resource files, see the
+     * ResourcesType enumeration class for details
      * @param name Name of the file
      * @return RCC relative path + name
      */

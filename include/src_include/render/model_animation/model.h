@@ -38,15 +38,18 @@ class Model:public OpenGLFunctionBase
 {
 public:
     /**
-     * @brief Model Load the model if there is animation then load the animation.
+     * @brief Model Load the model if there is animation then load
+     * the animation.
      * @param path Model path.
-     * @param animation_switch Is animation enabled? It will automatically find the animation file.
+     * @param animation_switch Is animation enabled? It will automatically
+     * find the animation file.
      * @param gamma Gamma number or gamma effect.
      */
     Model(QString const& path,bool animation_switch=false,float gamma=1.0f);
 
     /**
-     * @brief Draw Start painting the model and load the shader for shading effects.
+     * @brief Draw Start painting the model and load the shader for
+     * shading effects.
      * @param shader Shader object, which is used to color the model to show the coloring effect.
      */
     GLvoid Draw(QScopedPointer<Shader> &shader);
@@ -58,7 +61,8 @@ public:
      * @param gamma Gamma effect, generally not enabled by default.
      * @return The ID of the texture in OpenGL after binding is successful.
      */
-    GLuint TextureFromFile(const QString& path,const QString& directory,float gamma);
+    GLuint TextureFromFile(const QString& path,const QString& directory,
+                           float gamma);
 
     inline QMap<QString,BoneInfo>& GetBoneInfoMap()
     {
@@ -72,21 +76,24 @@ public:
 
 private:
     /**
-     * @brief LoadModel Read the texture path passed in, look for whether the texture exists, and read the model data according to the node.
+     * @brief LoadModel Read the texture path passed in, look for whether
+     * the texture exists, and read the model data according to the node.
      * @param path Model path.
      */
     GLvoid LoadModel(QString const& path);
 
     /**
-     * @brief ProcessNode The node data of the model will read the mesh data in each node data.
-     * Repeat the above process to read the remaining node data recursively.
+     * @brief ProcessNode The node data of the model will read the mesh
+     * data in each node data. Repeat the above process to read the
+     * remaining node data recursively.
      * @param node Node data of the model.
      * @param scene Scene data of the model.
      */
     GLvoid ProcessNode(aiNode* node,const aiScene* scene);
 
     /**
-     * @brief ProcessMesh Traverse the grid data, reading the bone weight if the animation effect switch is enabled.
+     * @brief ProcessMesh Traverse the grid data, reading the bone weight
+     * if the animation effect switch is enabled.
      * @param mesh Model mesh.
      * @param scene Model scene.
      * @return All grid data read from the model will be stored in the model.
@@ -94,35 +101,45 @@ private:
     Mesh ProcessMesh(aiMesh* mesh,const aiScene* scene);
 
     /**
-     * @brief LoadMaterialTextures Get the MaterialTexture from the scene texture and get all its Textures.
+     * @brief LoadMaterialTextures Get the MaterialTexture from the scene
+     * texture and get all its Textures.
      * @param mat The Material of the model mesh.
      * @param type The Texture type of the model mesh.
-     * @param type_name Types of Texture, respectively texture_diffuse|texture_specular|texture_normal|texture_height.
+     * @param type_name Types of Texture, respectively
+     * texture_diffuse|texture_specular|texture_normal|texture_height.
      * @return All Textures read from the MaterialTextures of the model mesh.
      */
-    QVector<modelattribute::Texture> LoadMaterialTextures(aiMaterial* mat,aiTextureType type,QString type_name);
+    QVector<modelattribute::Texture> LoadMaterialTextures(aiMaterial* mat,
+                                                          aiTextureType type,
+                                                          QString type_name);
 
     /**
-     * @brief SetVertexBoneDataToDafault The default bone has an initial id of -1 and a weight of 0.0f.
+     * @brief SetVertexBoneDataToDafault The default bone has an initial id
+     * of -1 and a weight of 0.0f.
      * @param vertex Vertex bone data.
      */
     void SetVertexBoneDataToDafault(modelattribute::Vertex& vertex);
 
     /**
-     * @brief SetVertexBoneData Update the bone data set as default to the current bone data.
+     * @brief SetVertexBoneData Update the bone data set as default to
+     * the current bone data.
      * @param vertex Vertex bone data.
      * @param bone_id Now the id of the bone.
      * @param weight Now the weight of the bone.
      */
-    void SetVertexBoneData(modelattribute::Vertex& vertex,int bone_id,float weight);
+    void SetVertexBoneData(modelattribute::Vertex& vertex,int bone_id,
+                           float weight);
 
     /**
-     * @brief ExtractBoneWeightForVertices Find the bone data in the current model mesh and update it to the bones.
+     * @brief ExtractBoneWeightForVertices Find the bone data in the current
+     *  model mesh and update it to the bones.
      * @param vertices Model mesh vertex data.
      * @param mesh Model mesh data.
      * @param scene Model mesh scene data.
      */
-    void ExtractBoneWeightForVertices(QVector<modelattribute::Vertex>& vertices,aiMesh* mesh,const aiScene* scene);
+    void ExtractBoneWeightForVertices(
+    QVector<modelattribute::Vertex>& vertices,
+    aiMesh* mesh,const aiScene* scene);
 
 public:
     // model data

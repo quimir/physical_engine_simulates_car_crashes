@@ -27,23 +27,31 @@ QString FilePathSystem::GetPath(const QString &name)
 
 QString FilePathSystem::GetResourcesPath(const QString &name)
 {
-    return QDir::toNativeSeparators(GetRoot()+QDir::separator()+"resources"+QDir::separator()+name);
+    return QDir::toNativeSeparators(GetRoot()+QDir::separator()+
+                                    "resources"+QDir::separator()+name);
 }
 
 QString FilePathSystem::GetLogsPath(const QString &name)
 {
-    return QDir::toNativeSeparators(GetRoot()+QDir::separator()+"logs"+QDir::separator()+name);
+    return QDir::toNativeSeparators(GetRoot()+QDir::separator()+
+                                    "logs"+QDir::separator()+name);
 }
 
-QString FilePathSystem::GetResourcesPath(resourcesfiletype::ResourcesType type, const QString& name, bool suffix)
+QString FilePathSystem::GetResourcesPath(
+    resourcesfiletype::ResourcesType type,
+    const QString& name,
+    bool suffix)
 {
     if(suffix)
     {
-        return resourcesfiletype::ResourcesTypeToMapper::GetInstance().EnumToStringPath(type)+name
-               +resourcesfiletype::ResourcesTypeToMapper::GetInstance().EnumToString(type).toLower();
+        return resourcesfiletype::ResourcesTypeToMapper::GetInstance().
+               EnumToStringPath(type)+name+
+               resourcesfiletype::ResourcesTypeToMapper::GetInstance().
+               EnumToString(type).toLower();
     }
 
-    return resourcesfiletype::ResourcesTypeToMapper::GetInstance().EnumToStringPath(type)+name;
+    return resourcesfiletype::ResourcesTypeToMapper::GetInstance().
+           EnumToStringPath(type)+name;
 }
 
 QString FilePathSystem::RCCToAbsolutePath(const QString &rcc_path)
@@ -51,7 +59,8 @@ QString FilePathSystem::RCCToAbsolutePath(const QString &rcc_path)
     return QFileInfo(QResource(rcc_path).fileName()).absoluteFilePath();
 }
 
-QString FilePathSystem::ExtractResource(const QString &resource_path, const QString &destination_dir)
+QString FilePathSystem::ExtractResource(const QString &resource_path,
+                                        const QString &destination_dir)
 {
     QFile resource_file(resource_path);
     if(resource_file.open(QIODevice::ReadOnly))
@@ -68,23 +77,31 @@ QString FilePathSystem::ExtractResource(const QString &resource_path, const QStr
         {
             destination_file.write(data);
             destination_file.close();
-            FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug,"Resource extracted to: "+destination_path);
+            FileWriteSystem::GetInstance().OutMessage(
+                FileWriteSystem::MessageTypeBit::kDebug,
+                "Resource extracted to: "+destination_path);
             return destination_path;
 
         }
         else
         {
-            FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug,"Failed to extract resource.");
+            FileWriteSystem::GetInstance().OutMessage(
+                FileWriteSystem::MessageTypeBit::kDebug,
+                "Failed to extract resource.");
         }
     }
     
-    FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug,"Failed to open resource file.");
+    FileWriteSystem::GetInstance().OutMessage(
+        FileWriteSystem::MessageTypeBit::kDebug,
+        "Failed to open resource file.");
     return QString();
 }
 
-QString FilePathSystem::GetResourcesPath(const QString &type, const QString &name)
+QString FilePathSystem::GetResourcesPath(const QString &type,
+                                         const QString &name)
 {
-    return resourcesfiletype::ResourcesTypeToMapper::GetInstance().StringToEnumToStringPath(type)+name;
+    return resourcesfiletype::ResourcesTypeToMapper::GetInstance().
+           StringToEnumToStringPath(type)+name;
 }
 
 FilePathSystem &FilePathSystem::GetInstance()

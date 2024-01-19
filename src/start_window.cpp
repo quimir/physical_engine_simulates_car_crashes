@@ -77,23 +77,6 @@ void StartWindow::paintGL()
     this->timer_.Stop();
 }
 
-void StartWindow::SetSurfaceFormat(QPair<int, int> major_version, int color_buffer, int depth_buffer)
-{
-    setSurfaceType(QSurface::OpenGLSurface);
-
-    QSurfaceFormat format;
-    format.setVersion(major_version.first,major_version.second);
-
-    format.setRedBufferSize(color_buffer);
-    format.setGreenBufferSize(color_buffer);
-    format.setBlueBufferSize(color_buffer);
-    format.setAlphaBufferSize(color_buffer);
-
-    format.setDepthBufferSize(depth_buffer);
-
-    setFormat(format);
-}
-
 StartWindow::~StartWindow()
 {
     unsetCursor();

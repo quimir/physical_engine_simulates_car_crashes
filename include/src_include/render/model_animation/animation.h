@@ -37,7 +37,8 @@ public:
 
 public:
     /**
-     * @brief Animation Read the animation from the animation path when the path exists
+     * @brief Animation Read the animation from the animation path when
+     * the path exists
      * @param animation_path Target animation path
      * @param model Target model
      */
@@ -46,7 +47,8 @@ public:
     /**
      * @brief FindBone Look for additional bone data that hasn't been added
      * @param name Bone name
-     * @return If yes, return skeleton modification, otherwise return nullptr
+     * @return If yes, return skeleton modification, otherwise return
+     * nullptr
      */
     Bone *FindBone(const QString& name);
 
@@ -72,14 +74,17 @@ public:
 
 private:
     /**
-     * @brief ReadMissingBones Read bone data that is not recorded in BoneInfoMap
-     * @param animation Need to query whether the bone is in the animation data of BoneInfoMap
+     * @brief ReadMissingBones Read bone data that is not recorded in
+     * BoneInfoMap
+     * @param animation Need to query whether the bone is in the animation
+     * data of BoneInfoMap
      * @param model Model's BoneInfoMap
      */
     void ReadMissingBones(const aiAnimation* animation,Model& model);
 
     /**
-     * @brief ReadHierarchyData Read the node data in the current animation and store it in the animation class node
+     * @brief ReadHierarchyData Read the node data in the current animation
+     * and store it in the animation class node
      * @param dest Animation node data
      * @param src Animation node name
      */

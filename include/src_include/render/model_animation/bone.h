@@ -58,9 +58,9 @@ public:
     Bone(const QString& name,int id,const aiNodeAnim* channel);
 
     /**
-     * @brief Update Interpolates  b/w positions,rotations & scaling keys based on the curren time of
-    the animation and prepares the local transformation matrix by combining all keys
-    tranformations
+     * @brief Update Interpolates  b/w positions,rotations & scaling keys
+     * based on the curren time of the animation and prepares the local
+     * transformation matrix by combining all keys tranformations
      * @param animation_time The duration of the animation
      */
     void Update(float animation_time);
@@ -81,24 +81,24 @@ public:
     }
 
     /**
-     * @brief GetPositionIndex Gets the current index on mKeyPositions to interpolate to based on
-    the current animation time
+     * @brief GetPositionIndex Gets the current index on mKeyPositions
+     * to interpolate to based on the current animation time
      * @param animation_time The duration of the animation
      * @return UINT_MAX or index
      */
     uint32_t GetPositionIndex(float animation_time);
 
     /**
-     * @brief GetRotationIndex Gets the current index on mKeyRotations to interpolate to based on the
-    current animation time
+     * @brief GetRotationIndex Gets the current index on mKeyRotations
+     * to interpolate to based on the current animation time
      * @param animationTime The duration of the animation
      * @return UINT_MAX or index
      */
     uint32_t GetRotationIndex(float animation_time);
 
     /**
-     * @brief GetScaleIndex Gets the current index on mKeyScalings to interpolate to based on the
-    current animation time
+     * @brief GetScaleIndex Gets the current index on mKeyScalings to
+     * interpolate to based on the current animation time
      * @param animation_time The duration of the animation
      * @return UINT_MAX or index
      */
@@ -112,7 +112,8 @@ private:
      * @param animation_time The duration of the animation
      * @return Scale factor about time
      */
-    float GetScaleFactor(float last_time_stamp,float next_time_stamp,float animation_time);
+    float GetScaleFactor(float last_time_stamp,float next_time_stamp,
+                         float animation_time);
 
     /**
      * @brief InterpolatePosition Gets a linear interpolation of position

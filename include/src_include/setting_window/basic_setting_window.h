@@ -29,7 +29,8 @@ class BasicSettingsWindow : public QWidget
 {
     Q_OBJECT
 public:
-    explicit BasicSettingsWindow(QRect window_geometry,QWidget *parent = nullptr);
+    explicit BasicSettingsWindow(QRect window_geometry,
+                                 QWidget *parent = nullptr);
 
 signals:
 

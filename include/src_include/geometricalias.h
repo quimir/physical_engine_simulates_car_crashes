@@ -41,7 +41,8 @@ using mat2x4=QMatrix2x4;
 using quat=QQuaternion;
 
 /**
- * @brief lerp Linear interpolation between two QVector3D, linear interpolation formula :a=a*(1-t)+b*t, will return the linear interpolation value of a.
+ * @brief lerp Linear interpolation between two QVector3D, linear interpolation
+ * formula :a=a*(1-t)+b*t, will return the linear interpolation value of a.
  * @param v1 Value to interpolate.
  * @param v2 Value to interpolate.
  * @param t Interpolant.

@@ -27,7 +27,8 @@ class EnvironmentSettingWindow : public QWidget
 {
     Q_OBJECT
 public:
-    explicit EnvironmentSettingWindow(QRect window_geometry,QWidget *parent = nullptr);
+    explicit EnvironmentSettingWindow(QRect window_geometry,
+                                      QWidget *parent = nullptr);
 
 signals:
 

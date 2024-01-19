@@ -31,56 +31,69 @@ class FileReadSystem
 {
 public:
     /**
-     * @brief GetInstance The only way to access an object of class FileReadSystem,
-     *  no other method can access its object, and the only way to call a function of class FileReadSystem.
-     * @return
+     * @brief GetInstance The only way to access an object of class
+     * FileReadSystem, no other method can access its object,
+     * and the only way to call a function of class FileReadSystem.
+     * @return FileReadSystem unique object.
      */
     static FileReadSystem& GetInstance();
 
     QString LoadStylesFromFile(const QString& file_name)=delete;
 
     /**
-     * @brief ReadImageFile It reads the information about the image, prints the attributes of the image after loading
-     * , and returns QImage if there is no information about the image.
+     * @brief ReadImageFile It reads the information about the image, prints
+     * the attributes of the image after loading, and returns QImage if
+     * there is no information about the image.
      * @param file_path Path to the image file
-     * @return On success, it returns a loaded and ready to use QImage object; otherwise, it returns an empty QImage object.
+     * @return On success, it returns a loaded and ready to use QImage
+     * object; otherwise, it returns an empty QImage object.
      */
     QImage ReadImageFile(const QString& file_path);
 
     /**
-     * @brief ReadImageFile It reads the information about the image, prints the attributes of the image after loading
-     * , and returns QImage if there is no information about the image.
+     * @brief ReadImageFile It reads the information about the image,
+     * prints the attributes of the image after loading, and returns QImage
+     * if there is no information about the image.
      * @param image_file Path to the image file
-     * @return On success, it returns a loaded and ready to use QImage object; otherwise, it returns an empty QImage object.
+     * @return On success, it returns a loaded and ready to use
+     * QImage object; otherwise, it returns an empty QImage object.
      */
     QImage ReadImageFile(QFile& image_file);
 
     /**
-     * @brief ReadFileContentsToString Reads the contents of a file into a string.
+     * @brief ReadFileContentsToString Reads the contents of a
+     * file into a string.
      * @param file File path.
      * @return The entire contents of the file.
      */
     QString ReadFileContentsToString(QFile& file);
 
     /**
-     * @brief ReadGLSLFile Read the map from the json, and if the keyword GLSL is found
-     * , convert the file path to the file content and re-store it into the map.
+     * @brief ReadGLSLFile Read the map from the json, and if the
+     * keyword GLSL is found, convert the file path to the file content
+     * and re-store it into the map.
      * @param glsl_map A map read from json
      * @param type Generally, the default is GLSL
      * @return Modified json map.
      */
-    QMap<QString,QMap<QString,QList<QString>>> ReadGLSLFile(QMap<QString,QMap<QString,QList<QString>>>& glsl_map
-                                                              ,resourcesfiletype::ResourcesType type=resourcesfiletype::ResourcesType::GLSL);
+    QMap<QString,QMap<QString,QList<QString>>> ReadGLSLFile(
+    QMap<QString,QMap<QString,QList<QString>>>& glsl_map
+    ,resourcesfiletype::ResourcesType type=
+    resourcesfiletype::ResourcesType::GLSL);
 
     /**
-     * @brief ReadJsonFile Read the Json file and return to go out, the content of the Json file format, please check /resources/Json/README.md Content.
+     * @brief ReadJsonFile Read the Json file and return to go out, the
+     * content of the Json file format, please check
+     * /resources/Json/README.md Content.
      * @param json_file Target jsonfile
-     * @return Returns a combination of key-key-array values, ensuring that the first key is unique.
+     * @return Returns a combination of key-key-array values, ensuring that
+     * the first key is unique.
      */
     QMap<QString,QMap<QString,QList<QString>>> ReadJsonFile(QFile json_file);
 
     /**
-     * @brief ReadFileFirstLine Reads the first part of the file and stores it all in a string.
+     * @brief ReadFileFirstLine Reads the first part of the file and stores
+     * it all in a string.
      * @param file A file that needs to be read
      * @param first_line First line of information
      * @return Returns true on success, false otherwise.
@@ -88,7 +101,8 @@ public:
     bool ReadFileFirstLine(QFile& file,QString& first_line);
 
     /**
-     * @brief ReadFileFirstLine Reads the first part of the file and stores it all in a string.
+     * @brief ReadFileFirstLine Reads the first part of the file and
+     * stores it all in a string.
      * @param file_path The path to the file.
      * @param first_line First line of information.
      * @return Returns true on success, false otherwise.
@@ -97,13 +111,16 @@ public:
 
 private:
     /* The following functions are not recommended to be modified unless you are familiar with the function and its logic. */
-    void ParseJson(const QJsonObject& json_obj,QMap<QString, QMap<QString,QList<QString>>>& json_map);
+    void ParseJson(const QJsonObject& json_obj,
+                   QMap<QString, QMap<QString,QList<QString>>>& json_map);
 
-    void ParseJsonObject(const QJsonObject& json_object, QMap<QString,QList<QString>>& relative_paths
-                         ,const QString &key,QList<QString>& value);
+    void ParseJsonObject(const QJsonObject& json_object,
+                         QMap<QString,QList<QString>>& relative_paths,
+                         const QString &key,QList<QString>& value);
 
-    void ParseJsonArray(const QJsonArray& json_array, QMap<QString,QList<QString>>& relative_paths
-                        ,const QString &key, QList<QString>& list_value);
+    void ParseJsonArray(const QJsonArray& json_array,
+                        QMap<QString,QList<QString>>& relative_paths,
+                        const QString &key, QList<QString>& list_value);
 
     /* End */
 private:

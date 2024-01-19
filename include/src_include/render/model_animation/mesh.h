@@ -34,18 +34,23 @@
 class Mesh:public OpenGLFunctionBase
 {
 public:
-    Mesh(QVector<modelattribute::Vertex> vertices,QVector<GLuint> indices,QVector<modelattribute::Texture> textures)
-        :vertices_(std::move(vertices)),indices_(std::move(indices)),textures_(std::move(textures))
+    Mesh(QVector<modelattribute::Vertex> vertices,QVector<GLuint> indices,
+         QVector<modelattribute::Texture> textures)
+        :vertices_(std::move(vertices)),indices_(std::move(indices)),
+        textures_(std::move(textures))
     {
         SetupMesh();
     };
 
-    Mesh(Mesh&& other)noexcept:vertices_(std::move(other.vertices_)),indices_(std::move(other.indices_)),textures_(std::move(other.textures_))
+    Mesh(Mesh&& other)noexcept:vertices_(std::move(other.vertices_)),
+        indices_(std::move(other.indices_)),
+        textures_(std::move(other.textures_))
     {
         SetupMesh();
     };
 
-    Mesh(const Mesh&other):vertices_(other.vertices_),indices_(other.indices_),textures_(other.textures_)
+    Mesh(const Mesh&other):vertices_(other.vertices_),
+        indices_(other.indices_),textures_(other.textures_)
     {
         SetupMesh();
     };
@@ -63,8 +68,9 @@ public:
     }
 
     /**
-     * @brief Load and draw the mesh information in the model and bind it to the Shader.
-     * This function is called by other classes without explicitly calling it.
+     * @brief Load and draw the mesh information in the model and bind it to
+     * the Shader. This function is called by other classes without
+     * explicitly calling it.
      * @param shader Bound shader
      */
     GLvoid Draw(QScopedPointer<Shader> &shader);

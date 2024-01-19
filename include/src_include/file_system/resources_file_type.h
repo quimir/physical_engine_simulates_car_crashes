@@ -24,7 +24,8 @@
 namespace resourcesfiletype
 {
 /**
- * @enum The ResourcesType enum Type of resource file, now existing type by json, iamge, shader, style,Obj.
+ * @enum The ResourcesType enum Type of resource file, now existing type
+ * by json, iamge, shader, style,Obj.
  */
 enum class ResourcesType
 {
@@ -41,29 +42,33 @@ class ResourcesTypeToMapper
 {
 public:
     /**
-     * @brief GetInstance The only way to access an object of class ResourcesTypeToMapper,
-     *  no other method can access its object, and the only way to call a function of class ResourcesTypeToMapper.
+     * @brief GetInstance The only way to access an object of class
+     * ResourcesTypeToMapper, no other method can access its object,
+     * and the only way to call a function of class ResourcesTypeToMapper.
      * @return Unique object.
      */
     static ResourcesTypeToMapper& GetInstance();
 
     /**
-     * @brief EnumToStringPath Relative path translation from ResourcesTypes types to RCC
+     * @brief EnumToStringPath Relative path translation from ResourcesTypes
+     * types to RCC
      * @param type RCC existing types
      * @return The relative path of type to RCC
      */
     QString EnumToStringPath(ResourcesType type)const;
 
     /**
-     * @brief StringToEnumToStringPath Look for a name that matches the RCC resource file (regardless of case rules)
-     * , and if it matches, return the relative path to the RCC for that type.
+     * @brief StringToEnumToStringPath Look for a name that matches the RCC
+     * resource file (regardless of case rules), and if it matches,
+     * return the relative path to the RCC for that type.
      * @param type A string to evaluate
      * @return The relative path of the type in RCC
      */
     QString StringToEnumToStringPath(QString type)const;
 
     /**
-     * @brief EnumToString Converts a fixed type from the ResourcesTypes type to a string
+     * @brief EnumToString Converts a fixed type from the ResourcesTypes type
+     * to a string
      * @param type target type
      * @return Converted string
      */

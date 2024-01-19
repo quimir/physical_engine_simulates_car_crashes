@@ -29,9 +29,12 @@ class SettingWindowButton : public QPushButton
 {
     Q_OBJECT
 public:
-    SettingWindowButton(const QString icon_path,const QSize original_size
-                        ,const QString button_text,const QSize icon_size,const QString specify_the_display_text=QString()
-                        ,const QString press_icon_path=QString());
+    SettingWindowButton(const QString icon_path,
+                        const QSize original_size,
+                        const QString button_text,
+                        const QSize icon_size,
+                        const QString specify_the_display_text=QString(),
+                        const QString press_icon_path=QString());
 
 protected:
     bool eventFilter(QObject* obj,QEvent* event);

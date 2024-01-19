@@ -27,7 +27,8 @@ class MoreSettingWindow : public QWidget
 {
     Q_OBJECT
 public:
-    explicit MoreSettingWindow(QRect window_geometry,QWidget *parent = nullptr);
+    explicit MoreSettingWindow(QRect window_geometry,
+                               QWidget *parent = nullptr);
 
 signals:
 

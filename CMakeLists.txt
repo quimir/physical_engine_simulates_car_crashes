@@ -20,13 +20,15 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
 if(CMAKE_SIZEOF_VOID_P EQUAL 8)
       message(STATUS "64-bit operating system detected.")
 else()
-      message(FATAL_ERROR "This project requires a 64-bit operating system. Exiting...")
+      message(FATAL_ERROR "This project requires a 64-bit operating
+              system. Exiting...")
 endif()
 
 # Define supported build types
 set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "Configs" FORCE)
 if(NOT CMAKE_BUILD_TYPE)
-      set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Choose the type of build, options are: Debug Release" FORCE)
+      set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Choose the type of build,
+          options are: Debug Release" FORCE)
 endif()
 
 # The project is built in the bin directory
@@ -34,7 +36,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 set(TARGET_DLLS_DIR ${CMAKE_SOURCE_DIR}/dlls)
 
 # Add header files and link library directories
-include_directories(${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/include/PhysX)
+include_directories(${CMAKE_SOURCE_DIR}/include
+      ${CMAKE_SOURCE_DIR}/include/PhysX)
 link_directories(${CMAKE_SOURCE_DIR}/lib)
 
 IF(MSVC AND CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -45,8 +48,10 @@ else()
 endif()
 
 # Find the required packages
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools OpenGL OpenGLWidgets MultimediaWidgets Qml Core)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools OpenGL OpenGLWidgets MultimediaWidgets Qml Core)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools OpenGL
+             OpenGLWidgets MultimediaWidgets Qml Core)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools
+             OpenGL OpenGLWidgets MultimediaWidgets Qml Core)
 IF(MSVC)# There is currently no way to introduce PhysX with the MinGW compiler
 find_package(PHYSX REQUIRED)
 message(STATUS "Found PHYSX in ${PHYSX_INCLUDE_DIR}")
@@ -59,7 +64,8 @@ message(STATUS "Found ASSIMP in ${ASSIMP_INCLUDE_DIR}")
 
 # Add and integrate link parameters
 IF(MSVC)
-set(LIBS assimp PhysX_64 PhysXCommon_64 PhysXCooking_64 PhysXExtensions_static_64 PhysXFoundation_64 PhysXPvdSDK_static_64)
+set(LIBS assimp PhysX_64 PhysXCommon_64 PhysXCooking_64
+    PhysXExtensions_static_64 PhysXFoundation_64 PhysXPvdSDK_static_64)
 ELSEIF(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
 IF(CMAKE_BUILD_TYPE STREQUAL "Debug")
 set(LIBS assimpd zlibstaticd)
@@ -108,7 +114,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
             MANUAL_FINALIZATION
       )
 # Define target properties for Android with Qt 6 as:
-#    set_property(TARGET physical_engine_simulates_car_crashes APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
+#    set_property(TARGET physical_engine_simulates_car_crashes APPEND PROPERTY
+#    QT_ANDROID_PACKAGE_SOURCE_DIR
 #                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
 # For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
 
@@ -137,7 +144,8 @@ set(COPY_DONE_FLAG ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/dlls_copied.flag)
 # If the copy flag file does not exist, copy it
 add_custom_command(
       OUTPUT ${COPY_DONE_FLAG}
-      COMMAND ${CMAKE_COMMAND} -E copy_directory ${TARGET_DLLS_DIR} $<TARGET_FILE_DIR:physical_engine_simulates_car_crashes>
+      COMMAND ${CMAKE_COMMAND} -E copy_directory ${TARGET_DLLS_DIR}
+      $<TARGET_FILE_DIR:physical_engine_simulates_car_crashes>
       COMMAND ${CMAKE_COMMAND} -E touch ${COPY_DONE_FLAG}
       COMMENT "Copying DLLs to $<TARGET_FILE_DIR:physical_engine_simulates_car_crashes>"
 )

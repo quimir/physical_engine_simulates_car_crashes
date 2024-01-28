@@ -1,44 +1,48 @@
 <RCC>
-    <qresource prefix="/image">
-        <file>end.png</file>
-        <file>setting.png</file>
-        <file>setting_more.png</file>
-        <file>setting_return.png</file>
-        <file>setting_start.png</file>
-        <file>setting_start_down.png</file>
-        <file>setting_start_up.png</file>
-        <file>setting_weath.png</file>
-        <file>start.png</file>
-        <file>background_picture.png</file>
-        <file>main_return.png</file>
-        <file>main_setting.png</file>
-        <file>main_start.png</file>
-    </qresource>
-    <qresource prefix="/json">
-        <file alias="basic_setting.json">json/basic_setting.json</file>
-        <file alias="data.json">json/data.json</file>
-        <file alias="environment_setting.json">json/environment_setting.json</file>
-        <file alias="more_setting.json">json/more_setting.json</file>
-    </qresource>
+    <qresource prefix="/image"/>
     <qresource prefix="/style">
         <file alias="main_entry_button_style.qml">style/main_entry_button_style.qml</file>
     </qresource>
-    <qresource prefix="/objs">
-        <file alias="text.obj">objs/text.obj</file>
-        <file alias="text2.obj">objs/text_2.obj</file>
-    </qresource>
-    <qresource prefix="/GLSL">
-        <file alias="text.frag">GLSL/text.frag</file>
-        <file alias="text.geom">GLSL/text.geom</file>
-        <file alias="text.vert">GLSL/text.vert</file>
-        <file alias="text_2.frag">GLSL/text_2.frag</file>
-        <file alias="text_2.vert">GLSL/text_2.vert</file>
-        <file alias="text_3.frag">GLSL/text_3.frag</file>
-        <file alias="text_3.vert">GLSL/text_3.vert</file>
-        <file>model_loading.vert</file>
-        <file>model_loading.frag</file>
-    </qresource>
     <qresource prefix="/model">
         <file alias="backpack.obj">model/backpack/backpack.obj</file>
+    </qresource>
+    <qresource prefix="/">
+        <file>images/background_picture.png</file>
+        <file>images/main_exit.png</file>
+        <file>images/main_cartonn_exit.png</file>
+        <file>images/main_cartonn_setting.png</file>
+        <file>images/main_cartonn_start.png</file>
+        <file>images/main_setting.png</file>
+        <file>images/setting_cartonn_more.png</file>
+        <file>images/setting_cartonn_exit.png</file>
+        <file>images/setting_cartonn_start.png</file>
+        <file>images/setting_cartonn_start_down.png</file>
+        <file>images/setting_cartonn_start_up.png</file>
+        <file>images/setting_cartonn_weath.png</file>
+        <file>images/main_start.png</file>
+        <file>textures/skybox/back.jpg</file>
+        <file>textures/skybox/bottom.jpg</file>
+        <file>textures/skybox/front.jpg</file>
+        <file>textures/skybox/left.jpg</file>
+        <file>textures/skybox/right.jpg</file>
+        <file>textures/skybox/top.jpg</file>
+        <file>textures/container.jpg</file>
+        <file>GLSL/model_loading.frag</file>
+        <file>GLSL/model_loading.vert</file>
+        <file>GLSL/README.md</file>
+        <file>GLSL/text.frag</file>
+        <file>GLSL/text.geom</file>
+        <file>GLSL/text.vert</file>
+        <file>GLSL/text_2.frag</file>
+        <file>GLSL/text_2.vert</file>
+        <file>GLSL/text_3.frag</file>
+        <file>GLSL/text_3.vert</file>
+        <file>json/basic_setting.json</file>
+        <file>json/data.json</file>
+        <file>json/environment_setting.json</file>
+        <file>json/more_setting.json</file>
+        <file>style/main_entry_button_style.qml</file>
+        <file>json/button.json</file>
+        <file>json/index.json</file>
     </qresource>
 </RCC>

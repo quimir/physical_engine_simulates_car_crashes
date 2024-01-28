@@ -21,8 +21,8 @@
 #include "src_include/render/model_animation/bone.h"
 
 Animator::Animator(Animation *animation)
-    :final_bone_matrices_(QVector<geometricalias::mat4>(100,geometricalias::mat4())),current_animation_(animation)
-    ,current_time_(0),delta_time_((float)INT_MAX)
+    :final_bone_matrices_(QVector<geometricalias::mat4>(100,geometricalias::mat4()))
+    ,current_animation_(animation),current_time_(0),delta_time_((float)INT_MAX)
 {
 }
 
@@ -37,8 +37,9 @@ void Animator::UpdateAnimation(float delte_time)
     }
     else
     {
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug
-                                                  ,"Failed to read the animation class");
+        FileWriteSystem::GetInstance().OutMessage(
+            FileWriteSystem::MessageTypeBit::kDebug,
+            "Failed to read the animation class");
         return;
     }
 }
@@ -49,7 +50,8 @@ void Animator::PlayAnimation(Animation *play_animation)
     this->current_time_=0.0f;
 }
 
-void Animator::CalculateBoneTransform(const Animation::AssimpNodeData *node, geometricalias::mat4 parent_transfrom)
+void Animator::CalculateBoneTransform(const Animation::AssimpNodeData *node,
+                                      geometricalias::mat4 parent_transfrom)
 {
     // Gets the node name and transformation matrix from the animation node data
     QString node_name=node->name;
@@ -66,8 +68,9 @@ void Animator::CalculateBoneTransform(const Animation::AssimpNodeData *node, geo
     }
     else
     {
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug
-                                                  ,"Failed to read the Bone class");
+        FileWriteSystem::GetInstance().OutMessage(
+            FileWriteSystem::MessageTypeBit::kDebug,
+            "Failed to read the Bone class");
         return;
     }
 
@@ -84,8 +87,9 @@ void Animator::CalculateBoneTransform(const Animation::AssimpNodeData *node, geo
     }
     else
     {
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug
-                                                  ,QString("%1 it's been stored on the bone map").arg(node_name));
+        FileWriteSystem::GetInstance().OutMessage(
+            FileWriteSystem::MessageTypeBit::kDebug,
+            QString("%1 it's been stored on the bone map").arg(node_name));
         return;
     }
 

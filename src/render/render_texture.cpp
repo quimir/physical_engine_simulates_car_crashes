@@ -20,11 +20,21 @@
 
 RenderTexture &RenderTexture::GetInstance()
 {
-    return instance();
+    return Instance();
 }
 
-GLuint RenderTexture::TextureFromFile(const QString &path, float gamma)
+GLuint RenderTexture::LoadTexture(const QString &path, float gamma)
 {
+    if(this->texture_)
+    {
+        if(this->texture_->isCreated())
+        {
+            this->texture_->destroy();
+            delete this->texture_;
+            this->texture_=nullptr;
+        }
+    }
+
     // Convert QImage to OpenGL texture
     QImage image=FileReadSystem::GetInstance().ReadImageFile(path);
     if(image.isNull())
@@ -37,46 +47,75 @@ GLuint RenderTexture::TextureFromFile(const QString &path, float gamma)
         image=ApplyGammaCorrection(image,gamma);
     }
 
-    this->texture_.reset(new QOpenGLTexture(image.mirrored()));
-    this->texture_->create();
-    this->texture_->setWrapMode(QOpenGLTexture::DirectionS, QOpenGLTexture::Repeat);
-    this->texture_->setWrapMode(QOpenGLTexture::DirectionT, QOpenGLTexture::Repeat);
-    this->texture_->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
-    this->texture_->setMagnificationFilter(QOpenGLTexture::Linear);
+    this->texture_=new QOpenGLTexture(image.mirrored());
+    if(this->texture_->create())
+    {
+        this->texture_->setWrapMode(QOpenGLTexture::DirectionS, QOpenGLTexture::Repeat);
+        this->texture_->setWrapMode(QOpenGLTexture::DirectionT, QOpenGLTexture::Repeat);
+        this->texture_->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
+        this->texture_->setMagnificationFilter(QOpenGLTexture::Linear);
 
-    this->texture_->generateMipMaps();
+        this->texture_->generateMipMaps();
+    }
+    else
+    {
+        delete this->texture_;
+        return 0;
+    }
 
     return this->texture_->textureId();
 }
 
 GLuint RenderTexture::LoadCubeMap(QVector<QString> faces, float gamma)
 {
-    this->texture_.reset(new QOpenGLTexture(QOpenGLTexture::TargetCubeMap));
-    this->texture_->create();
-    for(qsizetype i=0;i<faces.size();i++)
+    if(this->texture_)
     {
-        QImage image=FileReadSystem::GetInstance().ReadImageFile(faces[i]);
-        if(image.isNull())
+        if(this->texture_->isCreated())
         {
-            return 0;
+            this->texture_->destroy();
+            delete this->texture_;
+            this->texture_=nullptr;
         }
-
-        if(gamma!=1.0f)
-        {
-            image=ApplyGammaCorrection(image,gamma);
-        }
-
-        this->texture_->setData(QOpenGLTexture::CubeMapPositiveX + i, QOpenGLTexture::RGBA, QOpenGLTexture::UInt8, image.constBits());
-
     }
 
-    this->texture_->setMinificationFilter(QOpenGLTexture::Linear);
-    this->texture_->setMagnificationFilter(QOpenGLTexture::Linear);
-    this->texture_->setWrapMode(QOpenGLTexture::DirectionS, QOpenGLTexture::ClampToEdge);
-    this->texture_->setWrapMode(QOpenGLTexture::DirectionT, QOpenGLTexture::ClampToEdge);
-    this->texture_->setWrapMode(QOpenGLTexture::DirectionR, QOpenGLTexture::ClampToEdge);
+    this->texture_=new QOpenGLTexture(QOpenGLTexture::TargetCubeMap);
+    if(this->texture_->create())
+    {
+        for(qsizetype i=0;i<faces.size();i++)
+        {
+            QImage image=FileReadSystem::GetInstance().ReadImageFile(faces[i]);
+            if(image.isNull())
+            {
+                return 0;
+            }
 
-    this->texture_->generateMipMaps();
+            if(gamma!=1.0f)
+            {
+                image=ApplyGammaCorrection(image,gamma);
+            }
+
+            this->texture_->setData(QOpenGLTexture::CubeMapPositiveX + i,
+                                    QOpenGLTexture::RGBA, QOpenGLTexture::UInt8,
+                                    image.constBits());
+
+        }
+
+        this->texture_->setMinificationFilter(QOpenGLTexture::Linear);
+        this->texture_->setMagnificationFilter(QOpenGLTexture::Linear);
+        this->texture_->setWrapMode(QOpenGLTexture::DirectionS,
+                                    QOpenGLTexture::ClampToEdge);
+        this->texture_->setWrapMode(QOpenGLTexture::DirectionT,
+                                    QOpenGLTexture::ClampToEdge);
+        this->texture_->setWrapMode(QOpenGLTexture::DirectionR,
+                                    QOpenGLTexture::ClampToEdge);
+
+        this->texture_->generateMipMaps();
+    }
+    else
+    {
+        delete this->texture_;
+        return 0;
+    }
 
     return this->texture_->textureId();
 }
@@ -86,7 +125,24 @@ QString RenderTexture::TextureTypeToString(TextureType type) const
     return this->texture_type_map_.value(type);
 }
 
-RenderTexture &RenderTexture::instance()
+QOpenGLTexture *RenderTexture::GetTexture()
+{
+    return this->texture_;
+}
+
+RenderTexture::~RenderTexture()
+{
+    if(this->texture_)
+    {
+        if(this->texture_->isCreated())
+        {
+            this->texture_->destroy();
+            delete this->texture_;
+        }
+    }
+}
+
+RenderTexture &RenderTexture::Instance()
 {
     static RenderTexture instance;
     return instance;
@@ -94,7 +150,6 @@ RenderTexture &RenderTexture::instance()
 
 RenderTexture::RenderTexture():OpenGLFunctionBase(),texture_(nullptr)
 {
-    ContextOpenGL();
     this->texture_type_map_[TextureType::kTextureDiffuse]="texture_diffuse";
     this->texture_type_map_[TextureType::kTextureSpecular]="texture_specular";
     this->texture_type_map_[TextureType::kTextureNormal]="texture_normal";

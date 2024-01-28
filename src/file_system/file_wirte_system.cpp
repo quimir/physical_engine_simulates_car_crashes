@@ -91,7 +91,8 @@ void FileWriteSystem::RemoveLogDay(const QString &log_file_path, const long long
             if(log_file.exists())
             {
                 log_file.remove();
-                OutMessage(MessageTypeBit::kDebug,QString("log file deleted due to exceeding: %1 day").arg(QString::number(day)));
+                OutMessage(MessageTypeBit::kDebug
+                           ,QString("log file deleted due to exceeding: %1 day").arg(QString::number(day)));
             }
         }
     }
@@ -123,7 +124,8 @@ void FileWriteSystem::RemoveLogDay(QFile &log_file, const long long day)
             if(log_file.exists())
             {
                 log_file.remove();
-                OutMessage(MessageTypeBit::kDebug,QString("log file deleted due to exceeding: %1 day").arg(QString::number(day)));
+                OutMessage(MessageTypeBit::kDebug
+                           ,QString("log file deleted due to exceeding: %1 day").arg(QString::number(day)));
             }
         }
     }
@@ -185,7 +187,8 @@ FileWriteSystem &FileWriteSystem::Instance(QString log_file)
     return instance;
 }
 
-FileWriteSystem::FileWriteSystem(QString log_file):log_file_(QFile()),regex_("\"(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2})\"")
+FileWriteSystem::FileWriteSystem(QString log_file):log_file_(QFile()),
+    regex_("\"(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2})\"")
 {
     QString default_log_file=SetDefaultLogFile();
     bool if_file=false;

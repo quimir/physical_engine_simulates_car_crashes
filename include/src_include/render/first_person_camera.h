@@ -22,13 +22,17 @@
 
 #include "src_include/geometricalias.h"
 
+/*
+ * This space is used to hold the configuration of the camera with some
+ * fixed attributes.
+ */
 namespace camerasetting
 {
-constexpr float YAW=-90.0f;
-constexpr float PITCH=0.0f;
-constexpr float SPEED=2.5f;
-constexpr float SENSITIVITY=0.1f;
-constexpr float ZOOM=45.0f;
+constexpr float kYaw=-90.0f;
+constexpr float kPitch=0.0f;
+constexpr float kSpeed=2.5f;
+constexpr float kSensitivity=0.1f;
+constexpr float kZoom=45.0f;
 }
 
 class FirstPersonCamera : public QObject
@@ -48,14 +52,14 @@ public:
     explicit FirstPersonCamera(
         geometricalias::vec3 position=geometricalias::vec3(0.0f,0.0f,0.0f),
         geometricalias::vec3 up=geometricalias::vec3(0.0f,1.0f,0.0f),
-        float yaw=camerasetting::YAW,float pitch=camerasetting::PITCH,
+        float yaw=camerasetting::kYaw,float pitch=camerasetting::kPitch,
         QObject *parent=nullptr)
         :QObject(parent),position_(position),
         front_(geometricalias::vec3(0.0f,0.0f,-1.0f))
         ,world_up_(up),yaw_(yaw),pitch_(pitch),
-        movement_speed_(camerasetting::SPEED),
-        mouse_sensitivity_(camerasetting::SENSITIVITY),
-        zoom_(camerasetting::ZOOM),last_mouse_x_(0.0f),last_mouse_y_(0.0f)
+        movement_speed_(camerasetting::kSpeed),
+        mouse_sensitivity_(camerasetting::kSensitivity),
+        zoom_(camerasetting::kZoom),last_mouse_x_(0.0f),last_mouse_y_(0.0f)
         ,first_mouse_(true)
     {
         UpdateCameraVectors();

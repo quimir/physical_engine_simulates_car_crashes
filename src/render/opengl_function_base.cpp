@@ -20,36 +20,42 @@
 #include "src_include/render/opengl_function_base.h"
 #include "src_include/file_system/file_write_system.h"
 
-bool initialized=false;
+bool OpenGLFunctionBase::is_initialized_=false;
 
 OpenGLFunctionBase::OpenGLFunctionBase():QOpenGLFunctions_4_3_Core()
 {
-    if(!initialized)
+    if(!is_initialized_)
     {
         if(DefaultOpenGL())
         {
-            initialized=true;
+            is_initialized_=true;
         }
     }
 }
 
-bool OpenGLFunctionBase::ContextOpenGL()
+QOpenGLExtraFunctions *OpenGLFunctionBase::GetContextOpenGL()
 {
     if(IsValidContext())
     {
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug,"OpenGL is enabled, and the context is bound.");
-        return true;
+        QOpenGLExtraFunctions* gl=QOpenGLContext::currentContext()->extraFunctions();
+        return gl;
     }
-    
-    FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug,"OpenGL is not enabled or the context is not bound.");
-    return false;
+
+    FileWriteSystem::GetInstance().OutMessage(
+        FileWriteSystem::MessageTypeBit::kDebug,
+        "Error! Without initializing OpenGL, initialize the class before "
+        "using the function.");
+
+    return nullptr;
 }
 
 bool OpenGLFunctionBase::ResetOpenGL(QSurfaceFormat format)
 {
     if(nullptr==this->surface_||nullptr==this->openGL_context_)
     {
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug,"Scheduling is forbidden without initializing OpenGL.");
+        FileWriteSystem::GetInstance().OutMessage(
+            FileWriteSystem::MessageTypeBit::kDebug,
+            "Scheduling is forbidden without initializing OpenGL.");
         return false;
     }
 
@@ -58,7 +64,9 @@ bool OpenGLFunctionBase::ResetOpenGL(QSurfaceFormat format)
 
     if(!this->openGL_context_->create())
     {
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug,"Open GL Context initialization failed");
+        FileWriteSystem::GetInstance().OutMessage(
+            FileWriteSystem::MessageTypeBit::kDebug,
+            "OpenGL Context initialization failed");
         return false;
     }
 
@@ -67,7 +75,9 @@ bool OpenGLFunctionBase::ResetOpenGL(QSurfaceFormat format)
     {
         if (!this->openGL_context_->makeCurrent(this->surface_))
         {
-            FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug, "Failed to make the OpenGL context current.");
+            FileWriteSystem::GetInstance().OutMessage(
+                FileWriteSystem::MessageTypeBit::kDebug,
+                "Failed to make the OpenGL context current.");
             return false;
         }
     }
@@ -75,12 +85,16 @@ bool OpenGLFunctionBase::ResetOpenGL(QSurfaceFormat format)
 
     if(!initializeOpenGLFunctions())
     {
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug
-                                                  ,"Description OpenGL initialization failed!");
+        FileWriteSystem::GetInstance().OutMessage(
+            FileWriteSystem::MessageTypeBit::kDebug,
+            "Description OpenGL initialization failed!");
         return false;
     }
     
-    FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug, "OpenGL version: " + QString(reinterpret_cast<const char*>(glGetString(GL_VERSION))));
+    FileWriteSystem::GetInstance().OutMessage(
+        FileWriteSystem::MessageTypeBit::kDebug,
+        "OpenGL version: " + QString(reinterpret_cast<const char*>
+                                     (glGetString(GL_VERSION))));
     return true;
 }
 
@@ -110,7 +124,9 @@ bool OpenGLFunctionBase::DefaultOpenGL()
     this->openGL_context_=new QOpenGLContext();
     if(!this->openGL_context_->create())
     {
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug,"Open GL Context initialization failed");
+        FileWriteSystem::GetInstance().OutMessage(
+            FileWriteSystem::MessageTypeBit::kDebug,
+            "Open GL Context initialization failed");
         return false;
     }
 
@@ -119,7 +135,9 @@ bool OpenGLFunctionBase::DefaultOpenGL()
     {
         if (!this->openGL_context_->makeCurrent(this->surface_))
         {
-            FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug, "Failed to make the OpenGL context current.");
+            FileWriteSystem::GetInstance().OutMessage(
+                FileWriteSystem::MessageTypeBit::kDebug,
+                "Failed to make the OpenGL context current.");
             return false;
         }
     }
@@ -127,12 +145,16 @@ bool OpenGLFunctionBase::DefaultOpenGL()
 
     if(!initializeOpenGLFunctions())
     {
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug
-                                                  ,"Description OpenGL initialization failed!");
+        FileWriteSystem::GetInstance().OutMessage(
+            FileWriteSystem::MessageTypeBit::kDebug,
+            "Description OpenGL initialization failed!");
         return false;
     }
     
-    FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug, "OpenGL version: " + QString(reinterpret_cast<const char*>(glGetString(GL_VERSION))));
+    FileWriteSystem::GetInstance().OutMessage(
+        FileWriteSystem::MessageTypeBit::kDebug,
+        "OpenGL version: " + QString(reinterpret_cast<const char*>
+                                     (glGetString(GL_VERSION))));
     return true;
 }
 

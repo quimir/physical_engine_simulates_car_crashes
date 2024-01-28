@@ -23,29 +23,31 @@
 
 Model::Model(const QString& path, bool animation_switch, float gamma) :gamma_correction_(gamma), animation_switch_(animation_switch)
 {
-    ContextOpenGL();
     LoadModel(path);
 }
 
-GLvoid Model::Draw(QScopedPointer<Shader>& shader)
+GLvoid Model::Draw(Shader* shader)
 {
     for (GLuint i = 0; i < this->meshes_.size(); i++)
     {
-        this->meshes_[i].Draw(shader);
+        this->meshes_[i]->Draw(shader);
     }
 }
 
 GLuint Model::TextureFromFile(const QString& path, const QString& directory, float gamma)
 {
     QString filename = QDir(directory).filePath(path);
-    return RenderTexture::GetInstance().TextureFromFile(filename,gamma);
+    return RenderTexture::GetInstance().LoadTexture(filename,gamma);
 }
 
 GLvoid Model::LoadModel(const QString& path)
 {
     // read file via ASSIMP
     Assimp::Importer importer;
-    const aiScene* scene = importer.ReadFile(path.toStdString().c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+    const aiScene* scene = importer.ReadFile(
+        path.toStdString().c_str(),
+        aiProcess_Triangulate | aiProcess_GenSmoothNormals
+            | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
     // check for errors
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
     {
@@ -79,7 +81,7 @@ GLvoid Model::ProcessNode(aiNode* node, const aiScene* scene)
     }
 }
 
-Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
+Mesh *Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 {
     // date to fill
     QVector<modelattribute::Vertex> vertices;
@@ -99,16 +101,20 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
             if (mesh->mTextureCoords[0])
             {
                 geometricalias::vec2 vec(mesh->mTextureCoords[0][i].x,mesh->mTextureCoords[0][i].y);
-                vertex.tex_coords = vec;
+                vertex.tex_coord = vec;
             }
             else
             {
-                vertex.tex_coords= geometricalias::vec2(0.0f, 0.0f);
+                vertex.tex_coord= geometricalias::vec2(0.0f, 0.0f);
             }
         }
         else
         {
-            geometricalias::vec3 verctor(mesh->mVertices[i].x,mesh->mVertices[i].y,mesh->mVertices[i].z);// we declare a placeholder vector since assimp uses its own vector class that doesn't directly convert to QVector3D class so we transfer the data to this placeholder QVector3D first.
+            // we declare a placeholder vector since assimp uses its own vector class
+            // that doesn't directly convert to QVector3D class so we transfer the
+            // data to this placeholder QVector3D first.
+            geometricalias::vec3 verctor(mesh->mVertices[i].x,mesh->mVertices[i].y,
+                                         mesh->mVertices[i].z);
             // position
             vertex.position = verctor;
             // normals
@@ -125,7 +131,7 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
                 // a vertex can contain up to 8 different texture coordinates. We thus make the assumption that we won't
                 // use models where a vertex can have multiple texture coordinates so we always take the first set (0).
                 geometricalias::vec2 vec(mesh->mTextureCoords[0][i].x,mesh->mTextureCoords[0][i].y);
-                vertex.tex_coords = vec;
+                vertex.tex_coord = vec;
                 // tangent
                 verctor.setX(mesh->mTangents[i].x);
                 verctor.setY(mesh->mTangents[i].y);
@@ -139,13 +145,14 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
             }
             else
             {
-                vertex.tex_coords = geometricalias::vec2(0.0f, 0.0f);
+                vertex.tex_coord = geometricalias::vec2(0.0f, 0.0f);
             }
         }
         vertices.push_back(vertex);
     }
 
-    // now wak through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.
+    // now wak through each of the mesh's faces (a face is a mesh its triangle)
+    // and retrieve the corresponding vertex indices.
     for (uint32_t i = 0; i < mesh->mNumFaces; i++)
     {
         aiFace face = mesh->mFaces[i];
@@ -160,16 +167,28 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
     aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 
     // 1.diffuse maps
-    QVector<modelattribute::Texture> diffuse_maps = LoadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+    QVector<modelattribute::Texture> diffuse_maps = LoadMaterialTextures(
+        material,aiTextureType_DIFFUSE,
+        RenderTexture::GetInstance().TextureTypeToString(
+            RenderTexture::TextureType::kTextureDiffuse));
     textures += diffuse_maps;
     // 2.specular maps
-    QVector<modelattribute::Texture> specular_maps = LoadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+    QVector<modelattribute::Texture> specular_maps = LoadMaterialTextures(
+        material, aiTextureType_SPECULAR,
+        RenderTexture::GetInstance().TextureTypeToString(
+            RenderTexture::TextureType::kTextureSpecular));
     textures += specular_maps;
     // 3.normal maps
-    QVector<modelattribute::Texture> normal_maps = LoadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
+    QVector<modelattribute::Texture> normal_maps = LoadMaterialTextures(
+        material, aiTextureType_HEIGHT,
+        RenderTexture::GetInstance().TextureTypeToString(
+            RenderTexture::TextureType::kTextureNormal));
     textures += normal_maps;
     // 4.height maps
-    QVector<modelattribute::Texture> height_maps = LoadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
+    QVector<modelattribute::Texture> height_maps = LoadMaterialTextures(
+        material, aiTextureType_AMBIENT,
+        RenderTexture::GetInstance().TextureTypeToString(
+            RenderTexture::TextureType::kTextureHeight));
     textures += height_maps;
 
     if(this->animation_switch_)
@@ -178,7 +197,7 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
     }
 
     // return a mesh object created from the extracted mesh data
-    return Mesh(vertices, indices, textures);
+    return new Mesh(vertices, indices, textures);
 }
 
 QVector<modelattribute::Texture> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, QString type_name)
@@ -195,7 +214,8 @@ QVector<modelattribute::Texture> Model::LoadMaterialTextures(aiMaterial* mat, ai
             if (QFileInfo(this->textures_loaded_[j].path).filePath() == QString(str.C_Str()))
             {
                 textures.push_back(this->textures_loaded_[j]);
-                skip = true;// a texture with the same filepath has already been loaded, continue to next one. (optimization)
+                skip = true;// a texture with the same filepath has already been
+                            // loaded,continue to next one. (optimization)
                 break;
             }
         }
@@ -207,7 +227,11 @@ QVector<modelattribute::Texture> Model::LoadMaterialTextures(aiMaterial* mat, ai
             texture.type = type_name;
             texture.path = str.C_Str();
             textures.push_back(texture);
-            this->textures_loaded_.push_back(texture);// store it as texture loaded for entire model, to ensure we won't unnecessary load duplicate textures.
+            this->textures_loaded_.push_back(texture);// store it as texture
+                                                      // loaded for entire model,
+                                                      //to ensure we won't
+                                                      //unnecessary load duplicate
+                                                      //textures.
         }
     }
 
@@ -236,7 +260,8 @@ void Model::SetVertexBoneData(modelattribute::Vertex& vertex, int bone_id, float
     }
 }
 
-void Model::ExtractBoneWeightForVertices(QVector<modelattribute::Vertex>& vertices, aiMesh* mesh, const aiScene* scene)
+void Model::ExtractBoneWeightForVertices(QVector<modelattribute::Vertex>& vertices,
+                                         aiMesh* mesh, const aiScene* scene)
 {
     QMap<QString, BoneInfo>& bone_info_map = this->boneinfo_map_;
     uint32_t& bone_cout = this->bone_counter_;
@@ -249,7 +274,8 @@ void Model::ExtractBoneWeightForVertices(QVector<modelattribute::Vertex>& vertic
         {
             BoneInfo new_bone_info;
             new_bone_info.id = bone_cout;
-            new_bone_info.offset = assimpqtcoversion::ConvertMatrixToQtFormat(mesh->mBones[bone_index]->mOffsetMatrix);
+            new_bone_info.offset = assimpqtcoversion::ConvertMatrixToQtFormat(
+                mesh->mBones[bone_index]->mOffsetMatrix);
             bone_info_map[bone_name] = new_bone_info;
             bone_id = bone_cout;
             bone_cout++;
@@ -261,8 +287,9 @@ void Model::ExtractBoneWeightForVertices(QVector<modelattribute::Vertex>& vertic
 
         if (bone_id == -1)
         {
-            FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug
-                                                      , "Bone id error now is -1");
+            FileWriteSystem::GetInstance().OutMessage(
+                FileWriteSystem::MessageTypeBit::kDebug,
+                "Bone id error now is -1");
             return;
         }
 
@@ -276,8 +303,9 @@ void Model::ExtractBoneWeightForVertices(QVector<modelattribute::Vertex>& vertic
 
             if (vertex_id > vertices.size())
             {
-                FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug
-                                                          , "Bone weight id > bone weight size no this weight id");
+                FileWriteSystem::GetInstance().OutMessage(
+                    FileWriteSystem::MessageTypeBit::kDebug,
+                    "Bone weight id > bone weight size no this weight id");
                 return;
             }
             SetVertexBoneData(vertices[vertex_id], bone_id, weight);

@@ -15,6 +15,7 @@
  ** limitations under the License.
  **/
 
+
 #define QT_NO_DEBUG_OUTPUT
 #define QT_NO_QML_DEBUG
 
@@ -26,6 +27,8 @@
 
 #include "src_include/main_window.h"
 #include "src_include/file_system/file_write_system.h"
+#include "src_include/file_system/json_type/json_type.h"
+#include "src_include/file_system/file_path_system.h"
 
 int main(int argc, char *argv[])
 {
@@ -40,7 +43,10 @@ int main(int argc, char *argv[])
             break;
         }
     }
-    
+
+    jsonType::JsonType::GetInstance(
+        FilePathSystem::GetInstance().GetResourcesPath(
+            resourcesfiletype::ResourcesType::kJson,"index.json"));
     qInstallMessageHandler(FileWriteSystem::CustomMessageHandler);
     FileWriteSystem::GetInstance().RemoveDefaultLogFile();
 

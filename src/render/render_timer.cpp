@@ -37,7 +37,9 @@ qint64 RenderTimer::ElapsedTime() const
 {
     if(0==this->end_time_)
     {
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug,"endTime not set. Returning 0 milliseconds.");
+        FileWriteSystem::GetInstance().OutMessage(
+            FileWriteSystem::MessageTypeBit::kDebug,
+            "endTime not set. Returning 0 milliseconds.");
         return 0.0;
     }
 
@@ -48,7 +50,9 @@ double RenderTimer::ElapsedTimeInMilliseconds() const
 {
     if(0==this->end_time_)
     {
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug,"endTime not set. Returning 0 milliseconds.");
+        FileWriteSystem::GetInstance().OutMessage(
+            FileWriteSystem::MessageTypeBit::kDebug,
+            "endTime not set. Returning 0 milliseconds.");
         return 0.0;
     }
 

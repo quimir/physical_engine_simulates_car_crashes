@@ -19,12 +19,8 @@
 #define MAIN_WINDOW_H
 
 #include <QMainWindow>
-#include <QDebug>
 #include <QScreen>
-#include <QPushButton>
 #include <QEasingCurve>
-#include <QTimer>
-#include <QOpenGLWindow>
 #include <QPaintEvent>
 #include <QPixmap>
 #include <QPalette>

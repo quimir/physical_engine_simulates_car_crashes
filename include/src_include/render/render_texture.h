@@ -27,6 +27,11 @@
 
 #include "src_include/render/opengl_function_base.h"
 
+/**
+ * @brief The RenderTexture class This class is used to load the texture map
+ * to be rendered. It is only available via GetInstance(), which ensures that
+ * it is only initialized once. The memory is controlled by the RAII.
+ */
 class RenderTexture:public OpenGLFunctionBase
 {
 public:
@@ -41,14 +46,18 @@ public:
 public:
     static RenderTexture& GetInstance();
 
-    GLuint TextureFromFile(const QString& path,float gamma=1.0f);
+    GLuint LoadTexture(const QString& path,float gamma=1.0f);
 
     GLuint LoadCubeMap(QVector<QString> faces,float gamma=1.0f);
 
     QString TextureTypeToString(TextureType type)const;
 
+    QOpenGLTexture* GetTexture();
+
+    ~RenderTexture();
+
 private:
-    static RenderTexture& instance();
+    static RenderTexture& Instance();
 
     RenderTexture();
 
@@ -57,7 +66,7 @@ private:
     GLenum GetOpenGLFormat(const QImage& image);
 
 private:
-    QScopedPointer<QOpenGLTexture> texture_;
+    QOpenGLTexture* texture_;
 
     QMap<TextureType,QString> texture_type_map_;
 };

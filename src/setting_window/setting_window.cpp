@@ -16,6 +16,7 @@
  **/
 
 #include "src_include/setting_window/setting_window.h"
+#include "qtimer.h"
 #include "src_include/file_system/file_write_system.h"
 #include "src_include/file_system/file_path_system.h"
 #include "src_include/main_window.h"
@@ -39,7 +40,7 @@ SettingWindow::SettingWindow(const QRect &window_geometry, QWidget *parent)
 void SettingWindow::CreateBasicButton(const QSize button_size)
 {
     SettingWindowButton* basic_button=new SettingWindowButton(FilePathSystem::GetInstance()
-                                                                    .GetResourcesPath(resourcesfiletype::ResourcesType::kImage
+                                                                    .GetResourcesPath(resourcesfiletype::ResourcesType::kImages
                                                                                       ,"setting_start.png")
                                                                 ,button_size*2,"基本设置",button_size*2,"setting basic");
     FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug
@@ -58,7 +59,7 @@ void SettingWindow::CreateBasicButton(const QSize button_size)
 void SettingWindow::CreateEnvironmentButton(const QSize button_size)
 {
     SettingWindowButton* enviroment_button=new SettingWindowButton(FilePathSystem::GetInstance()
-                                                                         .GetResourcesPath(resourcesfiletype::ResourcesType::kImage
+                                                                         .GetResourcesPath(resourcesfiletype::ResourcesType::kImages
                                                                                            ,"setting_weath.png")
                                                                      ,button_size*2,"环境设置",button_size*2,"setting weath");
     if(nullptr==enviroment_button)
@@ -75,7 +76,7 @@ void SettingWindow::CreateEnvironmentButton(const QSize button_size)
 void SettingWindow::CreateMoreButton(const QSize button_size)
 {
     SettingWindowButton* more_button=new SettingWindowButton(FilePathSystem::GetInstance()
-                                                                   .GetResourcesPath(resourcesfiletype::ResourcesType::kImage
+                                                                   .GetResourcesPath(resourcesfiletype::ResourcesType::kImages
                                                                                      ,"setting_more.png")
                                                                ,button_size*2,"更多设置",button_size*2,"setting more");
     if(nullptr==more_button)
@@ -212,7 +213,7 @@ QSize SettingWindow::GetButtonSize()
 void SettingWindow::CreateRetunButton(const QSize button_size)
 {
     SettingWindowButton* return_button=new SettingWindowButton(FilePathSystem::GetInstance()
-                                                                     .GetResourcesPath(resourcesfiletype::ResourcesType::kImage
+                                                                     .GetResourcesPath(resourcesfiletype::ResourcesType::kImages
                                                                                        ,"setting_return.png")
                                                                  ,button_size*2,"返回到上一个页面",button_size*2,"setting return");
     if(nullptr==return_button)
@@ -229,9 +230,9 @@ void SettingWindow::CreateRetunButton(const QSize button_size)
 
 void SettingWindow::CreateStartButton(const QSize button_size)
 {
-    SettingWindowButton* start_button=new SettingWindowButton(FilePathSystem::GetInstance().GetResourcesPath(resourcesfiletype::ResourcesType::kImage,"setting_start_up.png")
+    SettingWindowButton* start_button=new SettingWindowButton(FilePathSystem::GetInstance().GetResourcesPath(resourcesfiletype::ResourcesType::kImages,"setting_start_up.png")
                                                                 ,button_size*2,"开始",button_size*2,"setting start"
-                                                                ,FilePathSystem::GetInstance().GetResourcesPath(resourcesfiletype::ResourcesType::kImage,"setting_start_down.png"));
+                                                                ,FilePathSystem::GetInstance().GetResourcesPath(resourcesfiletype::ResourcesType::kImages,"setting_start_down.png"));
     if(nullptr==start_button)
     {
         FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug
@@ -268,7 +269,7 @@ void SettingWindow::closeEvent(QCloseEvent *event)
 
 void SettingWindow::paintEvent(QPaintEvent *event)
 {
-    QPixmap background_image=QPixmap::fromImage(FileReadSystem::GetInstance().ReadImageFile(FilePathSystem::GetInstance().GetResourcesPath(resourcesfiletype::ResourcesType::kImage,"background_picture.png")));
+    QPixmap background_image=QPixmap::fromImage(FileReadSystem::GetInstance().ReadImageFile(FilePathSystem::GetInstance().GetResourcesPath(resourcesfiletype::ResourcesType::kImages,"background_picture.png")));
 
     if(background_image.isNull())
     {

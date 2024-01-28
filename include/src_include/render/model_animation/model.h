@@ -52,7 +52,7 @@ public:
      * shading effects.
      * @param shader Shader object, which is used to color the model to show the coloring effect.
      */
-    GLvoid Draw(QScopedPointer<Shader> &shader);
+    GLvoid Draw(Shader *shader);
 
     /**
      * @brief TextureFromFile Find the texture map and bind it to OpenGL.
@@ -98,7 +98,7 @@ private:
      * @param scene Model scene.
      * @return All grid data read from the model will be stored in the model.
      */
-    Mesh ProcessMesh(aiMesh* mesh,const aiScene* scene);
+    Mesh* ProcessMesh(aiMesh* mesh,const aiScene* scene);
 
     /**
      * @brief LoadMaterialTextures Get the MaterialTexture from the scene
@@ -147,7 +147,7 @@ public:
     /**
      * @brief meshes_ Mesh data
      */
-    QVector<Mesh> meshes_;
+    QVector<Mesh*> meshes_;
     QString directory_;
     bool gamma_correction_;
     bool animation_switch_;

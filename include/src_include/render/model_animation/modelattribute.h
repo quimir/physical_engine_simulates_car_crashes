@@ -25,7 +25,7 @@
 namespace modelattribute
 {
 
-constexpr unsigned int KMaxBoneInfluence=4;
+constexpr quint32 KMaxBoneInfluence=4;
 
 struct Vertex
 {
@@ -34,20 +34,20 @@ struct Vertex
     // normal
     geometricalias::vec3 normal;
     // texCoords
-    geometricalias::vec2 tex_coords;
+    geometricalias::vec2 tex_coord;
     // tangent
     geometricalias::vec3 tangent;
     // bitangent
     geometricalias::vec3 bitangent;
     // bone indexes which will influence this vertex
-    int32_t bone_ids[KMaxBoneInfluence];
+    qint32 bone_ids[KMaxBoneInfluence];
     // weights frome each bone
-    float_t weights[KMaxBoneInfluence];
+    float weights[KMaxBoneInfluence];
 };
 
 struct Texture
 {
-    uint32_t id;
+    quint32 id;
     QString type;
     QString path;
 };

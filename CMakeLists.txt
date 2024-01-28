@@ -21,14 +21,14 @@ if(CMAKE_SIZEOF_VOID_P EQUAL 8)
       message(STATUS "64-bit operating system detected.")
 else()
       message(FATAL_ERROR "This project requires a 64-bit operating
-              system. Exiting...")
+            system. Exiting...")
 endif()
 
 # Define supported build types
 set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "Configs" FORCE)
 if(NOT CMAKE_BUILD_TYPE)
       set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Choose the type of build,
-          options are: Debug Release" FORCE)
+            options are: Debug Release" FORCE)
 endif()
 
 # The project is built in the bin directory
@@ -49,9 +49,9 @@ endif()
 
 # Find the required packages
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools OpenGL
-             OpenGLWidgets MultimediaWidgets Qml Core)
+      OpenGLWidgets MultimediaWidgets Qml Core)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools
-             OpenGL OpenGLWidgets MultimediaWidgets Qml Core)
+      OpenGL OpenGLWidgets MultimediaWidgets Qml Core)
 IF(MSVC)# There is currently no way to introduce PhysX with the MinGW compiler
 find_package(PHYSX REQUIRED)
 message(STATUS "Found PHYSX in ${PHYSX_INCLUDE_DIR}")
@@ -65,7 +65,7 @@ message(STATUS "Found ASSIMP in ${ASSIMP_INCLUDE_DIR}")
 # Add and integrate link parameters
 IF(MSVC)
 set(LIBS assimp PhysX_64 PhysXCommon_64 PhysXCooking_64
-    PhysXExtensions_static_64 PhysXFoundation_64 PhysXPvdSDK_static_64)
+      PhysXExtensions_static_64 PhysXFoundation_64 PhysXPvdSDK_static_64)
 ELSEIF(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
 IF(CMAKE_BUILD_TYPE STREQUAL "Debug")
 set(LIBS assimpd zlibstaticd)
@@ -95,7 +95,11 @@ file(GLOB SOURCE_FILES
       "${CMAKE_SOURCE_DIR}/include/src_include/render/*.h"
       "${CMAKE_SOURCE_DIR}/include/src_include/render/model_animation/*.h"
       "${CMAKE_SOURCE_DIR}/src/render/*.cpp"
-      "${CMAKE_SOURCE_DIR}/src/render/model_animation/*.cpp")
+      "${CMAKE_SOURCE_DIR}/src/render/model_animation/*.cpp"
+      "${CMAKE_SOURCE_DIR}/include/src_include/file_system/json_type/*.h"
+      "${CMAKE_SOURCE_DIR}/src/file_system/json_type/*.cpp"
+      "${CMAKE_SOURCE_DIR}/include/src_include/file_system/json_type/json_data/*.h"
+      "${CMAKE_SOURCE_DIR}/src/file_system/json_type/json_data/*.cpp")
 
 set(PROJECT_SOURCES
       ${SOURCE_FILES}

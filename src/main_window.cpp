@@ -17,6 +17,7 @@
 
 #include "src_include/main_window.h"
 #include "qapplication.h"
+#include "qtimer.h"
 #include "src_include/main_entry_button.h"
 #include "src_include/setting_window/setting_window.h"
 #include "src_include/file_system/file_write_system.h"
@@ -58,14 +59,15 @@ int MainWindow::GetScreenHeight()const
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug
-                                              ,"The user closes the window using the close event in the upper-right corner");
+    FileWriteSystem::GetInstance().OutMessage(
+        FileWriteSystem::MessageTypeBit::kDebug,
+        "The user closes the window using the close event in the upper-right corner");
     FileWriteSystem::GetInstance().EndWirteLine();
 }
 
 void MainWindow::paintEvent(QPaintEvent *event)
 {
-    QPixmap background_image=QPixmap::fromImage(FileReadSystem::GetInstance().ReadImageFile(FilePathSystem::GetInstance().GetResourcesPath(resourcesfiletype::ResourcesType::kImage,"background_picture.png")));
+    QPixmap background_image=QPixmap::fromImage(FileReadSystem::GetInstance().ReadImageFile(FilePathSystem::GetInstance().GetResourcesPath(resourcesfiletype::ResourcesType::kImages,"background_picture.png")));
 
     if(background_image.isNull())
     {
@@ -136,19 +138,19 @@ MainWindow::~MainWindow()
 void MainWindow::CreateWindowButton()
 {
     // Build start button
-    this->buttons_[0]=new MainEntryButton(FilePathSystem::GetInstance().GetResourcesPath(resourcesfiletype::ResourcesType::kImage,"start.png"),
+    this->buttons_[0]=new MainEntryButton(FilePathSystem::GetInstance().GetResourcesPath(resourcesfiletype::ResourcesType::kImages,"start.png"),
                                             QSize((this->width() / 2 - this->width() / 10 * 3), this->height() / 8)
                                             , "开始");
     this->buttons_[0]->move(QPoint((this->width() / 16), (this->height() - this->height() / 4)));
 
     // Build setup button
-    this->buttons_[1] = new MainEntryButton(FilePathSystem::GetInstance().GetResourcesPath(resourcesfiletype::ResourcesType::kImage,"setting.png"),
+    this->buttons_[1] = new MainEntryButton(FilePathSystem::GetInstance().GetResourcesPath(resourcesfiletype::ResourcesType::kImages,"setting.png"),
                                             QSize(this->width() / 2 - this->width() / 10 * 3, this->height() / 8)
                                             , "设置");
     this->buttons_[1]->move(QPoint(this->width() / 2 - this->width() / 9, this->height() - this->height() / 4));
 
     // Build exit button
-    this->buttons_[2] = new MainEntryButton(FilePathSystem::GetInstance().GetResourcesPath(resourcesfiletype::ResourcesType::kImage,"end.png"),
+    this->buttons_[2] = new MainEntryButton(FilePathSystem::GetInstance().GetResourcesPath(resourcesfiletype::ResourcesType::kImages,"end.png"),
                                             QSize(this->width() / 2 - this->width() / 10 * 3, this->height() / 8)
                                             , "退出");
     this->buttons_[2]->move(QPoint(this->width() - this->width() / 3.5, this->height() - this->height() / 4));

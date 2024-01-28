@@ -111,14 +111,12 @@ private:
      */
     static FilePathSystem& Instance();
 
-    /**
-     * @brief FilePathSystem Initialize the basic data of the class.
-     */
     inline FilePathSystem()
         {};
 
     /**
-     * @brief GetRoot Returns the absolute path of the item in the system, which is the core code of the class.
+     * @brief GetRoot Returns the absolute path of the item in the system,
+     * which is the core code of the class.
      * @return The absolute path for this item in the system
      */
     QString GetRoot();

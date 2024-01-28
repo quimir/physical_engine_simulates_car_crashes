@@ -29,12 +29,13 @@ namespace resourcesfiletype
  */
 enum class ResourcesType
 {
-    kImage,
+    kImages,
     kJson,
-    GLSL,
+    kGLSL,
     kStyle,
     kObj,
     kModel,
+    kTextures,
     kNone // error
 };
 

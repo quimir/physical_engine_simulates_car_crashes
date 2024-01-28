@@ -19,15 +19,22 @@
 #include "src_include/file_system/file_write_system.h"
 #include "src_include/file_system/file_read_system.h"
 
-SettingWindowButton::SettingWindowButton(const QString icon_path, const QSize original_size
-                                         , const QString button_text, const QSize icon_size, const QString specify_the_display_text, const QString press_icon_path)
-    :icon_image_(FileReadSystem::GetInstance().ReadImageFile(icon_path)),press_icon_image_(FileReadSystem::GetInstance().ReadImageFile(icon_path)),specify_the_display_text_(specify_the_display_text)
+SettingWindowButton::SettingWindowButton(const QString icon_path,
+                                         const QSize original_size,
+                                         const QString button_text,
+                                         const QSize icon_size,
+                                         const QString specify_the_display_text,
+                                         const QString press_icon_path)
+    :icon_image_(FileReadSystem::GetInstance().ReadImageFile(icon_path)),
+    press_icon_image_(FileReadSystem::GetInstance().ReadImageFile(icon_path)),
+    specify_the_display_text_(specify_the_display_text)
 {
     if(original_size.isNull()||button_text.isNull())
     {
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug
-                                                  ,QString("Setting button original size is: %1,button text is: %2")
-                                                      .arg(original_size.isNull()?"null":"no null",button_text.isNull()?"null":"no null"));
+        FileWriteSystem::GetInstance().OutMessage(
+            FileWriteSystem::MessageTypeBit::kDebug,
+            QString("Setting button original size is: %1,button text is: %2")
+                .arg(original_size.isNull()?"null":"no null",button_text.isNull()?"null":"no null"));
         return;
     }
     this->original_size_=original_size;

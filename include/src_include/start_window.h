@@ -50,9 +50,6 @@ protected:
 
     void wheelEvent(QWheelEvent *event)override;
 
-protected slots:
-    void UpdateViewMatrix(const geometricalias::mat4& view_matrix);
-
 private:
     void ReadRenderingMap(
     QMap<QString,QMap<QString,QList<QString>>>& render_map);
@@ -60,13 +57,18 @@ private:
     bool ReadAnyMap(resourcesfiletype::ResourcesType map_type,
                     QMap<QString,QList<QString>>& any_map);
 
+protected slots:
+    void UpdateViewMatrix(const geometricalias::mat4& view_matrix);
+
+    void ProcessingOpenGLError();
+
 private:
     QRect screen_size_;
     RenderTimer timer_;
 
     QMap<QString,QMap<QString,QList<QString>>> render_map_;
-    QVector<QScopedPointer<Shader>> shaders_;
-    QVector<QScopedPointer<Model>> models_;
+    QVector<Shader*> shaders_;
+    QVector<Model*> models_;
 
     FirstPersonCamera camera_;
     geometricalias::mat4 projection_;

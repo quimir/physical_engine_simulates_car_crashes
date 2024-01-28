@@ -29,9 +29,11 @@ MainEntryButton::MainEntryButton(const QString icon_path, const QSize original_s
 {
     if(this->original_size_.isEmpty()||button_text.isEmpty())
     {
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug
-                                                  ,QString("Setting button original size is: %1,button text is: %2")
-                                                      .arg(original_size.isNull()?"null":"no null",button_text.isNull()?"null":"no null"));
+        FileWriteSystem::GetInstance().OutMessage(
+            FileWriteSystem::MessageTypeBit::kDebug
+            ,QString("Setting button original size is: %1,button text is: %2")
+                .arg(original_size.isNull()?"null":"no null",
+                     button_text.isNull()?"null":"no null"));
     }
 
     this->setText(button_text);
@@ -53,7 +55,8 @@ MainEntryButton::MainEntryButton(const QString icon_path, const QSize original_s
 
 void MainEntryButton::enterEvent(QEnterEvent* event)
 {
-    AnimateSizeChange(original_size_, QSize(original_size_.width() * 1.1, original_size_.height() * 1.1));
+    AnimateSizeChange(original_size_, QSize(original_size_.width() * 1.1,
+                                            original_size_.height() * 1.1));
     event->accept();
 }
 
@@ -65,7 +68,8 @@ void MainEntryButton::leaveEvent(QEvent* event)
 }
 
 
-void MainEntryButton::AnimateSizeChange(const QSize& start_size, const QSize& end_size)
+void MainEntryButton::AnimateSizeChange(const QSize& start_size,
+                                        const QSize& end_size)
 {
     this->animation_->setStartValue(QRect(this->pos(), start_size));
     this->animation_->setEndValue(QRect(this->pos(), end_size));
@@ -95,7 +99,8 @@ void MainEntryButton::SetButtonLayout()
 {
     // Remove old layout objects to avoid memory leaks
     QLayout *existing_layout = layout();
-    if (existing_layout) {
+    if (existing_layout)
+    {
         delete existing_layout;
     }
 

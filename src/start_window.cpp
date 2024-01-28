@@ -20,6 +20,7 @@
 #include "src_include/file_system/file_path_system.h"
 #include "src_include/file_system/file_write_system.h"
 #include "src_include/file_system/resources_file_type.h"
+#include <QMessageBox>
 
 StartWindow::StartWindow(QRect screen_size, QMap<QString,QMap<QString,QList<QString>>> render_map):
     QOpenGLWindow(),OpenGLFunctionBase(),screen_size_(screen_size),timer_(),
@@ -27,8 +28,11 @@ StartWindow::StartWindow(QRect screen_size, QMap<QString,QMap<QString,QList<QStr
 {
     if(this->screen_size_.isEmpty()||render_map.isEmpty())
     {
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug
-                                                  ,"No "+QString(this->screen_size_.isEmpty()?(QString("window screen size"+QString(this->render_map_.isEmpty()?"and no shader map":""))):"shader map"));
+        FileWriteSystem::GetInstance().OutMessage(
+            FileWriteSystem::MessageTypeBit::kDebug,
+            "No "+QString(this->screen_size_.isEmpty()?(
+                                QString("window screen size"+
+                                        QString(this->render_map_.isEmpty()?"and no shader map":""))):"shader map"));
     }
 
     //SetSurfaceFormat();
@@ -38,8 +42,6 @@ StartWindow::StartWindow(QRect screen_size, QMap<QString,QMap<QString,QList<QStr
 
 void StartWindow::initializeGL()
 {
-    if(!ContextOpenGL())
-        return;
     glClearColor(0.05f,0.05f,0.05f,1.0f);
     glEnable(GL_DEPTH_TEST);
     ReadRenderingMap(this->render_map_);
@@ -87,16 +89,20 @@ void StartWindow::keyPressEvent(QKeyEvent *event)
     switch(event->key())
     {
     case Qt::Key_W:
-        this->camera_.ProcessKeyInput(FirstPersonCamera::cameramovement::kForward,this->timer_.ElapsedTimeInMilliseconds());
+        this->camera_.ProcessKeyInput(FirstPersonCamera::cameramovement::kForward,
+                                      this->timer_.ElapsedTimeInMilliseconds());
         break;
     case Qt::Key_S:
-        this->camera_.ProcessKeyInput(FirstPersonCamera::cameramovement::kBackward,this->timer_.ElapsedTimeInMilliseconds());
+        this->camera_.ProcessKeyInput(FirstPersonCamera::cameramovement::kBackward,
+                                      this->timer_.ElapsedTimeInMilliseconds());
         break;
     case Qt::Key_A:
-        this->camera_.ProcessKeyInput(FirstPersonCamera::cameramovement::kLeet,this->timer_.ElapsedTimeInMilliseconds());
+        this->camera_.ProcessKeyInput(FirstPersonCamera::cameramovement::kLeet,
+                                      this->timer_.ElapsedTimeInMilliseconds());
         break;
     case Qt::Key_D:
-        this->camera_.ProcessKeyInput(FirstPersonCamera::cameramovement::kRight,this->timer_.ElapsedTimeInMilliseconds());
+        this->camera_.ProcessKeyInput(FirstPersonCamera::cameramovement::kRight,
+                                      this->timer_.ElapsedTimeInMilliseconds());
         break;
     case Qt::Key_Escape:
         this->close();
@@ -106,37 +112,54 @@ void StartWindow::keyPressEvent(QKeyEvent *event)
     update();
 }
 
-void StartWindow::ReadRenderingMap(QMap<QString, QMap<QString, QList<QString> > > &render_map)
+void StartWindow::ReadRenderingMap(
+    QMap<QString, QMap<QString, QList<QString> > > &render_map)
 {
     QMap<QString,QMap<QString,QList<QString>>>::Iterator it=render_map.begin();
 
     while(it!=render_map.end())
     {
         QMap<QString,QList<QString>> render_map_value=it.value();
-        ReadAnyMap(resourcesfiletype::ResourcesTypeToMapper::GetInstance().StringToEnum(it.key()),render_map_value);
+        ReadAnyMap(resourcesfiletype::ResourcesTypeToMapper::GetInstance()
+                       .StringToEnum(it.key()),render_map_value);
 
         it++;
     }
 }
 
-bool StartWindow::ReadAnyMap(resourcesfiletype::ResourcesType map_type, QMap<QString, QList<QString> > &any_map)
+bool StartWindow::ReadAnyMap(resourcesfiletype::ResourcesType map_type,
+                             QMap<QString, QList<QString> > &any_map)
 {
     if(any_map.isEmpty()||map_type==resourcesfiletype::ResourcesType::kNone)
     {
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug
-                                                  ,resourcesfiletype::ResourcesTypeToMapper::GetInstance().EnumToString(map_type)+"is null!");
+        FileWriteSystem::GetInstance().OutMessage(
+            FileWriteSystem::MessageTypeBit::kDebug,
+            resourcesfiletype::ResourcesTypeToMapper::GetInstance()
+                    .EnumToString(map_type)+"is null!");
         return false;
     }
 
     QMap<QString,QVector<QString>> shader_paths_map;
-    if(map_type==resourcesfiletype::ResourcesType::GLSL)
+    if(map_type==resourcesfiletype::ResourcesType::kGLSL)
     {
-        shader_paths_map[Shader::GLSLTypesToString(Shader::GLSLTypes::kVertex).toLower()]=QVector<QString>();
-        shader_paths_map[Shader::GLSLTypesToString(Shader::GLSLTypes::kFragment).toLower()] = QVector<QString>();
-        shader_paths_map[Shader::GLSLTypesToString(Shader::GLSLTypes::kGeometry).toLower()] = QVector<QString>();
-        shader_paths_map[Shader::GLSLTypesToString(Shader::GLSLTypes::kTessellationControl).toLower()] = QVector<QString>();
-        shader_paths_map[Shader::GLSLTypesToString(Shader::GLSLTypes::kTessellationEvaluation).toLower()] = QVector<QString>();
-        shader_paths_map[Shader::GLSLTypesToString(Shader::GLSLTypes::kCompute).toLower()] = QVector<QString>();
+        shader_paths_map[Shader::GLSLTypesToString(
+                             Shader::GLSLTypes::kVertex).toLower()]
+            =QVector<QString>();
+        shader_paths_map[Shader::GLSLTypesToString(
+                             Shader::GLSLTypes::kFragment).toLower()]
+            = QVector<QString>();
+        shader_paths_map[Shader::GLSLTypesToString(
+                             Shader::GLSLTypes::kGeometry).toLower()]
+            = QVector<QString>();
+        shader_paths_map[Shader::GLSLTypesToString(
+                             Shader::GLSLTypes::kTessellationControl).toLower()]
+            = QVector<QString>();
+        shader_paths_map[Shader::GLSLTypesToString(
+                             Shader::GLSLTypes::kTessellationEvaluation).toLower()]
+            = QVector<QString>();
+        shader_paths_map[Shader::GLSLTypesToString(
+                             Shader::GLSLTypes::kCompute).toLower()]
+            = QVector<QString>();
     }
 
     for(const QString &key:any_map.keys())
@@ -149,7 +172,7 @@ bool StartWindow::ReadAnyMap(resourcesfiletype::ResourcesType map_type, QMap<QSt
             {
                 switch(map_type)
                 {
-                case resourcesfiletype::ResourcesType::GLSL:
+                case resourcesfiletype::ResourcesType::kGLSL:
                 {
                     QVector<QString>& shader_paths=shader_paths_map[key.toLower()];
                     shader_paths.push_back(map_path);
@@ -158,9 +181,8 @@ bool StartWindow::ReadAnyMap(resourcesfiletype::ResourcesType map_type, QMap<QSt
                     break;
                 case resourcesfiletype::ResourcesType::kModel:
                 {
-                    QString file_path=FilePathSystem::GetInstance()
-                                            .ExtractResource(FilePathSystem::GetInstance().RCCToAbsolutePath(FilePathSystem::GetInstance().GetResourcesPath(resourcesfiletype::ResourcesType::kModel,map_path)),QCoreApplication::applicationDirPath());
-                    QScopedPointer<Model> model(new Model(file_path));
+                    QString file_path=FilePathSystem::GetInstance().GetResourcesPath("model/backpack/"+map_path);
+                    Model* model=new Model(file_path);
                     this->models_.push_back(model);
                 }
                 break;
@@ -170,19 +192,35 @@ bool StartWindow::ReadAnyMap(resourcesfiletype::ResourcesType map_type, QMap<QSt
             }
         }
     }
-
-    if(map_type==resourcesfiletype::ResourcesType::GLSL)
+    
+    if(map_type==resourcesfiletype::ResourcesType::kGLSL)
     {
-        int shader_count = shader_paths_map[Shader::GLSLTypesToString(Shader::GLSLTypes::kVertex).toLower()].size();
+        int shader_count = shader_paths_map[
+                               Shader::GLSLTypesToString(
+                                   Shader::GLSLTypes::kVertex).toLower()].size();
 
         for(int i=0;i<shader_count;i++)
         {
-            QScopedPointer<Shader> shader(new Shader(true,shader_paths_map[Shader::GLSLTypesToString(Shader::GLSLTypes::kVertex).toLower()].value(i),
-                                                     shader_paths_map[Shader::GLSLTypesToString(Shader::GLSLTypes::kFragment).toLower()].value(i),
-                                                     shader_paths_map[Shader::GLSLTypesToString(Shader::GLSLTypes::kGeometry).toLower()].value(i),
-                                                     shader_paths_map[Shader::GLSLTypesToString(Shader::GLSLTypes::kTessellationControl).toLower()].value(i),
-                                                     shader_paths_map[Shader::GLSLTypesToString(Shader::GLSLTypes::kTessellationEvaluation).toLower()].value(i),
-                                                     shader_paths_map[Shader::GLSLTypesToString(Shader::GLSLTypes::kCompute).toLower()].value(i)));
+            Shader* shader=new Shader(
+                true,
+                shader_paths_map[Shader::GLSLTypesToString(
+                                     Shader::GLSLTypes::kVertex)
+                                     .toLower()].value(i),
+                shader_paths_map[Shader::GLSLTypesToString(
+                                     Shader::GLSLTypes::kFragment)
+                                     .toLower()].value(i),
+                shader_paths_map[Shader::GLSLTypesToString(
+                                     Shader::GLSLTypes::kGeometry)
+                                     .toLower()].value(i),
+                shader_paths_map[Shader::GLSLTypesToString(
+                                     Shader::GLSLTypes::kTessellationControl)
+                                     .toLower()].value(i),
+                shader_paths_map[Shader::GLSLTypesToString(
+                                     Shader::GLSLTypes::kTessellationEvaluation)
+                                     .toLower()].value(i),
+                shader_paths_map[Shader::GLSLTypesToString(
+                                     Shader::GLSLTypes::kCompute)
+                                     .toLower()].value(i));
             if(shader->Use())
                 this->shaders_.push_back(shader);
         }
@@ -226,7 +264,9 @@ void StartWindow::UpdateViewMatrix(const geometricalias::mat4 &view_matrix)
     {
         if(!this->shaders_[i]->Use())
         {
-            FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug,"No shader was built, please recheck if this shader exists, then kill this shader!");
+            FileWriteSystem::GetInstance().OutMessage(
+                FileWriteSystem::MessageTypeBit::kDebug,
+                "No shader was built, please recheck if this shader exists, then kill this shader!");
             index.push_back(i);
         }
         else
@@ -244,7 +284,9 @@ void StartWindow::UpdateViewMatrix(const geometricalias::mat4 &view_matrix)
         }
         else
         {
-            FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug,"No this shader index");
+            FileWriteSystem::GetInstance().OutMessage(
+                FileWriteSystem::MessageTypeBit::kDebug,
+                "No this shader index");
         }
     }
 }

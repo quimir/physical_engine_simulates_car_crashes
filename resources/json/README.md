@@ -1,1 +1,0 @@
-All text in Json is in the: key-key-array format, where the second key can be multiple arrays or integers but the first key can only be specified as a unique key.

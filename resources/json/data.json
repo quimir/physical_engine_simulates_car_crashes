@@ -1,5 +1,32 @@
 {
-      "GLSL":[
+      "logs":
+      {
+            "open":true,
+            "path":"log_file.log",
+            "day":1,
+            "last_open_time":""
+      },
+      "image":
+      {
+            "video_or_image":false,
+            "background":
+            {
+                  "main_window":"background_picture.png",
+                  "setting_window":"background_picture.png"
+            }
+      },
+      "GLSL":
+      {
+            "boxkey":
+            {
+                  "vert":["model_loading.vert","text.vert","text_2.vert"],
+                  "frag":["model_loading.frag","text.frag","text_2.frag"],
+                  "geom":["",""],
+                  "tesc":["",""],
+                  "tese":["",""],
+                  "compute":["",""]
+            },
+            "model":
             {
                   "vert":["model_loading.vert",""],
                   "frag":["model_loading.frag",""],
@@ -8,10 +35,17 @@
                   "tese":["",""],
                   "compute":["",""]
             }
-      ],
-      "model":[
-            {
-                  "backpack":"backpack.obj"
-            }
-      ]
+      },
+      "model":
+      {
+            "backpack":"backpack.obj",
+            "nanosuit":"nanosuit,obj"
+      },
+      "json":
+      {
+            "button":"button.json",
+            "basic_setting":"basic_setting.json",
+            "environment_setting":"environment_setting.json",
+            "more_setting":"more_setting.json"
+      }
 }

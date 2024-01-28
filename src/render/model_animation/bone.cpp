@@ -79,7 +79,9 @@ uint32_t Bone::GetPositionIndex(float animation_time)
         }
     }
     
-    FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug,QString("No find %1 bone position index id is: %2").arg(name_,QString::number(id_)));
+    FileWriteSystem::GetInstance().OutMessage(
+        FileWriteSystem::MessageTypeBit::kDebug,
+        QString("No find %1 bone position index id is: %2").arg(name_,QString::number(id_)));
     return UINT_MAX;
 }
 
@@ -93,7 +95,9 @@ uint32_t Bone::GetRotationIndex(float animation_time)
         }
     }
     
-    FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug,QString("No find %1 bone rotation index id is: %2").arg(name_,QString::number(id_)));
+    FileWriteSystem::GetInstance().OutMessage(
+        FileWriteSystem::MessageTypeBit::kDebug,
+        QString("No find %1 bone rotation index id is: %2").arg(name_,QString::number(id_)));
     return UINT_MAX;
 }
 
@@ -107,11 +111,14 @@ uint32_t Bone::GetScaleIndex(float animation_time)
         }
     }
     
-    FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug,QString("No find %1 bone scale index id is: %2").arg(name_,QString::number(id_)));
+    FileWriteSystem::GetInstance().OutMessage(
+        FileWriteSystem::MessageTypeBit::kDebug,
+        QString("No find %1 bone scale index id is: %2").arg(name_,QString::number(id_)));
     return UINT_MAX;
 }
 
-float Bone::GetScaleFactor(float last_time_stamp, float next_time_stamp, float animation_time)
+float Bone::GetScaleFactor(float last_time_stamp, float next_time_stamp,
+                           float animation_time)
 {
     float scale_factor=0.0f;
     float mid_way_length=animation_time-last_time_stamp;
@@ -134,8 +141,12 @@ geometricalias::mat4 Bone::InterpolatePosition(float animation_time)
     uint32_t p0_index=GetPositionIndex(animation_time);
     // Get next time stamp
     uint32_t p1_index=p0_index+1;
-    float scale_factor=GetScaleFactor(this->positions_[p0_index].time_stamp,this->positions_[p1_index].time_stamp,animation_time);
-    geometricalias::vec3 final_position=geometricalias::lerp(this->positions_[p0_index].position,this->positions_[p1_index].position,scale_factor);
+    float scale_factor=GetScaleFactor(
+        this->positions_[p0_index].time_stamp,
+        this->positions_[p1_index].time_stamp,animation_time);
+    geometricalias::vec3 final_position=geometricalias::lerp(
+        this->positions_[p0_index].position,
+        this->positions_[p1_index].position,scale_factor);
     matrix.translate(final_position);
     return matrix;
 }
@@ -155,8 +166,12 @@ geometricalias::mat4 Bone::InterpolateRotation(float animation_time)
     uint32_t p0_index=GetRotationIndex(animation_time);
     // Get next time stamp
     uint32_t p1_index=p0_index+1;
-    float scale_factor=GetScaleFactor(this->rotations_[p0_index].time_stamp,this->rotations_[p1_index].time_stamp,animation_time);
-    geometricalias::quat final_rotation=geometricalias::quat::slerp(this->rotations_[p0_index].orientation,this->rotations_[p1_index].orientation,scale_factor);
+    float scale_factor=GetScaleFactor(
+        this->rotations_[p0_index].time_stamp,
+        this->rotations_[p1_index].time_stamp,animation_time);
+    geometricalias::quat final_rotation=geometricalias::quat::slerp(
+        this->rotations_[p0_index].orientation,
+        this->rotations_[p1_index].orientation,scale_factor);
     final_rotation.normalize();
     matrix.rotate(final_rotation);
     return matrix;
@@ -175,8 +190,12 @@ geometricalias::mat4 Bone::InterpolateScaling(float animation_time)
     uint32_t p0_index=GetScaleIndex(animation_time);
     // Get next time stamp
     uint32_t p1_index=p0_index+1;
-    float scale_factor=GetScaleFactor(this->scales_[p0_index].time_stamp,this->scales_[p1_index].time_stamp,animation_time);
-    geometricalias::vec3 final_scale=geometricalias::lerp(this->positions_[p0_index].position,this->positions_[p1_index].position,scale_factor);
+    float scale_factor=GetScaleFactor(
+        this->scales_[p0_index].time_stamp,
+        this->scales_[p1_index].time_stamp,animation_time);
+    geometricalias::vec3 final_scale=geometricalias::lerp(
+        this->positions_[p0_index].position,
+        this->positions_[p1_index].position,scale_factor);
     matrix.scale(final_scale);
     return matrix;
 }

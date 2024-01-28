@@ -163,6 +163,59 @@ QMap<QString, QMap<QString, QList<QString> > > FileReadSystem::ReadJsonFile(
     return json_map;
 }
 
+QJsonObject FileReadSystem::ReadJsonFileToJsonObject(const QString &json_path)
+{
+    QFile file(json_path);
+    if(file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        QByteArray json_data=file.readAll();
+        file.close();
+
+        QJsonParseError json_error;
+        QJsonDocument json_doc=QJsonDocument::fromJson(json_data,&json_error);
+        if(json_error.error!=QJsonParseError::NoError)
+        {
+            FileWriteSystem::GetInstance().OutMessage(
+                FileWriteSystem::MessageTypeBit::kDebug,json_error.errorString());
+            return QJsonObject();
+        }
+
+        QJsonObject root_object=json_doc.object();
+        return root_object;
+    }
+
+    FileWriteSystem::GetInstance().OutMessage(
+        FileWriteSystem::MessageTypeBit::kDebug
+        ,"Failed to open the file");
+    return QJsonObject();
+}
+
+QJsonObject FileReadSystem::ReadJsonFileToJsonObject(QFile json_file)
+{
+    if(json_file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        QByteArray json_data=json_file.readAll();
+        json_file.close();
+
+        QJsonParseError json_error;
+        QJsonDocument json_doc=QJsonDocument::fromJson(json_data,&json_error);
+        if(json_error.error!=QJsonParseError::NoError)
+        {
+            FileWriteSystem::GetInstance().OutMessage(
+                FileWriteSystem::MessageTypeBit::kDebug,json_error.errorString());
+            return QJsonObject();
+        }
+
+        QJsonObject root_object=json_doc.object();
+        return root_object;
+    }
+
+    FileWriteSystem::GetInstance().OutMessage(
+        FileWriteSystem::MessageTypeBit::kDebug
+        ,"Failed to open the file");
+    return QJsonObject();
+}
+
 bool FileReadSystem::ReadFileFirstLine(QFile &file, QString &first_line)
 {
     if(file.open(QIODevice::ReadOnly|QIODevice::Text))

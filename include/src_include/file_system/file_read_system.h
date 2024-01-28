@@ -38,8 +38,6 @@ public:
      */
     static FileReadSystem& GetInstance();
 
-    QString LoadStylesFromFile(const QString& file_name)=delete;
-
     /**
      * @brief ReadImageFile It reads the information about the image, prints
      * the attributes of the image after loading, and returns QImage if
@@ -77,9 +75,9 @@ public:
      * @return Modified json map.
      */
     QMap<QString,QMap<QString,QList<QString>>> ReadGLSLFile(
-    QMap<QString,QMap<QString,QList<QString>>>& glsl_map
-    ,resourcesfiletype::ResourcesType type=
-    resourcesfiletype::ResourcesType::GLSL);
+        QMap<QString,QMap<QString,QList<QString>>>& glsl_map,
+        resourcesfiletype::ResourcesType type=
+        resourcesfiletype::ResourcesType::kGLSL);
 
     /**
      * @brief ReadJsonFile Read the Json file and return to go out, the
@@ -90,6 +88,10 @@ public:
      * the first key is unique.
      */
     QMap<QString,QMap<QString,QList<QString>>> ReadJsonFile(QFile json_file);
+
+    QJsonObject ReadJsonFileToJsonObject(const QString& json_path);
+
+    QJsonObject ReadJsonFileToJsonObject(QFile json_file);
 
     /**
      * @brief ReadFileFirstLine Reads the first part of the file and stores
@@ -110,7 +112,8 @@ public:
     bool ReadFileFirstLine(const QString& file_path,QString& first_line);
 
 private:
-    /* The following functions are not recommended to be modified unless you are familiar with the function and its logic. */
+    /* The following functions are not recommended to be modified unless
+     * you are familiar with the function and its logic. */
     void ParseJson(const QJsonObject& json_obj,
                    QMap<QString, QMap<QString,QList<QString>>>& json_map);
 

@@ -23,17 +23,21 @@
 #include <QDateTime>
 #include <QMap>
 
-namespace jsonType
+namespace jsontype
 {
 
 class JsonLogs
 {
 public:
-    JsonLogs(const QJsonObject& root_object);
+    JsonLogs(QJsonObject &root_object);
 
     QVariantMap GetLogProperty()const;
 
     void SetLogsProperty(QVariantMap new_josn_logs_property);
+
+    void SetLogsLastOpenTime(QDateTime new_last_open_time);
+
+    void SetLogsLogDay(qint32 new_day);
 
     QList<QString> GetLogsKeys()const;
 
@@ -47,10 +51,12 @@ public:
 
     void SetLogsProperty(const QString& key,const QVariant value);
 
-    void ResetLogs(const QJsonObject &root_object);
+    void ResetLogs(QJsonObject &root_object);
+
+    QJsonObject GetRootObject()const;
 
 private:
-    void InitJsonLogs(const QJsonObject& root_object);
+    void InitJsonLogs(QJsonObject &root_object);
 
     void ParseLogs(const QJsonObject& logs_object);
 

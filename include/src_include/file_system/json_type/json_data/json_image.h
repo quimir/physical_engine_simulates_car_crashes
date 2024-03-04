@@ -23,7 +23,7 @@
 #include <QJsonObject>
 #include <QVector>
 
-namespace jsonType
+namespace jsontype
 {
 
 struct BackGround
@@ -49,13 +49,15 @@ public:
 
     void ResetJsonImage(const QJsonObject& json_object);
 
+    QJsonObject GetRootObject()const;
+
 private:
     void InitJsonImage(const QJsonObject& json_object);
 
     void ParseImage(const QJsonObject& image_object);
 
 private:
-    QJsonObject json_object_;
+    QJsonObject root_object_;
     bool video_or_image_;
     QVector<BackGround> back_ground_;
 };

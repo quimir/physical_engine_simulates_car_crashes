@@ -18,7 +18,7 @@
 #include "src_include/file_system/json_type/json_data/json_model.h"
 #include "src_include/file_system/file_write_system.h"
 
-namespace jsonType
+namespace jsontype
 {
 JsonModel::JsonModel(const QJsonObject &root_object)
 {
@@ -38,6 +38,11 @@ QString JsonModel::GetModelMapValue(const QString& key) const
 void JsonModel::ResetJsonModel(const QJsonObject &root_object)
 {
     InitJsonModel(root_object);
+}
+
+QJsonObject JsonModel::GetRootObject() const
+{
+    return this->root_object_;
 }
 
 void JsonModel::InitJsonModel(const QJsonObject &root_object)

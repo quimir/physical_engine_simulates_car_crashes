@@ -23,7 +23,7 @@
 #include <QMap>
 #include <QJsonObject>
 
-namespace jsonType
+namespace jsontype
 {
 struct JsonGLSLProperty
 {
@@ -43,12 +43,15 @@ public:
 
     void ResetJsonGLSL(const QJsonObject& root_object);
 
+    QJsonObject GetRootObject()const;
+
 private:
     void InitJsonGLSL(const QJsonObject& root_object);
 
     void ParseGLSL(const QJsonObject& glsl_object);
 
     JsonGLSLProperty ParseGLSLProperty(const QJsonObject& property_object);
+
 private:
     QJsonObject root_object_;
 

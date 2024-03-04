@@ -40,12 +40,5 @@
       {
             "backpack":"backpack.obj",
             "nanosuit":"nanosuit,obj"
-      },
-      "json":
-      {
-            "button":"button.json",
-            "basic_setting":"basic_setting.json",
-            "environment_setting":"environment_setting.json",
-            "more_setting":"more_setting.json"
       }
 }

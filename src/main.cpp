@@ -44,9 +44,10 @@ int main(int argc, char *argv[])
         }
     }
 
-    jsonType::JsonType::GetInstance(
+    jsontype::JsonType::GetInstance(
         FilePathSystem::GetInstance().GetResourcesPath(
             resourcesfiletype::ResourcesType::kJson,"index.json"));
+
     qInstallMessageHandler(FileWriteSystem::CustomMessageHandler);
     FileWriteSystem::GetInstance().RemoveDefaultLogFile();
 

@@ -21,6 +21,7 @@
 #include "src_include/file_system/file_write_system.h"
 #include "src_include/file_system/resources_file_type.h"
 #include <QMessageBox>
+#include "src_include/render/model_animation/geometryengine.h"
 
 StartWindow::StartWindow(QRect screen_size, QMap<QString,QMap<QString,QList<QString>>> render_map):
     QOpenGLWindow(),OpenGLFunctionBase(),screen_size_(screen_size),timer_(),
@@ -51,7 +52,7 @@ void StartWindow::initializeGL()
 void StartWindow::resizeGL(int w, int h)
 {
     this->projection_.setToIdentity();
-    this->projection_.perspective(this->camera_.GetZoom(),w/float(h),0.01f,100.0f);
+    this->projection_.perspective(this->camera_.GetZoom(),w/float(h),0.1f,100.0f);
 
     glViewport(0,0,w,h);
 }
@@ -73,7 +74,9 @@ void StartWindow::paintGL()
         model.translate(geometricalias::vec3(0.0f,0.0f,0.0f));
         model.scale(geometricalias::vec3(1.0f,1.0f,1.0f));
         this->shaders_[i]->SetMat4("model",model);
-        this->models_[i]->Draw(this->shaders_[i]);
+        geometryengine::GeometryEngine engine;
+        engine.drawObj(
+            FilePathSystem::GetInstance().GetResourcesPath("model/backpack/backpack.obj").toStdString(),&this->shaders_[i]->GetShaderProgram(),true);
     }
 
     this->timer_.Stop();
@@ -182,8 +185,6 @@ bool StartWindow::ReadAnyMap(resourcesfiletype::ResourcesType map_type,
                 case resourcesfiletype::ResourcesType::kModel:
                 {
                     QString file_path=FilePathSystem::GetInstance().GetResourcesPath("model/backpack/"+map_path);
-                    Model* model=new Model(file_path);
-                    this->models_.push_back(model);
                 }
                 break;
                 default:

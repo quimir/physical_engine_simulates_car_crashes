@@ -20,7 +20,7 @@
 #include "src_include/file_system/json_type/json_data/json_image.h"
 #include "src_include/file_system/file_write_system.h"
 
-namespace jsonType
+namespace jsontype
 {
 
 JsonImage::JsonImage(const QJsonObject &json_object)
@@ -67,14 +67,19 @@ void JsonImage::InitJsonImage(const QJsonObject &json_object)
             "Json iamge object load failed!");
         return;
     }
-
-    this->json_object_=json_object;
-    ParseImage(this->json_object_);
+    
+    this->root_object_=json_object;
+    ParseImage(this->root_object_);
 }
 
 void JsonImage::ResetJsonImage(const QJsonObject &json_object)
 {
     InitJsonImage(json_object);
+}
+
+QJsonObject JsonImage::GetRootObject() const
+{
+    return this->root_object_;
 }
 
 void JsonImage::ParseImage(const QJsonObject &image_object)

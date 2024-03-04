@@ -1,7 +1,7 @@
 #ifndef FILE_SYSTEM_JSON_ENVIRONMENT_SETTING_H
 #define FILE_SYSTEM_JSON_ENVIRONMENT_SETTING_H
 
-namespace jsonType
+namespace jsontype
 {
 class JsonEnvironmentSetting
 {

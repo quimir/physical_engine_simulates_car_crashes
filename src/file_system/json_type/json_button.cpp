@@ -19,10 +19,10 @@
 #include "src_include/file_system/file_read_system.h"
 #include "src_include/file_system/file_write_system.h"
 
-namespace jsonType
+namespace jsontype
 {
 
-jsonType::JsonButton::JsonButton(const QString &path)
+jsontype::JsonButton::JsonButton(const QString &path)
 {
     if(path.isEmpty())
     {
@@ -60,7 +60,8 @@ QList<QString> JsonButton::GetButtonMapKeys() const
 
 void JsonButton::ParsePathFile()
 {
-    QJsonObject root_object=FileReadSystem::GetInstance().ReadJsonFileToJsonObject(this->path_);
+    QJsonObject root_object=FileReadSystem::GetInstance().
+                              ReadJsonFileToJsonObject(this->path_);
     ParseJson(root_object);
 }
 
@@ -76,13 +77,15 @@ void JsonButton::ParseJson(const QJsonObject &root_object)
         }
         else
         {
-            QList<JsonButtonKey> button_value=ParseButtonKey(key,root_dir_object[key].toObject());
+            QList<JsonButtonKey> button_value=ParseButtonKey(
+                key,root_dir_object[key].toObject());
             this->button_map_[key]=button_value;
         }
     }
 }
 
-QList<JsonButtonKey> JsonButton::ParseButtonKey(const QString &key, const QJsonObject &button_key_object)
+QList<JsonButtonKey> JsonButton::ParseButtonKey(
+    const QString &key, const QJsonObject &button_key_object)
 {
     QList<JsonButtonKey> button_key;
 
@@ -93,28 +96,60 @@ QList<JsonButtonKey> JsonButton::ParseButtonKey(const QString &key, const QJsonO
         button_key_path.name=path_key;
         QJsonObject key_path=button_key_object.value(path_key).toObject();
 
-        // Initialize icon_path with an empty string
-        QString icon_path;
+        for(auto button_setting_path=key_path.begin();
+             button_setting_path!=key_path.end();button_setting_path++)
+        {
+            QString button_setting_path_key=button_setting_path.key();
+            QJsonValueRef button_setting_path_value=
+                button_setting_path.value();
 
-        // Check if cartoon is true and icon_cartonn exists
-        if (cartoon_ && key_path.contains("icon_cartonn"))
-        {
-            icon_path = key_path["icon_cartonn"].toString();
-        }
-        else if (key_path.contains("icon")) // Check if icon exists
-        {
-            icon_path = key_path["icon"].toString();
-        }
-
-        // Set the icon path in the setting map
-        button_key_path.setting["icon"] = icon_path;
-        for(auto it_path=key_path.begin();it_path!=key_path.end();it_path++)
-        {
-            QString path_key_path=it_path.key();
-            if(path_key_path!="icon"&&path_key_path!="icon_cartonn")
+            if(button_setting_path_key=="icon")
             {
-                button_key_path.setting[path_key_path]=key_path[path_key_path].toString();
+                if(!this->cartoon_ && !button_setting_path_value.isNull())
+                {
+                    if(!button_setting_path_value.toString().isEmpty())
+                    {
+                        button_key_path.setting["icon"]=
+                            button_setting_path_value.toString();
+                    }
+                    continue;
+                }
             }
+
+            else if(button_setting_path_key=="icon_cartonn")
+            {
+                if(this->cartoon_ && !button_setting_path_value.isNull())
+                {
+                    if(!button_key_path.setting["icon"].isEmpty()
+                        && !button_setting_path_value.toString().isEmpty())
+                    {
+                        button_key_path.setting["icon"]=
+                            button_setting_path_value.toString();
+                    }
+                }
+
+                else if(!this->cartoon_ &&
+                         button_key_path.setting["icon"].isEmpty()
+                         && !button_setting_path_value.isNull())
+                {
+                    if(!button_setting_path_value.toString().isEmpty())
+                    {
+                        button_key_path.setting["icon"]=
+                            button_setting_path_value.toString();
+                    }
+                }
+
+                else if(button_key_path.setting["icon"].isEmpty())
+                {
+                    button_key_path.setting["icon"]=
+                        key_path.value("icon").toString();
+                }
+
+                continue;
+            }
+
+            button_key_path.setting[button_setting_path_key]=
+                button_setting_path_value.toString();
         }
 
         button_key.push_back(button_key_path);

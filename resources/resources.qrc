@@ -44,5 +44,6 @@
         <file>style/main_entry_button_style.qml</file>
         <file>json/button.json</file>
         <file>json/index.json</file>
+        <file>json/shader_data.json</file>
     </qresource>
 </RCC>

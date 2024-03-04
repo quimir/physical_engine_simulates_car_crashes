@@ -1,0 +1,17 @@
+{
+    "GLSL":[
+          {
+                "vert":["model_loading.vert",""],
+                "frag":["model_loading.frag",""],
+                "geom":["",""],
+                "tesc":["",""],
+                "tese":["",""],
+                "compute":["",""]
+          }
+    ],
+    "model":[
+          {
+                "backpack":"backpack.obj"
+          }
+    ]
+}

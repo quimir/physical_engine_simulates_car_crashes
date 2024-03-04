@@ -23,7 +23,7 @@
 #include <QJsonObject>
 #include <QVariantMap>
 
-namespace jsonType
+namespace jsontype
 {
 struct JsonButtonKey
 {

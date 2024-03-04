@@ -18,6 +18,7 @@
 #include "src_include/file_system/file_write_system.h"
 #include "src_include/file_system/file_path_system.h"
 #include "src_include/file_system/file_read_system.h"
+#include "src_include/file_system/json_type/json_type.h"
 
 FileWriteSystem &FileWriteSystem::GetInstance(QString log_file)
 {
@@ -236,7 +237,9 @@ QString FileWriteSystem::GetCurrentDataTimeString()
 QString FileWriteSystem::SetDefaultLogFile()
 {
     QString log_file_path;
-    log_file_path=FilePathSystem::GetInstance().GetLogsPath("log_file.log");
+    log_file_path=FilePathSystem::GetInstance().GetLogsPath(
+        jsontype::JsonType::GetInstance().
+        GetJsonData()->GetJsonLogs()->GetLogsPath());
     QString directory_path=QFileInfo(log_file_path).absolutePath();
 
     QDir directory(directory_path);

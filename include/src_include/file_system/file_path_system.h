@@ -95,6 +95,33 @@ public:
                             const QString& destination_dir);
 
     /**
+     * @brief IsRccPath The index in front of the path is used
+     * to determine whether it is a path of RCC.
+     * @param path The path to the file.
+     * @return If it is true, otherwise it returns false.
+     */
+    bool IsRccPath(const QString& path);
+
+    /**
+     * @brief IsAbsolutePath Use Qt's own filesystem to check
+     * whether the path is an absolute path.See the QFileInfo
+     * class for details.
+     * @param path The path to the file.
+     * @return If it is true, otherwise it returns false.
+     */
+    bool IsAbsolutePath(const QString& path);
+
+    /**
+     * @brief IsRelativePath By checking whether the path is an
+     * RCC file path and an absolute path to determine whether
+     * it is a relative path, when the RCC file path and the
+     * absolute path are both false, then it is a relative path.
+     * @param path The path to the file.
+     * @return If it is true, otherwise it returns false.
+     */
+    bool IsRelativePath(const QString& path);
+
+    /**
      * @brief GetResourcesPath Returns the location of the file relative
      * to the RCC resource system under the RCC resource system.
      * @param type For the types of RCC resource files, see the

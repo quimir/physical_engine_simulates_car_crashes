@@ -24,7 +24,7 @@
 #include "json_image.h"
 #include "src_include/file_system/resources_file_type.h"
 
-namespace jsonType
+namespace jsontype
 {
 class JsonData
 {
@@ -41,15 +41,23 @@ public:
 
     void PrasePathFile();
 
+    void ResetJsonData(const QString path);
+
+    qint32 SavingTheJsonFile();
+
     ~JsonData();
 
 private:
-    void InitValues(QString key,QJsonObject json_object);
+    void InitValues(QString key,QJsonObject& json_object);
 
     void SetInitalValues(resourcesfiletype::ResourcesType type,QJsonObject json_object);
 
 private:
+    bool IsReset;
+
     QString path_;
+
+    /* Json data */
     JsonGLSL* json_glsl_;
     JsonLogs* json_logs_;
     JsonModel* json_model_;

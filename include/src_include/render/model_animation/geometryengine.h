@@ -10,6 +10,8 @@
 #include <QOpenGLTexture>
 
 using namespace std;
+namespace geometryengine
+{
 struct VertexData
 {
     QVector3D position;
@@ -97,6 +99,7 @@ private:
     void processMesh(vector<VertexData>& vertices, vector<GLushort>& indices, QOpenGLTexture*& albedo, aiMesh *mesh, const aiScene *scen);
 
     map<string, Model> mapModel;
+};
 };
 
 #endif // GEOMETRYENGINE_H

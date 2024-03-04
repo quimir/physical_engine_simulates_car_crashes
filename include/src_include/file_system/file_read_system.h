@@ -89,6 +89,13 @@ public:
      */
     QMap<QString,QMap<QString,QList<QString>>> ReadJsonFile(QFile json_file);
 
+    /**
+     * @brief ReadJsonFileToJsonObject Read all the data from the Json
+     * class file (if the file path is correct and conforms to the
+     * Json class file specification) into the QJsonObject object.
+     * @param json_path
+     * @return
+     */
     QJsonObject ReadJsonFileToJsonObject(const QString& json_path);
 
     QJsonObject ReadJsonFileToJsonObject(QFile json_file);

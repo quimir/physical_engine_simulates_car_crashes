@@ -18,10 +18,10 @@
 #include "src_include/file_system/json_type/json_data/json_logs.h"
 #include "src_include/file_system/file_write_system.h"
 
-namespace jsonType
+namespace jsontype
 {
 
-JsonLogs::JsonLogs(const QJsonObject &root_object)
+JsonLogs::JsonLogs(QJsonObject &root_object)
 {
     InitJsonLogs(root_object);
 }
@@ -34,6 +34,21 @@ QVariantMap JsonLogs::GetLogProperty() const
 void JsonLogs::SetLogsProperty(QVariantMap new_josn_logs_property)
 {
     this->log_property_=new_josn_logs_property;
+}
+
+void JsonLogs::SetLogsLastOpenTime(QDateTime new_last_open_time)
+{
+    if(GetLogsLastOpenTime()==new_last_open_time)
+        return;
+    this->root_object_.insert("last_opne_time",new_last_open_time.toString("yyyy-MM-dd hh:mm:ss"));
+}
+
+void JsonLogs::SetLogsLogDay(qint32 new_day)
+{
+    if(GetLogsDay()==new_day)
+        return;
+
+    this->root_object_.insert("day",new_day);
 }
 
 QList<QString> JsonLogs::GetLogsKeys() const
@@ -67,12 +82,17 @@ void JsonLogs::SetLogsProperty(const QString &key, const QVariant value)
 }
 
 
-void JsonLogs::ResetLogs(const QJsonObject &root_object)
+void JsonLogs::ResetLogs(QJsonObject &root_object)
 {
     InitJsonLogs(root_object);
 }
 
-void JsonLogs::InitJsonLogs(const QJsonObject &root_object)
+QJsonObject JsonLogs::GetRootObject() const
+{
+    return this->root_object_;
+}
+
+void JsonLogs::InitJsonLogs(QJsonObject &root_object)
 {
     if(root_object.isEmpty())
     {

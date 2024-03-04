@@ -19,7 +19,7 @@
 #include "qjsonarray.h"
 #include "src_include/file_system/file_write_system.h"
 
-namespace jsonType
+namespace jsontype
 {
 
 JsonGLSL::JsonGLSL(const QJsonObject &root_object)
@@ -40,6 +40,11 @@ JsonGLSLProperty JsonGLSL::GetGLSLProperty(QString key) const
 void JsonGLSL::ResetJsonGLSL(const QJsonObject &root_object)
 {
     InitJsonGLSL(root_object);
+}
+
+QJsonObject JsonGLSL::GetRootObject() const
+{
+    return this->root_object_;
 }
 
 void JsonGLSL::InitJsonGLSL(const QJsonObject &root_object)

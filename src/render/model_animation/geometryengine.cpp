@@ -4,7 +4,8 @@
 #include <QVector3D>
 #include <QVector>
 
-
+namespace geometryengine
+{
 GeometryEngine::GeometryEngine()
 {
 
@@ -214,4 +215,5 @@ void GeometryEngine::CalTangent(VertexData& vertex0, VertexData& vertex1, Vertex
         vertexArr[i]->tangent = vertexArr[i]->tangent * (1 - ratio) + tangent * ratio;
         vertexArr[i]->tangent.normalize();
     }
+}
 }

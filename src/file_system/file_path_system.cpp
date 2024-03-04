@@ -97,6 +97,22 @@ QString FilePathSystem::ExtractResource(const QString &resource_path,
     return QString();
 }
 
+bool FilePathSystem::IsAbsolutePath(const QString &path)
+{
+    QFileInfo file_info(path);
+    return !file_info.isAbsolute() && file_info.fileName().isEmpty();
+}
+
+bool FilePathSystem::IsRelativePath(const QString &path)
+{
+    return QFileInfo(path).isAbsolute();
+}
+
+bool FilePathSystem::IsRccPath(const QString &path)
+{
+    return path.startsWith(":/");
+}
+
 QString FilePathSystem::GetResourcesPath(const QString &type,
                                          const QString &name)
 {

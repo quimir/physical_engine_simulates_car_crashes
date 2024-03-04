@@ -37,7 +37,9 @@ MainWindow::MainWindow(QWidget* parent)
     SetUIWindow();
     for(MainEntryButton* button:this->buttons_)
     {
-        connect(button,&MainEntryButton::clicked,this,&MainWindow::HandleButtonClicked);
+        connect(
+            button,&MainEntryButton::clicked,
+            this,&MainWindow::HandleButtonClicked);
     }
 }
 
@@ -47,9 +49,10 @@ void MainWindow::GetScreenWindow()
     QRect get_user_screen = user_screen->availableGeometry();
     this->screen_width_ = get_user_screen.width();
     this->screen_height_ = get_user_screen.height();
-    FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug
-                                              , QString("User screen width: %1,height: %2")
-                                                  .arg(QString::number(screen_width_), QString::number(screen_height_)));
+    FileWriteSystem::GetInstance().OutMessage(
+        FileWriteSystem::MessageTypeBit::kDebug,
+        QString("User screen width: %1,height: %2").arg(
+            QString::number(screen_width_), QString::number(screen_height_)));
 }
 
 int MainWindow::GetScreenHeight()const
@@ -67,12 +70,17 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::paintEvent(QPaintEvent *event)
 {
-    QPixmap background_image=QPixmap::fromImage(FileReadSystem::GetInstance().ReadImageFile(FilePathSystem::GetInstance().GetResourcesPath(resourcesfiletype::ResourcesType::kImages,"background_picture.png")));
+    QPixmap background_image=QPixmap::fromImage(
+        FileReadSystem::GetInstance().ReadImageFile(
+            FilePathSystem::GetInstance().GetResourcesPath(
+                resourcesfiletype::ResourcesType::kImages,
+                "background_picture.png")));
 
     if(background_image.isNull())
     {
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug
-                                                  ,"The background image fails to be read. Check the cause of the failure");
+        FileWriteSystem::GetInstance().OutMessage(
+            FileWriteSystem::MessageTypeBit::kDebug,
+            "The background image fails to be read. Check the cause of the failure");
     }
 
     QBrush brush(background_image);
@@ -89,10 +97,13 @@ int MainWindow::GetScreenWidth()const
 
 void MainWindow::SetUIWindow()
 {
-    this->setGeometry(GetScreenWidth() / 4, GetScreenHeight() / 4, GetScreenWidth() / 2, GetScreenHeight() / 2);
-    FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug
-                                              ,QString("Now main_windows width: %1 height: %2")
-                                                  .arg(QString::number(this->width()),QString::number(this->height())));
+    this->setGeometry(
+        GetScreenWidth() / 4,
+        GetScreenHeight() / 4, GetScreenWidth() / 2, GetScreenHeight() / 2);
+    FileWriteSystem::GetInstance().OutMessage(
+        FileWriteSystem::MessageTypeBit::kDebug
+        ,QString("Now main_windows width: %1 height: %2")
+            .arg(QString::number(this->width()),QString::number(this->height())));
     CreateWindowButton();
 }
 
@@ -104,8 +115,11 @@ void MainWindow::HandleButtonClicked()
 
     if(clicked_button==this->buttons_[0])
     {
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug, "clicked start_button");
-        auto shader_file=FileReadSystem::GetInstance().ReadJsonFile(FilePathSystem::GetInstance().GetResourcesPath(resourcesfiletype::ResourcesType::kJson,"data.json"));
+        FileWriteSystem::GetInstance().OutMessage(
+            FileWriteSystem::MessageTypeBit::kDebug, "clicked start_button");
+        auto shader_file=FileReadSystem::GetInstance().ReadJsonFile(
+            FilePathSystem::GetInstance().GetResourcesPath(
+                resourcesfiletype::ResourcesType::kJson,"shader_data.json"));
         FileReadSystem::GetInstance().ReadGLSLFile(shader_file);
         StartWindow* start_window=new StartWindow(this->geometry(),shader_file);
         start_window->show();
@@ -114,7 +128,9 @@ void MainWindow::HandleButtonClicked()
     else if(clicked_button==this->buttons_[1])
     {
         SettingWindow* setting_window=new SettingWindow(this->geometry());
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug, "clicked setting_button");
+        FileWriteSystem::GetInstance().OutMessage(
+            FileWriteSystem::MessageTypeBit::kDebug,
+            "clicked setting_button");
 
         QTimer::singleShot(200, this, [=]() {
             setting_window->show();
@@ -123,7 +139,9 @@ void MainWindow::HandleButtonClicked()
     }
     else if(clicked_button==this->buttons_[2])
     {
-        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug, "clicked end_button");
+        FileWriteSystem::GetInstance().OutMessage(
+            FileWriteSystem::MessageTypeBit::kDebug,
+            "clicked end_button");
         FileWriteSystem::GetInstance().EndWirteLine();
         this->close();
     }
@@ -138,22 +156,37 @@ MainWindow::~MainWindow()
 void MainWindow::CreateWindowButton()
 {
     // Build start button
-    this->buttons_[0]=new MainEntryButton(FilePathSystem::GetInstance().GetResourcesPath(resourcesfiletype::ResourcesType::kImages,"start.png"),
-                                            QSize((this->width() / 2 - this->width() / 10 * 3), this->height() / 8)
-                                            , "开始");
-    this->buttons_[0]->move(QPoint((this->width() / 16), (this->height() - this->height() / 4)));
+    this->buttons_[0]=new MainEntryButton(
+        FilePathSystem::GetInstance().GetResourcesPath(
+            resourcesfiletype::ResourcesType::kImages,"main_start.png"),
+        QSize((this->width() / 2 - this->width() / 10 * 3),
+              this->height() / 8), "开始");
+    this->buttons_[0]->move(
+        QPoint((this->width() / 16),
+               (this->height() - this->height() / 4)));
+    this->buttons_[0]->setParent(this);
 
     // Build setup button
-    this->buttons_[1] = new MainEntryButton(FilePathSystem::GetInstance().GetResourcesPath(resourcesfiletype::ResourcesType::kImages,"setting.png"),
-                                            QSize(this->width() / 2 - this->width() / 10 * 3, this->height() / 8)
-                                            , "设置");
-    this->buttons_[1]->move(QPoint(this->width() / 2 - this->width() / 9, this->height() - this->height() / 4));
+    this->buttons_[1] = new MainEntryButton(
+        FilePathSystem::GetInstance().GetResourcesPath(
+            resourcesfiletype::ResourcesType::kImages,"main_setting.png"),
+        QSize(this->width() / 2 - this->width() / 10 * 3,
+              this->height() / 8), "设置");
+    this->buttons_[1]->move(
+        QPoint(this->width() / 2 - this->width() / 9,
+               this->height() - this->height() / 4));
+    this->buttons_[1]->setParent(this);
 
     // Build exit button
-    this->buttons_[2] = new MainEntryButton(FilePathSystem::GetInstance().GetResourcesPath(resourcesfiletype::ResourcesType::kImages,"end.png"),
-                                            QSize(this->width() / 2 - this->width() / 10 * 3, this->height() / 8)
-                                            , "退出");
-    this->buttons_[2]->move(QPoint(this->width() - this->width() / 3.5, this->height() - this->height() / 4));
+    this->buttons_[2] = new MainEntryButton(
+        FilePathSystem::GetInstance().GetResourcesPath(
+            resourcesfiletype::ResourcesType::kImages,"main_exit.png"),
+        QSize(this->width() / 2 - this->width() / 10 * 3,
+              this->height() / 8), "退出");
+    this->buttons_[2]->move(
+        QPoint(this->width() - this->width() / 3.5,
+               this->height() - this->height() / 4));
+    this->buttons_[2]->setParent(this);
 
     for(MainEntryButton *button:this->buttons_)
     {

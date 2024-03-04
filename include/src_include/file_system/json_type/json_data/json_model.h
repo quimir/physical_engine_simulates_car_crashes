@@ -22,7 +22,7 @@
 #include <QString>
 #include <QJsonObject>
 
-namespace jsonType
+namespace jsontype
 {
 class JsonModel
 {
@@ -34,6 +34,8 @@ public:
     QString GetModelMapValue(const QString &key)const;
 
     void ResetJsonModel(const QJsonObject& root_object);
+
+    QJsonObject GetRootObject()const;
 
 private:
     void InitJsonModel(const QJsonObject& root_object);

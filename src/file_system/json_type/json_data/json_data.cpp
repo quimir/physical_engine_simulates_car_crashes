@@ -16,10 +16,11 @@
  **/
 
 #include "src_include/file_system/json_type/json_data/json_data.h"
+#include "qjsondocument.h"
 #include "src_include/file_system/file_read_system.h"
 #include "src_include/file_system/file_write_system.h"
 
-namespace jsonType
+namespace jsontype
 {
 
 JsonData::JsonData(const QString path)
@@ -33,6 +34,7 @@ JsonData::JsonData(const QString path)
     }
 
     this->path_=path;
+    this->IsReset=false;
 }
 
 JsonGLSL *JsonData::GetJsonGLSL()
@@ -75,8 +77,45 @@ void JsonData::PrasePathFile()
     for(auto it=json_object.begin();it!=json_object.end();it++)
     {
         QString key=it.key();
-        InitValues(key,json_object[key].toObject());
+        QJsonObject json_object_setting=json_object[key].toObject();
+        InitValues(key,json_object_setting);
     }
+}
+
+void JsonData::ResetJsonData(const QString path)
+{
+    if(path.isEmpty())
+    {
+        FileWriteSystem::GetInstance().OutMessage(
+            FileWriteSystem::MessageTypeBit::kDebug,
+            "Json data file path error!");
+        return;
+    }
+
+    this->path_=path;
+    this->IsReset=true;
+}
+
+qint32 JsonData::SavingTheJsonFile()
+{
+    QJsonObject json_object=FileReadSystem::GetInstance().ReadJsonFileToJsonObject(this->path_);
+    json_object.insert("logs",this->json_logs_->GetRootObject());
+    json_object.insert("image",this->json_image_->GetRootObject());
+    json_object.insert("GLSL",this->json_glsl_->GetRootObject());
+    json_object.insert("model",this->json_model_->GetRootObject());
+
+    QFile output_file(this->path_);
+    if(!output_file.open(QIODevice::WriteOnly|QIODevice::Text))
+    {
+        FileWriteSystem::GetInstance().OutMessage(FileWriteSystem::MessageTypeBit::kDebug,
+                                                  "Failed to open" +this->path_+"for writing");
+        return -1;
+    }
+
+    output_file.write(QJsonDocument(json_object).toJson());
+    output_file.close();
+
+    return 1;
 }
 
 JsonData::~JsonData()
@@ -91,13 +130,13 @@ JsonData::~JsonData()
         delete json_model_;
 }
 
-void JsonData::InitValues(QString key, QJsonObject json_object)
+void JsonData::InitValues(QString key, QJsonObject &json_object)
 {
     if(!key.isEmpty())
     {
-        if(!key.contains("logs",Qt::CaseInsensitive))
+        if(key.contains("logs",Qt::CaseInsensitive))
         {
-            if(nullptr==this->json_logs_)
+            if(!this->IsReset)
             {
                 this->json_logs_=new JsonLogs(json_object);
             }
@@ -121,7 +160,7 @@ void JsonData::SetInitalValues(resourcesfiletype::ResourcesType type, QJsonObjec
     {
     case resourcesfiletype::ResourcesType::kImages:
     {
-        if(nullptr==this->json_image_)
+        if(!this->IsReset)
         {
             this->json_image_=new JsonImage(json_object);
         }
@@ -133,7 +172,7 @@ void JsonData::SetInitalValues(resourcesfiletype::ResourcesType type, QJsonObjec
     break;
     case resourcesfiletype::ResourcesType::kGLSL:
     {
-        if(nullptr==this->json_glsl_)
+        if(!this->IsReset)
         {
             this->json_glsl_=new JsonGLSL(json_object);
         }
@@ -145,7 +184,7 @@ void JsonData::SetInitalValues(resourcesfiletype::ResourcesType type, QJsonObjec
     break;
     case resourcesfiletype::ResourcesType::kModel:
     {
-        if(nullptr==this->json_model_)
+        if(!this->IsReset)
         {
             this->json_model_=new JsonModel(json_object);
         }

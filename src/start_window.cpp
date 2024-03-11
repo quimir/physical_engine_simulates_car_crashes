@@ -64,20 +64,19 @@ void StartWindow::paintGL()
 
     this->timer_.Start();
 
-    for(int i=0;i<this->shaders_.size();i++)
-    {
-        this->shaders_[i]->Use();
+    Shader shader(false,FilePathSystem::GetInstance().GetResourcesPath("GLSL/model_loading.vert"),
+                  FilePathSystem::GetInstance().GetResourcesPath("GLSL/model_loading.frag"));
+    shader.Use();
+    shader.SetMat4("projection",this->projection_);
+    shader.SetMat4("view",this->camera_.GetViewMatrix());
+    geometricalias::mat4 model;
+    model.translate(geometricalias::vec3(0.0f,0.0f,0.0f));
+    model.scale(geometricalias::vec3(1.0f,1.0f,1.0f));
+    shader.SetMat4("model",model);
+    geometryengine::GeometryEngine engine;
+    engine.drawObj(
+        FilePathSystem::GetInstance().GetResourcesPath("model/backpack/backpack.obj").toStdString(),&shader.GetShaderProgram(),true);
 
-        this->shaders_[i]->SetMat4("projection",this->projection_);
-        this->shaders_[i]->SetMat4("view",this->camera_.GetViewMatrix());
-        geometricalias::mat4 model;
-        model.translate(geometricalias::vec3(0.0f,0.0f,0.0f));
-        model.scale(geometricalias::vec3(1.0f,1.0f,1.0f));
-        this->shaders_[i]->SetMat4("model",model);
-        geometryengine::GeometryEngine engine;
-        engine.drawObj(
-            FilePathSystem::GetInstance().GetResourcesPath("model/backpack/backpack.obj").toStdString(),&this->shaders_[i]->GetShaderProgram(),true);
-    }
 
     this->timer_.Stop();
 }
